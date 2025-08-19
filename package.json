@@ -1,0 +1,34 @@
+{
+  "name": "bun-template",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./build/package.d.ts",
+      "require": "./build/package.cjs",
+      "import": "./build/package.js"
+    }
+  },
+  "scripts": {
+    "lint": "gts lint",
+    "clean": "gts clean",
+    "dev": "bun --watch src/index.ts",
+    "compile": "tsdown",
+    "fix": "gts fix"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "gts": "^6.0.2",
+    "tsdown": "^0.14.1",
+    "typescript": "^5.6.3",
+    "@types/node": "^22.7.5"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": ">=14",
+    "bun": ">=1.0.0"
+  }
+}
