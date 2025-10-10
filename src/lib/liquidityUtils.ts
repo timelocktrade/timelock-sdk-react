@@ -1,7 +1,7 @@
 import {SqrtPriceMath, TickMath} from '@uniswap/v3-sdk';
 import JSBI from 'jsbi';
 
-const PRICE_PRECISION = BigInt(1e18);
+export const PRICE_PRECISION = BigInt(1e18);
 
 export const getPriceAtTick = (tick: number) => {
   const sqrtRatioX96 = BigInt(TickMath.getSqrtRatioAtTick(tick).toString());
@@ -136,85 +136,4 @@ export const liquiditiesToAmounts = (
     }
   }
   return [amount0, amount1];
-};
-
-export const liquiditiesToAmountsOption = (
-  optionType: 'CALL' | 'PUT',
-  liquidities: bigint[],
-  strikeTick: number,
-  entryTick: number,
-  currentTick: number,
-  tickSpacing: number,
-  optionAssetIsToken0: boolean,
-) => {
-  const leftTick =
-    optionType === 'CALL'
-      ? strikeTick
-      : strikeTick - tickSpacing * liquidities.length;
-
-  const [repayAmount0, repayAmount1] = liquiditiesToAmounts(
-    liquidities,
-    leftTick,
-    currentTick,
-    tickSpacing,
-  );
-  const borrowedAmount0 = liquiditiesToAmount0(
-    liquidities,
-    leftTick,
-    tickSpacing,
-  );
-  const borrowedAmount1 = liquiditiesToAmount1(
-    liquidities,
-    leftTick,
-    tickSpacing,
-  );
-
-  const [optionAssetToRepay, payoutAssetToRepay] = optionAssetIsToken0
-    ? [repayAmount0, repayAmount1]
-    : [repayAmount1, repayAmount0];
-
-  let optionAssetBorrowed = 0n;
-  let payoutAssetBorrowed = 0n;
-  let positionSize = 0n;
-
-  if (optionType === 'CALL') {
-    optionAssetBorrowed = optionAssetIsToken0
-      ? borrowedAmount0
-      : borrowedAmount1;
-    positionSize = optionAssetBorrowed;
-  } else {
-    payoutAssetBorrowed = optionAssetIsToken0
-      ? borrowedAmount1
-      : borrowedAmount0;
-    positionSize = optionAssetIsToken0
-      ? token1ToToken0(payoutAssetBorrowed, entryTick)
-      : token0ToToken1(payoutAssetBorrowed, entryTick);
-  }
-
-  const displayPnl =
-    optionType === 'CALL'
-      ? optionAssetIsToken0
-        ? token0ToToken1(positionSize, currentTick) -
-          token0ToToken1(positionSize, entryTick)
-        : token1ToToken0(positionSize, currentTick) -
-          token1ToToken0(positionSize, entryTick)
-      : optionAssetIsToken0
-        ? token0ToToken1(positionSize, entryTick) -
-          token0ToToken1(positionSize, currentTick)
-        : token1ToToken0(positionSize, entryTick) -
-          token1ToToken0(positionSize, currentTick);
-
-  const strikePrice = optionAssetIsToken0
-    ? getPriceAtTick(strikeTick)
-    : (PRICE_PRECISION * PRICE_PRECISION) / getPriceAtTick(strikeTick);
-
-  return {
-    optionAssetToRepay,
-    payoutAssetToRepay,
-    optionAssetBorrowed,
-    payoutAssetBorrowed,
-    positionSize,
-    displayPnl,
-    strikePrice,
-  };
 };

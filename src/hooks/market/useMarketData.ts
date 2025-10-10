@@ -1,8 +1,10 @@
 import type {Address} from 'viem';
 import {useClient, useReadContract} from 'wagmi';
-import {getErc20, type TimelockMarket} from '../../lib/contracts';
 import {useLens} from '../useLens';
+import type {TimelockMarket} from '../../lib/contracts';
 import {lensAbi} from '../../abis/lens';
+
+export type TimelockMarketData = Required<ReturnType<typeof useMarketData>>;
 
 export const useMarketData = (market?: Address | TimelockMarket) => {
   const {timelockLens} = useLens();
@@ -16,14 +18,11 @@ export const useMarketData = (market?: Address | TimelockMarket) => {
     args: marketAddr ? [marketAddr] : undefined,
     query: {
       enabled: marketAddr !== undefined,
-      staleTime: 5 * 60 * 1000, // 5 minutes
     },
   });
 
   type TimelockMarketData = typeof rawMarketData & {
     address: Address;
-    optionAsset: ReturnType<typeof getErc20>;
-    payoutAsset: ReturnType<typeof getErc20>;
   };
 
   if (!rawMarketData || !marketAddr || !client) {

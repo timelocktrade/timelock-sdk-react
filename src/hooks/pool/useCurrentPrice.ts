@@ -1,7 +1,7 @@
 import type {Address} from 'viem';
 import {useCurrentTick} from './useCurrentTick';
 
-import type {UniswapPool} from '~/lib/contracts';
+import type {UniswapPool} from '../../lib/contracts';
 import usePriceAtTick from './usePriceAtTick';
 
 export const useCurrentPrice = (pool?: Address | UniswapPool) => {

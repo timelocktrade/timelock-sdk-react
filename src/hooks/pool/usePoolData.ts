@@ -19,7 +19,6 @@ export const usePoolData = (pool?: Address | UniswapPool) => {
     args: poolAddress ? [poolAddress] : undefined,
     query: {
       enabled: !!poolAddress && !!client,
-      staleTime: 5 * 60 * 1000, // 5 minutes
       select: poolData => ({
         ...poolData,
         token0: getErc20(poolData.token0, client!),

@@ -7,6 +7,7 @@ import {
   useWaitForTransactionReceipt,
   useReadContract,
   useWalletClient,
+  useClient,
 } from 'wagmi';
 
 import {useCurrentTick} from '../pool/useCurrentTick';
@@ -16,11 +17,16 @@ import {usePoolData} from '../pool/usePoolData';
 import {useMarketData} from './useMarketData';
 import {useUserOptions} from './useUserOptions';
 
-import {getTimelockMarket, type TimelockMarket} from '../../lib/contracts';
+import {
+  getErc20,
+  getTimelockMarket,
+  type TimelockMarket,
+} from '../../lib/contracts';
 import {optionsMarketAbi} from '../../abis/optionsMarket';
 import {singleOwnerVaultAbi} from '../../abis/singleOwnerVault';
 
 export const useMintOption = (market?: Address | TimelockMarket) => {
+  const client = useClient();
   const {refetch: refetchOptions} = useUserOptions(market);
   const {payoutAsset, vault} = useMarketData(market);
   const {pool} = useVaultData(vault);
@@ -45,17 +51,19 @@ export const useMintOption = (market?: Address | TimelockMarket) => {
   market = market || marketAddr;
 
   const askForApproval = async (premiumAmount: bigint) => {
-    if (!payoutAsset || !marketAddr) {
+    if (!payoutAsset || !marketAddr || !client) {
       throw new Error('Tokens not available');
     }
-    const allowance = await payoutAsset.read.allowance([
+    const payoutContract = getErc20(payoutAsset, client);
+
+    const allowance = await payoutContract.read.allowance([
       walletClient!.account!.address,
       marketAddr,
     ]);
 
     if (allowance < premiumAmount) {
       const approvalHash = await writeContractAsync({
-        address: payoutAsset.address,
+        address: payoutAsset,
         abi: erc20Abi,
         functionName: 'approve',
         args: [marketAddr, maxUint256],
