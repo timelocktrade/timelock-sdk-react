@@ -2,7 +2,6 @@ import {useMemo} from 'react';
 import type {Address} from 'viem';
 import {useMarketData} from './useMarketData';
 import {usePoolData} from '../pool/usePoolData';
-import {useVaultData} from '../vault/useVaultData';
 import {useCurrentTick} from '../pool/useCurrentTick';
 import {
   liquiditiesToAmount1,
@@ -21,8 +20,7 @@ export const useOptionLiquidityData = (
   strikeTick: number,
   entryTick: number,
 ) => {
-  const {vault, optionAssetIsToken0} = useMarketData(marketAddr);
-  const {pool} = useVaultData(vault);
+  const {pool, optionAssetIsToken0} = useMarketData(marketAddr);
   const {tickSpacing} = usePoolData(pool);
   const {exact: currentTick} = useCurrentTick(pool);
 

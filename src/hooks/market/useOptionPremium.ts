@@ -4,7 +4,6 @@ import {useMemo} from 'react';
 
 import {useCurrentTick} from '../pool/useCurrentTick';
 import {usePoolData} from '../pool/usePoolData';
-import {useVaultData} from '../vault/useVaultData';
 import {useMarketData} from './useMarketData';
 
 import type {TimelockMarket} from '../../lib/contracts';
@@ -17,8 +16,7 @@ export const useOptionPremium = (
   optionAmount: bigint,
   duration: number,
 ) => {
-  const {vault} = useMarketData(market);
-  const {pool} = useVaultData(vault);
+  const {pool} = useMarketData(market);
   const currentTick = useCurrentTick(pool);
   const {tickSpacing} = usePoolData(pool);
   const {payoutAssetDecimals} = useMarketData(market);
