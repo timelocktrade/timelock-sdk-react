@@ -22,7 +22,7 @@ export const useVaultTVL = (vault?: Address | TimelockVault) => {
     address: timelockLens?.address,
     abi: lensAbi,
     functionName: 'getVaultTVL',
-    args: [vaultAddr!],
+    args: [vaultAddr!, 100],
     query: {enabled: !!vaultAddr && !!timelockLens},
   });
 
@@ -33,29 +33,9 @@ export const useVaultTVL = (vault?: Address | TimelockVault) => {
     borrowedAmount1,
     tvl0,
     tvl1,
+    borrowable0,
+    borrowable1,
   ] = data || [];
-
-  const available0 =
-    totalAmount0 !== undefined && borrowedAmount0 !== undefined
-      ? totalAmount0 - borrowedAmount0
-      : undefined;
-  const available1 =
-    totalAmount1 !== undefined && borrowedAmount1 !== undefined
-      ? totalAmount1 - borrowedAmount1
-      : undefined;
-
-  const borrowable0 =
-    totalAmount0 !== undefined && available0 !== undefined
-      ? totalAmount0 / 10n < available0
-        ? totalAmount0 / 10n
-        : available0
-      : undefined;
-  const borrowable1 =
-    totalAmount1 !== undefined && available1 !== undefined
-      ? totalAmount1 / 10n < available1
-        ? totalAmount1 / 10n
-        : available1
-      : undefined;
 
   const maxLongSize = borrowable0;
   const maxShortSize =

@@ -20,7 +20,6 @@ export const useMarketData = (market?: Address | TimelockMarket) => {
       enabled: marketAddr !== undefined,
     },
   });
-
   type TimelockMarketData = typeof rawMarketData & {
     address: Address;
   };

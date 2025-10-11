@@ -501,6 +501,11 @@ export const lensAbi = [
         type: 'address',
         internalType: 'contract TimelockVaultCore',
       },
+      {
+        name: 'maxBorrowableRange',
+        type: 'int24',
+        internalType: 'int24',
+      },
     ],
     outputs: [
       {
@@ -525,6 +530,8 @@ export const lensAbi = [
       },
       {name: 'tvl0', type: 'uint256', internalType: 'uint256'},
       {name: 'tvl1', type: 'uint256', internalType: 'uint256'},
+      {name: 'borrowable0', type: 'uint256', internalType: 'uint256'},
+      {name: 'borrowable1', type: 'uint256', internalType: 'uint256'},
     ],
     stateMutability: 'view',
   },
