@@ -59,6 +59,93 @@ export const lensAbi = [
   },
   {
     type: 'function',
+    name: 'getExpiredOptions',
+    inputs: [
+      {
+        name: 'market',
+        type: 'address',
+        internalType: 'contract TimelockOptionsMarket',
+      },
+      {name: 'startId', type: 'uint256', internalType: 'uint256'},
+      {name: 'limit', type: 'uint256', internalType: 'uint256'},
+    ],
+    outputs: [
+      {
+        name: 'expiredOptions',
+        type: 'tuple[]',
+        internalType: 'struct TimelockLens.OptionData[]',
+        components: [
+          {
+            name: 'optionId',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {name: 'owner', type: 'address', internalType: 'address'},
+          {name: 'optionType', type: 'uint8', internalType: 'uint8'},
+          {name: 'leftTick', type: 'int24', internalType: 'int24'},
+          {name: 'strikeTick', type: 'int24', internalType: 'int24'},
+          {name: 'entryTick', type: 'int24', internalType: 'int24'},
+          {
+            name: 'strikePrice',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'entryPrice',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'optionAssetBorrowed',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'payoutAssetBorrowed',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'optionAssetToRepay',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'payoutAssetToRepay',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'positionSize',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'netOptionAssetToRepay',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'premiumPaid',
+            type: 'uint128',
+            internalType: 'uint128',
+          },
+          {name: 'expiresAt', type: 'uint64', internalType: 'uint64'},
+          {name: 'createdAt', type: 'uint64', internalType: 'uint64'},
+          {
+            name: 'liquidities',
+            type: 'uint128[]',
+            internalType: 'uint128[]',
+          },
+        ],
+      },
+      {name: 'nextStartId', type: 'uint256', internalType: 'uint256'},
+      {name: 'hasMore', type: 'bool', internalType: 'bool'},
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     name: 'getLiquidityAtTick',
     inputs: [
       {
