@@ -11,10 +11,8 @@ import {
 } from 'wagmi';
 
 import {useCurrentTick} from '../pool/useCurrentTick';
-import {useLiquidityBlocks} from '../vault/useLiquidityBlocks';
 import {usePoolData} from '../pool/usePoolData';
 import {useMarketData} from './useMarketData';
-import {useUserOptions} from './useUserOptions';
 
 import {
   getErc20,
@@ -26,9 +24,7 @@ import {singleOwnerVaultAbi} from '../../abis/singleOwnerVault';
 
 export const useMintOption = (market?: Address | TimelockMarket) => {
   const client = useClient();
-  const {refetch: refetchOptions} = useUserOptions(market);
   const {payoutAsset, vault, pool} = useMarketData(market);
-  const {refetch: refetchLiquidity} = useLiquidityBlocks(vault);
   const {tickSpacing} = usePoolData(pool);
   const {rounded: currentTick} = useCurrentTick(pool);
 
@@ -111,8 +107,6 @@ export const useMintOption = (market?: Address | TimelockMarket) => {
       ],
     });
     await waitForTransactionReceipt(walletClient!, {hash});
-    void refetchLiquidity();
-    void refetchOptions();
     return hash;
   };
   return {

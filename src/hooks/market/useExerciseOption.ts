@@ -9,9 +9,7 @@ import {
   useWalletClient,
 } from 'wagmi';
 
-import {useUserOptions} from './useUserOptions';
 import {useMarketData} from './useMarketData';
-import {useLiquidityBlocks} from '../vault/useLiquidityBlocks';
 
 import {type TimelockMarket} from '../../lib/contracts';
 import {optionsMarketAbi} from '../../abis/optionsMarket';
@@ -19,9 +17,7 @@ import {singleOwnerVaultAbi} from '../../abis/singleOwnerVault';
 
 export const useExerciseOption = (market?: Address | TimelockMarket) => {
   const {vault} = useMarketData(market);
-  const {refetch: refetchOptions} = useUserOptions(market);
   const {data: walletClient} = useWalletClient();
-  const {refetch: refetchLiquidity} = useLiquidityBlocks(vault);
 
   const {data: lowestTick} = useReadContract({
     address: vault,
@@ -50,8 +46,6 @@ export const useExerciseOption = (market?: Address | TimelockMarket) => {
       args: [optionId, liquidities, 0n, lowestTick],
     });
     await waitForTransactionReceipt(walletClient!, {hash});
-    void refetchOptions();
-    void refetchLiquidity();
     return hash;
   };
 
