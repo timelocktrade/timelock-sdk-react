@@ -24,8 +24,81 @@ export const useOptionLiquidityData = (
   const {tickSpacing} = usePoolData(pool);
   const {exact: currentTick} = useCurrentTick(pool);
 
-  return useMemo(() => {
+  const leftTick =
+    tickSpacing !== undefined
+      ? optionType === 'CALL'
+        ? strikeTick
+        : strikeTick - tickSpacing * liquidities.length
+      : undefined;
+
+  const {positionSize, optionAssetBorrowed, payoutAssetBorrowed, strikePrice} =
+    useMemo(() => {
+      if (
+        leftTick === undefined ||
+        tickSpacing === undefined ||
+        optionAssetIsToken0 === undefined
+      ) {
+        return {
+          optionAssetBorrowed: undefined,
+          payoutAssetBorrowed: undefined,
+          positionSize: undefined,
+          strikePrice: undefined,
+        };
+      }
+
+      const borrowedAmount0 = liquiditiesToAmount0(
+        liquidities,
+        leftTick,
+        tickSpacing,
+      );
+      const borrowedAmount1 = liquiditiesToAmount1(
+        liquidities,
+        leftTick,
+        tickSpacing,
+      );
+
+      let optionAssetBorrowed = 0n;
+      let payoutAssetBorrowed = 0n;
+      let positionSize = 0n;
+
+      if (optionType === 'CALL') {
+        optionAssetBorrowed = optionAssetIsToken0
+          ? borrowedAmount0
+          : borrowedAmount1;
+        positionSize = optionAssetBorrowed;
+      } else {
+        payoutAssetBorrowed = optionAssetIsToken0
+          ? borrowedAmount1
+          : borrowedAmount0;
+        positionSize = optionAssetIsToken0
+          ? token1ToToken0(payoutAssetBorrowed, entryTick)
+          : token0ToToken1(payoutAssetBorrowed, entryTick);
+      }
+
+      const strikePrice = optionAssetIsToken0
+        ? getPriceAtTick(strikeTick)
+        : (PRICE_PRECISION * PRICE_PRECISION) / getPriceAtTick(strikeTick);
+
+      return {
+        optionAssetBorrowed,
+        payoutAssetBorrowed,
+        positionSize,
+        strikePrice,
+      };
+    }, [
+      leftTick,
+      tickSpacing,
+      optionAssetIsToken0,
+      liquidities,
+      optionType,
+      strikeTick,
+      entryTick,
+    ]);
+
+  const {optionAssetToRepay, payoutAssetToRepay, displayPnl} = useMemo(() => {
     if (
+      leftTick === undefined ||
+      positionSize === undefined ||
       tickSpacing === undefined ||
       currentTick === undefined ||
       optionAssetIsToken0 === undefined
@@ -33,18 +106,9 @@ export const useOptionLiquidityData = (
       return {
         optionAssetToRepay: undefined,
         payoutAssetToRepay: undefined,
-        optionAssetBorrowed: undefined,
-        payoutAssetBorrowed: undefined,
-        positionSize: undefined,
         displayPnl: undefined,
-        strikePrice: undefined,
       };
     }
-
-    const leftTick =
-      optionType === 'CALL'
-        ? strikeTick
-        : strikeTick - tickSpacing * liquidities.length;
 
     const [repayAmount0, repayAmount1] = liquiditiesToAmounts(
       liquidities,
@@ -52,38 +116,9 @@ export const useOptionLiquidityData = (
       currentTick,
       tickSpacing,
     );
-    const borrowedAmount0 = liquiditiesToAmount0(
-      liquidities,
-      leftTick,
-      tickSpacing,
-    );
-    const borrowedAmount1 = liquiditiesToAmount1(
-      liquidities,
-      leftTick,
-      tickSpacing,
-    );
-
     const [optionAssetToRepay, payoutAssetToRepay] = optionAssetIsToken0
       ? [repayAmount0, repayAmount1]
       : [repayAmount1, repayAmount0];
-
-    let optionAssetBorrowed = 0n;
-    let payoutAssetBorrowed = 0n;
-    let positionSize = 0n;
-
-    if (optionType === 'CALL') {
-      optionAssetBorrowed = optionAssetIsToken0
-        ? borrowedAmount0
-        : borrowedAmount1;
-      positionSize = optionAssetBorrowed;
-    } else {
-      payoutAssetBorrowed = optionAssetIsToken0
-        ? borrowedAmount1
-        : borrowedAmount0;
-      positionSize = optionAssetIsToken0
-        ? token1ToToken0(payoutAssetBorrowed, entryTick)
-        : token0ToToken1(payoutAssetBorrowed, entryTick);
-    }
 
     const displayPnl =
       optionType === 'CALL'
@@ -98,26 +133,29 @@ export const useOptionLiquidityData = (
           : token1ToToken0(positionSize, entryTick) -
             token1ToToken0(positionSize, currentTick);
 
-    const strikePrice = optionAssetIsToken0
-      ? getPriceAtTick(strikeTick)
-      : (PRICE_PRECISION * PRICE_PRECISION) / getPriceAtTick(strikeTick);
-
     return {
       optionAssetToRepay,
       payoutAssetToRepay,
-      optionAssetBorrowed,
-      payoutAssetBorrowed,
-      positionSize,
       displayPnl,
-      strikePrice,
     };
   }, [
+    leftTick,
     tickSpacing,
     currentTick,
     optionAssetIsToken0,
-    optionType,
-    strikeTick,
     liquidities,
+    optionType,
+    positionSize,
     entryTick,
   ]);
+
+  return {
+    optionAssetToRepay,
+    payoutAssetToRepay,
+    optionAssetBorrowed,
+    payoutAssetBorrowed,
+    positionSize,
+    displayPnl,
+    strikePrice,
+  };
 };
