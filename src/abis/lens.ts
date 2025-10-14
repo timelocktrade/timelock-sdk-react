@@ -266,6 +266,28 @@ export const lensAbi = [
   },
   {
     type: 'function',
+    name: 'getMaxPositionSize',
+    inputs: [
+      {
+        name: 'market',
+        type: 'address',
+        internalType: 'contract TimelockOptionsMarket',
+      },
+      {name: 'strikeTick', type: 'int24', internalType: 'int24'},
+      {
+        name: 'maxBorrowableRange',
+        type: 'int24',
+        internalType: 'int24',
+      },
+    ],
+    outputs: [
+      {name: 'maxCallSize', type: 'uint256', internalType: 'uint256'},
+      {name: 'maxPutSize', type: 'uint256', internalType: 'uint256'},
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     name: 'getOptionData',
     inputs: [
       {
@@ -602,12 +624,6 @@ export const lensAbi = [
         type: 'address',
         internalType: 'contract TimelockVaultCore',
       },
-      {
-        name: 'maxBorrowableRange',
-        type: 'int24',
-        internalType: 'int24',
-      },
-      {name: 'strikeTick', type: 'int24', internalType: 'int24'},
     ],
     outputs: [
       {
@@ -632,8 +648,6 @@ export const lensAbi = [
       },
       {name: 'tvl0', type: 'uint256', internalType: 'uint256'},
       {name: 'tvl1', type: 'uint256', internalType: 'uint256'},
-      {name: 'borrowable0', type: 'uint256', internalType: 'uint256'},
-      {name: 'borrowable1', type: 'uint256', internalType: 'uint256'},
     ],
     stateMutability: 'view',
   },
