@@ -16,9 +16,7 @@ export const useMarketData = (market?: Address | TimelockMarket) => {
     abi: lensAbi,
     functionName: 'getMarketData',
     args: marketAddr ? [marketAddr] : undefined,
-    query: {
-      enabled: marketAddr !== undefined,
-    },
+    query: {enabled: marketAddr !== undefined},
   });
   type TimelockMarketData = typeof rawMarketData & {
     address: Address;

@@ -1,18 +1,16 @@
-'use client';
-
 import {type Address, erc20Abi, maxUint256} from 'viem';
 import {waitForTransactionReceipt} from 'viem/actions';
 import {
   useWriteContract,
-  useWaitForTransactionReceipt,
-  useReadContract,
-  useWalletClient,
   useClient,
+  useWaitForTransactionReceipt,
+  useAccount,
 } from 'wagmi';
 
 import {useCurrentTick} from '../pool/useCurrentTick';
 import {usePoolData} from '../pool/usePoolData';
 import {useMarketData} from './useMarketData';
+import {useLens} from '../useLens';
 
 import {
   getErc20,
@@ -20,41 +18,34 @@ import {
   type TimelockMarket,
 } from '../../lib/contracts';
 import {optionsMarketAbi} from '../../abis/optionsMarket';
-import {singleOwnerVaultAbi} from '../../abis/singleOwnerVault';
 
 export const useMintOption = (market?: Address | TimelockMarket) => {
-  const client = useClient();
   const {payoutAsset, vault, pool} = useMarketData(market);
   const {tickSpacing} = usePoolData(pool);
+  const {timelockLens} = useLens();
   const {rounded: currentTick} = useCurrentTick(pool);
+  const client = useClient();
+  const {address} = useAccount();
 
-  const {data: walletClient} = useWalletClient();
-
-  const {data: lowestTick} = useReadContract({
-    address: vault,
-    abi: singleOwnerVaultAbi,
-    functionName: 'lowestTick',
-  });
   const {writeContractAsync, data: hash, isPending, error} = useWriteContract();
 
   const {isLoading: isConfirming, isSuccess} = useWaitForTransactionReceipt({
     hash,
   });
-
   const marketAddr = typeof market === 'string' ? market : market?.address;
-  market = market || marketAddr;
 
   const askForApproval = async (premiumAmount: bigint) => {
-    if (!payoutAsset || !marketAddr || !client) {
+    if (!client || !address) throw new Error('Wallet not connected');
+
+    if (!payoutAsset || !marketAddr) {
       throw new Error('Tokens not available');
     }
     const payoutContract = getErc20(payoutAsset, client);
 
     const allowance = await payoutContract.read.allowance([
-      walletClient!.account!.address,
+      address,
       marketAddr,
     ]);
-
     if (allowance < premiumAmount) {
       const approvalHash = await writeContractAsync({
         address: payoutAsset,
@@ -62,7 +53,7 @@ export const useMintOption = (market?: Address | TimelockMarket) => {
         functionName: 'approve',
         args: [marketAddr, maxUint256],
       });
-      await waitForTransactionReceipt(walletClient!, {hash: approvalHash});
+      await waitForTransactionReceipt(client, {hash: approvalHash});
     }
   };
 
@@ -71,10 +62,12 @@ export const useMintOption = (market?: Address | TimelockMarket) => {
     amount: bigint,
     duration: number,
   ) => {
+    if (!client) throw new Error('Wallet not connected');
+
     if (
-      lowestTick === undefined ||
+      !timelockLens ||
+      !vault ||
       !marketAddr ||
-      !walletClient ||
       !currentTick ||
       !tickSpacing
     ) {
@@ -83,7 +76,7 @@ export const useMintOption = (market?: Address | TimelockMarket) => {
     const strikeTick =
       optionType === 'CALL' ? currentTick + tickSpacing : currentTick;
 
-    const market = getTimelockMarket(marketAddr, walletClient);
+    const market = getTimelockMarket(marketAddr, client);
 
     const premium = await market.read.calculatePremium([
       optionType === 'CALL' ? 0 : 1,
@@ -103,10 +96,10 @@ export const useMintOption = (market?: Address | TimelockMarket) => {
         strikeTick,
         BigInt(duration),
         BigInt(1e69),
-        lowestTick,
+        await timelockLens.read.getRefTick([vault, strikeTick]),
       ],
     });
-    await waitForTransactionReceipt(walletClient!, {hash});
+    await waitForTransactionReceipt(client, {hash});
     return hash;
   };
   return {

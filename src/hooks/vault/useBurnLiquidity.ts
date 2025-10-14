@@ -1,17 +1,10 @@
-'use client';
-
-import {encodeFunctionData} from 'viem';
+import {type Address, encodeFunctionData} from 'viem';
 import {waitForTransactionReceipt} from 'viem/actions';
-import {
-  useWriteContract,
-  useWaitForTransactionReceipt,
-  useReadContract,
-  useWalletClient,
-} from 'wagmi';
+import {useWriteContract, useWaitForTransactionReceipt, useClient} from 'wagmi';
 
 import {useCurrentTick} from '../pool/useCurrentTick';
-import {useLiquidityBlocks} from './useLiquidityBlocks';
 import {useVaultData} from './useVaultData';
+import {useLens} from '../useLens';
 
 import {type TimelockVault} from '../../lib/contracts';
 import {singleOwnerVaultAbi} from '../../abis/singleOwnerVault';
@@ -22,17 +15,14 @@ interface BurnPosition {
   liquidity: bigint;
 }
 
-export const useBurnLiquidity = (vault: TimelockVault) => {
-  const {data: walletClient} = useWalletClient();
+export const useBurnLiquidity = (vault?: Address | TimelockVault) => {
+  const client = useClient();
   const {pool} = useVaultData(vault);
-  const {refetch} = useLiquidityBlocks(vault);
   const currentTick = useCurrentTick(pool);
+  const {timelockLens} = useLens();
 
-  const {data: lowestTick} = useReadContract({
-    address: vault.address,
-    abi: singleOwnerVaultAbi,
-    functionName: 'lowestTick',
-  });
+  const vaultAddr = typeof vault === 'string' ? vault : vault?.address;
+
   const {writeContractAsync, data: hash, isPending, error} = useWriteContract();
 
   const {isLoading: isConfirming, isSuccess} = useWaitForTransactionReceipt({
@@ -44,29 +34,34 @@ export const useBurnLiquidity = (vault: TimelockVault) => {
     tickUpper: number,
     liquidity: bigint,
   ) => {
-    if (!lowestTick) {
-      throw new Error('Lowest tick lower not available');
+    if (!client) throw new Error('Wallet not connected');
+
+    if (!vaultAddr || !timelockLens) {
+      throw new Error('Vault/lens not available');
     }
+    const refTick = await timelockLens.read.getRefTick([vaultAddr, tickLower]);
+
     const hash = await writeContractAsync({
-      address: vault.address,
+      address: vaultAddr,
       abi: singleOwnerVaultAbi,
       functionName: 'burn',
-      args: [tickLower, tickUpper, liquidity, lowestTick],
+      args: [tickLower, tickUpper, liquidity, refTick],
     });
-    await waitForTransactionReceipt(walletClient!, {hash});
-    void refetch();
+    await waitForTransactionReceipt(client, {hash});
     return hash;
   };
 
   const burnMultiple = async (positions: BurnPosition[]) => {
+    if (!client) throw new Error('Wallet not connected');
+
     if (!currentTick.exact) {
       throw new Error('Current tick not available');
     }
     if (positions.length === 0) {
       throw new Error('No positions to burn');
     }
-    if (!lowestTick) {
-      throw new Error('Lowest tick lower not available');
+    if (!timelockLens || !vaultAddr) {
+      throw new Error('Vault/lens not available');
     }
     if (positions.length === 1) {
       await burn(
@@ -75,26 +70,24 @@ export const useBurnLiquidity = (vault: TimelockVault) => {
         positions[0].liquidity,
       );
     } else {
-      const multicallData = positions.map(position =>
+      const refTicks = await timelockLens.read.batchGetRefTick([
+        vaultAddr,
+        positions.map(position => position.tickLower),
+      ]);
+      const multicallData = positions.map((p, i) =>
         encodeFunctionData({
           abi: singleOwnerVaultAbi,
           functionName: 'burn',
-          args: [
-            position.tickLower,
-            position.tickUpper,
-            position.liquidity,
-            lowestTick,
-          ],
+          args: [p.tickLower, p.tickUpper, p.liquidity, refTicks[i]],
         }),
       );
       const hash = await writeContractAsync({
-        address: vault.address,
+        address: vaultAddr,
         abi: singleOwnerVaultAbi,
         functionName: 'multicall',
         args: [multicallData],
       });
-      await waitForTransactionReceipt(walletClient!, {hash});
-      void refetch();
+      await waitForTransactionReceipt(client, {hash});
     }
   };
 

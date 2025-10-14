@@ -1,22 +1,19 @@
-'use client';
-
 import {encodeFunctionData, erc20Abi, maxUint256, type Address} from 'viem';
 import {waitForTransactionReceipt} from 'viem/actions';
 import {
   useWriteContract,
   useWaitForTransactionReceipt,
-  useReadContract,
-  useWalletClient,
+  useClient,
+  useAccount,
 } from 'wagmi';
 
-import {useCurrentTick} from '~/hooks/pool/useCurrentTick';
-import {usePoolData} from '~/hooks/pool/usePoolData';
-import {useLiquidityBlocks} from './useLiquidityBlocks';
 import {useVaultData} from './useVaultData';
-
-import type {TimelockVault, UniswapMathLens} from '~/lib/contracts';
-import {singleOwnerVaultAbi} from '~/abis/singleOwnerVault';
+import {useCurrentTick} from '../pool/useCurrentTick';
+import {usePoolData} from '../pool/usePoolData';
 import {useLens} from '../useLens';
+
+import type {TimelockVault, UniswapMathLens} from '../../lib/contracts';
+import {singleOwnerVaultAbi} from '../../abis/singleOwnerVault';
 
 export const batchGetAmountsFromLiquidity = async (
   lens: UniswapMathLens,
@@ -58,21 +55,16 @@ interface MintPositionParams {
 }
 
 export const useMintLiquidity = (vault?: Address | TimelockVault) => {
-  const {data: walletClient} = useWalletClient();
-  const {refetch} = useLiquidityBlocks(vault);
+  const client = useClient();
+  const {address} = useAccount();
   const {pool} = useVaultData(vault);
-  const {uniswapLens} = useLens();
+  const {timelockLens, uniswapLens} = useLens();
 
   const currentTick = useCurrentTick(pool);
   const {token0, token1} = usePoolData(pool);
 
   const vaultAddr = typeof vault === 'string' ? vault : vault?.address;
 
-  const {data: lowestTick} = useReadContract({
-    address: vaultAddr,
-    abi: singleOwnerVaultAbi,
-    functionName: 'lowestTick',
-  });
   const {writeContractAsync, data: hash, isPending, error} = useWriteContract();
 
   const {isLoading: isConfirming, isSuccess} = useWaitForTransactionReceipt({
@@ -80,6 +72,8 @@ export const useMintLiquidity = (vault?: Address | TimelockVault) => {
   });
 
   const askForApproval = async (params: MintPositionParams[]) => {
+    if (!address || !client) throw new Error('Wallet not connected');
+
     if (
       currentTick.exact === undefined ||
       !token0 ||
@@ -98,8 +92,8 @@ export const useMintLiquidity = (vault?: Address | TimelockVault) => {
     );
 
     const [allowance0, allowance1] = await Promise.all([
-      token0.read.allowance([walletClient!.account!.address, vaultAddr]),
-      token1.read.allowance([walletClient!.account!.address, vaultAddr]),
+      token0.read.allowance([address, vaultAddr]),
+      token1.read.allowance([address, vaultAddr]),
     ]);
     const approvalPromises = [];
 
@@ -111,7 +105,7 @@ export const useMintLiquidity = (vault?: Address | TimelockVault) => {
         args: [vaultAddr, maxUint256],
       });
       approvalPromises.push(
-        waitForTransactionReceipt(walletClient!, {hash: approvalHash}),
+        waitForTransactionReceipt(client, {hash: approvalHash}),
       );
     }
     if (allowance1 <= totalAmount1) {
@@ -122,7 +116,7 @@ export const useMintLiquidity = (vault?: Address | TimelockVault) => {
         args: [vaultAddr, maxUint256],
       });
       approvalPromises.push(
-        waitForTransactionReceipt(walletClient!, {hash: approvalHash1}),
+        waitForTransactionReceipt(client, {hash: approvalHash1}),
       );
     }
     if (approvalPromises.length > 0) {
@@ -135,31 +129,34 @@ export const useMintLiquidity = (vault?: Address | TimelockVault) => {
     tickUpper: number,
     liquidity: bigint,
   ) => {
-    if (!lowestTick || !vaultAddr) {
-      throw new Error('Lowest tick lower not available');
+    if (!client) throw new Error('Wallet not connected');
+
+    if (!vaultAddr || !timelockLens) {
+      throw new Error('Vault/lens not available');
     }
     await askForApproval([{tickLower, tickUpper, liquidity}]);
+    const refTick = await timelockLens.read.getRefTick([vaultAddr, tickLower]);
 
     const hash = await writeContractAsync({
       address: vaultAddr,
       abi: singleOwnerVaultAbi,
       functionName: 'mint',
-      args: [tickLower, tickUpper, liquidity, lowestTick],
+      args: [tickLower, tickUpper, liquidity, refTick],
     });
-    await waitForTransactionReceipt(walletClient!, {hash});
-    void refetch();
+    await waitForTransactionReceipt(client, {hash});
     return hash;
   };
 
   const mintMultiple = async (positions: MintPositionParams[]) => {
+    if (!client) throw new Error('Wallet not connected');
     if (!currentTick.exact) {
       throw new Error('Current tick not available');
     }
     if (positions.length === 0) {
       throw new Error('No positions to mint');
     }
-    if (!lowestTick || !vaultAddr) {
-      throw new Error('Lowest tick lower not available');
+    if (!timelockLens || !vaultAddr) {
+      throw new Error('Vault/lens not available');
     }
     if (positions.length === 1) {
       await mint(
@@ -170,16 +167,15 @@ export const useMintLiquidity = (vault?: Address | TimelockVault) => {
     } else {
       await askForApproval(positions);
 
-      const multicallData = positions.map(position =>
+      const refTicks = await timelockLens.read.batchGetRefTick([
+        vaultAddr,
+        positions.map(position => position.tickLower),
+      ]);
+      const multicallData = positions.map((p, i) =>
         encodeFunctionData({
           abi: singleOwnerVaultAbi,
           functionName: 'mint',
-          args: [
-            position.tickLower,
-            position.tickUpper,
-            position.liquidity,
-            lowestTick,
-          ],
+          args: [p.tickLower, p.tickUpper, p.liquidity, refTicks[i]],
         }),
       );
       const hash = await writeContractAsync({
@@ -188,8 +184,7 @@ export const useMintLiquidity = (vault?: Address | TimelockVault) => {
         functionName: 'multicall',
         args: [multicallData],
       });
-      await waitForTransactionReceipt(walletClient!, {hash});
-      void refetch();
+      await waitForTransactionReceipt(client, {hash});
     }
   };
 

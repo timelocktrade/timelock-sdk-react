@@ -1,15 +1,18 @@
-import {useQuery} from '@tanstack/react-query';
-import {useAccount, usePublicClient} from 'wagmi';
 import {getContract, type Address} from 'viem';
+import {useClient} from 'wagmi';
+import {useQuery} from '@tanstack/react-query';
+
 import type {TimelockMarket} from '../../lib/contracts';
 import {useCurrentMarket} from '../../providers/TimelockMarketProvider';
 import {lensAbi} from '../../abis/lens';
 
 export type OptionData = ReturnType<typeof useUserOptions>['options'][0];
 
-export const useUserOptions = (market?: Address | TimelockMarket) => {
-  const {address: userAddr} = useAccount();
-  const client = usePublicClient();
+export const useUserOptions = (
+  userAddr?: Address,
+  market?: Address | TimelockMarket,
+) => {
+  const client = useClient();
   const {lensAddr} = useCurrentMarket();
 
   const marketAddr = typeof market === 'string' ? market : market?.address;

@@ -1,6 +1,20 @@
 export const lensAbi = [
   {
     type: 'function',
+    name: 'batchGetRefTick',
+    inputs: [
+      {
+        name: 'vault',
+        type: 'address',
+        internalType: 'contract TimelockVaultCore',
+      },
+      {name: 'tickLower', type: 'int24[]', internalType: 'int24[]'},
+    ],
+    outputs: [{name: 'refTicks', type: 'int24[]', internalType: 'int24[]'}],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     name: 'getAllBlocks',
     inputs: [
       {
