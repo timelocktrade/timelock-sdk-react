@@ -10,7 +10,7 @@ import {lensAbi} from '../../abis/lens';
 
 export const useMaxPositionSize = (
   market: Address | TimelockMarket | undefined,
-  strikeTick: number,
+  strikeTick: number | undefined,
   maxBorrowableRange = 100,
 ) => {
   const {timelockLens} = useLens();
@@ -22,8 +22,8 @@ export const useMaxPositionSize = (
     address: timelockLens?.address,
     abi: lensAbi,
     functionName: 'getMaxPositionSize',
-    args: [marketAddr!, strikeTick, maxBorrowableRange],
-    query: {enabled: !!marketAddr && !!timelockLens},
+    args: [marketAddr!, strikeTick!, maxBorrowableRange],
+    query: {enabled: !!marketAddr && !!timelockLens && !!strikeTick},
   });
 
   const maxCallSize =
