@@ -607,6 +607,7 @@ export const lensAbi = [
         type: 'int24',
         internalType: 'int24',
       },
+      {name: 'strikeTick', type: 'int24', internalType: 'int24'},
     ],
     outputs: [
       {
