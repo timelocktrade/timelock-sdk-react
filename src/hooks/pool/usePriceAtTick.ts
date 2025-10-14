@@ -6,7 +6,7 @@ import type {UniswapPool} from '../../lib/contracts';
 import {getPriceAtTick} from '../../lib/liquidityUtils';
 import {wrapPrice} from '../../lib/numberUtils';
 
-const usePriceAtTick = (tick?: number, pool?: Address | UniswapPool) => {
+export const usePriceAtTick = (tick?: number, pool?: Address | UniswapPool) => {
   const {token0Decimals, token1Decimals} = usePoolData(pool);
 
   const price = useMemo(
@@ -18,5 +18,3 @@ const usePriceAtTick = (tick?: number, pool?: Address | UniswapPool) => {
   );
   return price;
 };
-
-export default usePriceAtTick;
