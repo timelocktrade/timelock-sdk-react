@@ -1,7 +1,8 @@
 import type {Address} from 'viem';
 import {useClient, useReadContract} from 'wagmi';
 import {useLens} from '../useLens';
-import {getErc20, type UniswapPool} from '../../lib/contracts';
+
+import type {UniswapPool} from '../../lib/contracts';
 import {lensAbi} from '../../abis/lens';
 
 export type UniswapPoolData = ReturnType<typeof usePoolData>;
@@ -17,14 +18,7 @@ export const usePoolData = (pool?: Address | UniswapPool) => {
     abi: lensAbi,
     functionName: 'getPoolData',
     args: poolAddress ? [poolAddress] : undefined,
-    query: {
-      enabled: !!poolAddress && !!client,
-      select: poolData => ({
-        ...poolData,
-        token0: getErc20(poolData.token0, client!),
-        token1: getErc20(poolData.token1, client!),
-      }),
-    },
+    query: {enabled: !!poolAddress && !!client},
   });
   return (data || {}) as Partial<NonUndefined<typeof data>>;
 };

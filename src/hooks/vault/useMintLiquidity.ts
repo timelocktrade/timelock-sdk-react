@@ -12,7 +12,11 @@ import {useCurrentTick} from '../pool/useCurrentTick';
 import {usePoolData} from '../pool/usePoolData';
 import {useLens} from '../useLens';
 
-import type {TimelockVault, UniswapMathLens} from '../../lib/contracts';
+import {
+  getErc20,
+  type TimelockVault,
+  type UniswapMathLens,
+} from '../../lib/contracts';
 import {singleOwnerVaultAbi} from '../../abis/singleOwnerVault';
 
 export const batchGetAmountsFromLiquidity = async (
@@ -92,14 +96,14 @@ export const useMintLiquidity = (vault?: Address | TimelockVault) => {
     );
 
     const [allowance0, allowance1] = await Promise.all([
-      token0.read.allowance([address, vaultAddr]),
-      token1.read.allowance([address, vaultAddr]),
+      getErc20(token0, client).read.allowance([address, vaultAddr]),
+      getErc20(token1, client).read.allowance([address, vaultAddr]),
     ]);
     const approvalPromises = [];
 
     if (allowance0 <= totalAmount0) {
       const approvalHash = await writeContractAsync({
-        address: token0.address,
+        address: token0,
         abi: erc20Abi,
         functionName: 'approve',
         args: [vaultAddr, maxUint256],
@@ -110,7 +114,7 @@ export const useMintLiquidity = (vault?: Address | TimelockVault) => {
     }
     if (allowance1 <= totalAmount1) {
       const approvalHash1 = await writeContractAsync({
-        address: token1.address,
+        address: token1,
         abi: erc20Abi,
         functionName: 'approve',
         args: [vaultAddr, maxUint256],
