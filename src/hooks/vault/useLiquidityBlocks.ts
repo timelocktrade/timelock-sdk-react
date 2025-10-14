@@ -60,13 +60,14 @@ export const useLiquidityBlocks = (vault?: Address | TimelockVault) => {
     );
 
   const tvl1 = useMemo(() => {
-    if (!totalAmount0 || !totalAmount1 || !currentPrice) return 0;
+    if (!totalAmount0 || !totalAmount1 || !currentPrice || !token1Decimals)
+      return undefined;
 
     const tvl0as1 = (totalAmount0.scaled * currentPrice.scaled) / 10n ** 18n;
     const tvl1 = totalAmount1.scaled;
 
-    return tvl0as1 + tvl1;
-  }, [totalAmount0, totalAmount1, currentPrice]);
+    return wrapAmount(tvl0as1 + tvl1, token1Decimals);
+  }, [totalAmount0, totalAmount1, currentPrice, token1Decimals]);
 
   return {
     tvl1,
