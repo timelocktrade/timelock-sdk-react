@@ -12,6 +12,13 @@ export const getPriceAtTick = (tick: number) => {
   return price;
 };
 
+export const getTickAtPrice = (price: bigint) => {
+  const priceX192 = (price * BigInt(2 ** 192)) / PRICE_PRECISION;
+  const sqrtPriceX96 = JSBI.BigInt(Math.sqrt(Number(priceX192)).toString());
+
+  return TickMath.getTickAtSqrtRatio(sqrtPriceX96);
+};
+
 export const token0ToToken1 = (amount0: bigint, tick: number) => {
   const price = getPriceAtTick(tick);
   return (amount0 * price) / PRICE_PRECISION;
