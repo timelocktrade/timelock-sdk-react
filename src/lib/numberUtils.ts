@@ -20,7 +20,7 @@ export const wrapAmount = (scaled: bigint, decimals: number): Amount => {
   return {scaled, unscaled, decimals, formatted};
 };
 
-export const wrapAmountForUnscaled = (
+export const wrapAmountUnscaled = (
   unscaled: Big | number | string,
   decimals: number,
 ): Amount => {
@@ -36,6 +36,17 @@ export const wrapPrice = (
   decimals1: number,
 ): Amount => {
   const unscaled = unscalePrice(scaled, decimals0, decimals1);
+  const formatted = formatAmount(unscaled);
+  return {scaled, unscaled, decimals: 36 + decimals1 - decimals0, formatted};
+};
+
+export const wrapPriceUnscaled = (
+  unscaled: Big | number | string,
+  decimals0: number,
+  decimals1: number,
+): Amount => {
+  unscaled = Big(unscaled);
+  const scaled = scalePrice(unscaled, decimals0, decimals1);
   const formatted = formatAmount(unscaled);
   return {scaled, unscaled, decimals: 36 + decimals1 - decimals0, formatted};
 };
@@ -63,6 +74,22 @@ export const unscalePrice = (
     .mul(new Big(10).pow(decimals0))
     .div(new Big(10).pow(decimals1))
     .div(new Big(10).pow(precision));
+};
+
+export const scalePrice = (
+  unscaled: Big | number | string,
+  decimals0: number,
+  decimals1: number,
+  precision = 18,
+) => {
+  return BigInt(
+    Big(unscaled)
+      .mul(new Big(10).pow(precision))
+      .mul(new Big(10).pow(decimals1))
+      .div(new Big(10).pow(decimals0))
+      .round()
+      .toFixed(0),
+  );
 };
 
 export const formatAmount = (value?: Big | number | string) => {
