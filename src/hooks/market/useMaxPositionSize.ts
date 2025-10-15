@@ -22,7 +22,9 @@ export const useMaxPositionSize = (
     address: timelockLens?.address,
     abi: lensAbi,
     functionName: 'getMaxPositionSize',
-    args: [marketAddr!, strikeTick!, maxBorrowableRange],
+    args: strikeTick
+      ? [marketAddr!, strikeTick, maxBorrowableRange]
+      : [marketAddr!, maxBorrowableRange],
     query: {enabled: !!marketAddr && !!timelockLens && !!strikeTick},
   });
 

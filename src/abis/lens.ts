@@ -288,6 +288,27 @@ export const lensAbi = [
   },
   {
     type: 'function',
+    name: 'getMaxPositionSize',
+    inputs: [
+      {
+        name: 'market',
+        type: 'address',
+        internalType: 'contract TimelockOptionsMarket',
+      },
+      {
+        name: 'maxBorrowableRange',
+        type: 'int24',
+        internalType: 'int24',
+      },
+    ],
+    outputs: [
+      {name: 'maxCallSize', type: 'uint256', internalType: 'uint256'},
+      {name: 'maxPutSize', type: 'uint256', internalType: 'uint256'},
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     name: 'getOptionData',
     inputs: [
       {
