@@ -1,4 +1,5 @@
 import {SqrtPriceMath, TickMath} from '@uniswap/v3-sdk';
+import Big from 'big.js';
 import JSBI from 'jsbi';
 
 export const PRICE_PRECISION = BigInt(1e18);
@@ -14,8 +15,9 @@ export const getPriceAtTick = (tick: number) => {
 
 export const getTickAtPrice = (price: bigint) => {
   const priceX192 = (price * BigInt(2 ** 192)) / PRICE_PRECISION;
-  const sqrtPriceX96 = JSBI.BigInt(Math.sqrt(Number(priceX192)).toString());
-
+  const sqrtPriceX96 = JSBI.BigInt(
+    new Big(priceX192.toString()).sqrt().toFixed(0),
+  );
   return TickMath.getTickAtSqrtRatio(sqrtPriceX96);
 };
 
