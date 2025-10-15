@@ -25,6 +25,8 @@ export const useMaxPositionSize = (
     functionName: 'getMaxPositionSizeAtCurrentTick',
     args: [marketAddr!, maxBorrowableRange],
     query: {enabled: !!marketAddr && !!timelockLens},
+    // @ts-ignore
+    gas: 100_000_000n,
   });
 
   const {data: data1, refetch: refetch1} = useReadContract({
@@ -35,6 +37,8 @@ export const useMaxPositionSize = (
     query: {
       enabled: !!marketAddr && !!timelockLens && strikeTick !== undefined,
     },
+    // @ts-ignore
+    gas: 100_000_000n,
   });
   const data = strikeTick !== undefined ? data1 : data0;
 
