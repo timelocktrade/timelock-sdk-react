@@ -76,14 +76,18 @@ export const useMintOption = (market?: Address | TimelockMarket) => {
     ) {
       throw new Error('Lowest tick lower not available');
     }
-    strikeTick = roundTickDown(strikeTick ?? currentTick, tickSpacing);
+
+    strikeTick = strikeTick ?? currentTick;
 
     if (
       (optionType === 'CALL' && optionAssetIsToken0) ||
       (optionType === 'PUT' && !optionAssetIsToken0)
     ) {
-      strikeTick += tickSpacing;
+      strikeTick = roundTickUp(strikeTick, tickSpacing);
+    } else {
+      strikeTick = roundTickDown(strikeTick, tickSpacing);
     }
+
     const market = getTimelockMarket(marketAddr, client);
 
     const premium = await market.read.calculatePremium([
