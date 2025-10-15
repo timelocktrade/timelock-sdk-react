@@ -10,7 +10,7 @@ import {lensAbi} from '../../abis/lens';
 
 export const useMaxPositionSize = (
   market: Address | TimelockMarket | undefined,
-  strikeTick: number | undefined,
+  strikeTick?: number,
   maxBorrowableRange = 100,
 ) => {
   const {timelockLens} = useLens();
