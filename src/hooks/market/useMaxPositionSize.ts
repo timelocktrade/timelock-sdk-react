@@ -25,7 +25,7 @@ export const useMaxPositionSize = (
     args: strikeTick
       ? [marketAddr!, strikeTick, maxBorrowableRange]
       : [marketAddr!, maxBorrowableRange],
-    query: {enabled: !!marketAddr && !!timelockLens && !!strikeTick},
+    query: {enabled: !!marketAddr && !!timelockLens},
   });
 
   const maxCallSize =
