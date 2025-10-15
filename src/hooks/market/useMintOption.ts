@@ -22,7 +22,7 @@ import {optionsMarketAbi} from '../../abis/optionsMarket';
 
 export const useMintOption = (market?: Address | TimelockMarket) => {
   const {timelockLens} = useLens();
-  const {payoutAsset, vault, pool} = useMarketData(market);
+  const {payoutAsset, vault, pool, optionAssetIsToken0} = useMarketData(market);
   const {tickSpacing} = usePoolData(pool);
   const {exact: currentTick} = useCurrentTick(pool);
 
@@ -76,10 +76,14 @@ export const useMintOption = (market?: Address | TimelockMarket) => {
     ) {
       throw new Error('Lowest tick lower not available');
     }
-    strikeTick = (optionType === 'CALL' ? roundTickUp : roundTickDown)(
-      strikeTick ?? currentTick,
-      tickSpacing,
-    );
+    strikeTick = roundTickDown(strikeTick ?? currentTick, tickSpacing);
+
+    if (
+      (optionType === 'CALL' && optionAssetIsToken0) ||
+      (optionType === 'PUT' && !optionAssetIsToken0)
+    ) {
+      strikeTick += tickSpacing;
+    }
     const market = getTimelockMarket(marketAddr, client);
 
     const premium = await market.read.calculatePremium([
