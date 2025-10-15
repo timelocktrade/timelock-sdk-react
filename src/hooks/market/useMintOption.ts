@@ -17,8 +17,8 @@ import {
   getTimelockMarket,
   type TimelockMarket,
 } from '../../lib/contracts';
+import {roundTickDown, roundTickUp} from '../../lib/liquidityUtils';
 import {optionsMarketAbi} from '../../abis/optionsMarket';
-import {roundTickDown, roundTickUp} from 'src/lib/liquidityUtils';
 
 export const useMintOption = (market?: Address | TimelockMarket) => {
   const {timelockLens} = useLens();
