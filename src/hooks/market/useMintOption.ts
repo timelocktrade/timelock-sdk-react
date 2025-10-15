@@ -18,12 +18,14 @@ import {
   type TimelockMarket,
 } from '../../lib/contracts';
 import {optionsMarketAbi} from '../../abis/optionsMarket';
+import {roundTickDown, roundTickUp} from 'src/lib/liquidityUtils';
 
 export const useMintOption = (market?: Address | TimelockMarket) => {
+  const {timelockLens} = useLens();
   const {payoutAsset, vault, pool} = useMarketData(market);
   const {tickSpacing} = usePoolData(pool);
-  const {timelockLens} = useLens();
-  const {rounded: currentTick} = useCurrentTick(pool);
+  const {exact: currentTick} = useCurrentTick(pool);
+
   const client = useClient();
   const {address} = useAccount();
 
@@ -61,6 +63,7 @@ export const useMintOption = (market?: Address | TimelockMarket) => {
     optionType: 'CALL' | 'PUT',
     amount: bigint,
     duration: number,
+    strikeTick?: number,
   ) => {
     if (!client) throw new Error('Wallet not connected');
 
@@ -73,9 +76,10 @@ export const useMintOption = (market?: Address | TimelockMarket) => {
     ) {
       throw new Error('Lowest tick lower not available');
     }
-    const strikeTick =
-      optionType === 'CALL' ? currentTick + tickSpacing : currentTick;
-
+    strikeTick = (optionType === 'CALL' ? roundTickUp : roundTickDown)(
+      strikeTick ?? currentTick,
+      tickSpacing,
+    );
     const market = getTimelockMarket(marketAddr, client);
 
     const premium = await market.read.calculatePremium([

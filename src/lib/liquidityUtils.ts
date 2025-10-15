@@ -21,6 +21,19 @@ export const getTickAtPrice = (price: bigint) => {
   return TickMath.getTickAtSqrtRatio(sqrtPriceX96);
 };
 
+export const roundTickDown = (tick: number, spacing: number) => {
+  const rem = tick % spacing;
+  if (rem >= 0) return tick - rem;
+  return tick - rem - spacing;
+};
+
+export const roundTickUp = (tick: number, spacing: number) => {
+  const rem = tick % spacing;
+  if (rem === 0) return tick;
+  if (rem > 0) return tick - rem + spacing;
+  return tick - rem;
+};
+
 export const token0ToToken1 = (amount0: bigint, tick: number) => {
   const price = getPriceAtTick(tick);
   return (amount0 * price) / PRICE_PRECISION;
