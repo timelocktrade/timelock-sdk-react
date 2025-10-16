@@ -11,6 +11,7 @@ import {
   getPriceAtTick,
   PRICE_PRECISION,
 } from '../../lib/liquidityUtils';
+import {wrapAmount, wrapPrice} from 'src/lib/numberUtils';
 
 const getPositionSize = (
   liquidities: bigint[],
@@ -56,58 +57,100 @@ export const useOptionLiquidityData = (optionData: {
     entryTick,
   } = optionData;
 
-  const {pool, optionAssetIsToken0} = useMarketData(marketAddr);
+  const {pool, optionAssetIsToken0, optionAssetDecimals, payoutAssetDecimals} =
+    useMarketData(marketAddr);
   const {tickSpacing} = usePoolData(pool);
   const {exact: currentTick} = useCurrentTick(pool);
 
   const {strikePrice, entryPrice} = useMemo(() => {
-    if (optionAssetIsToken0 === undefined) return {};
-    const entryPrice = getPrice(entryTick, optionAssetIsToken0);
-    const strikePrice = getPrice(strikeTick, optionAssetIsToken0);
-
-    return {strikePrice, entryPrice};
-  }, [optionData, optionAssetIsToken0]);
-
-  const {positionSizeAtOpen, positionSizeCurrent} = useMemo(() => {
-    if (optionAssetIsToken0 === undefined || tickSpacing === undefined)
-      return {};
-
-    const positionSizeAtOpen = getPositionSize(
-      liquiditiesAtOpen,
-      entryTick,
-      strikeTick,
-      tickSpacing,
-      optionType,
-      optionAssetIsToken0,
-    );
-    const positionSizeCurrent = getPositionSize(
-      liquiditiesCurrent,
-      entryTick,
-      strikeTick,
-      tickSpacing,
-      optionType,
-      optionAssetIsToken0,
-    );
-    return {positionSizeAtOpen, positionSizeCurrent};
-  }, [optionData, optionAssetIsToken0, tickSpacing]);
-
-  const {displayPnl, unrealizedPayout} = useMemo(() => {
     if (
-      currentTick === undefined ||
-      positionSizeCurrent === undefined ||
-      optionAssetIsToken0 === undefined
+      optionAssetIsToken0 === undefined ||
+      !optionAssetDecimals ||
+      !payoutAssetDecimals
     )
       return {};
 
+    const entryPrice = wrapPrice(
+      getPrice(entryTick, optionAssetIsToken0),
+      optionAssetDecimals,
+      payoutAssetDecimals,
+    );
+    const strikePrice = wrapPrice(
+      getPrice(strikeTick, optionAssetIsToken0),
+      optionAssetDecimals,
+      payoutAssetDecimals,
+    );
+    return {strikePrice, entryPrice};
+  }, [
+    optionData,
+    optionAssetIsToken0,
+    optionAssetDecimals,
+    payoutAssetDecimals,
+  ]);
+
+  const {positionSizeAtOpen, positionSizeCurrent} = useMemo(() => {
+    if (
+      optionAssetIsToken0 === undefined ||
+      !tickSpacing ||
+      !optionAssetDecimals ||
+      !payoutAssetDecimals
+    )
+      return {};
+
+    const positionSizeAtOpen = wrapAmount(
+      getPositionSize(
+        liquiditiesAtOpen,
+        entryTick,
+        strikeTick,
+        tickSpacing,
+        optionType,
+        optionAssetIsToken0,
+      ),
+      optionAssetDecimals,
+    );
+    const positionSizeCurrent = wrapAmount(
+      getPositionSize(
+        liquiditiesCurrent,
+        entryTick,
+        strikeTick,
+        tickSpacing,
+        optionType,
+        optionAssetIsToken0,
+      ),
+      optionAssetDecimals,
+    );
+    return {positionSizeAtOpen, positionSizeCurrent};
+  }, [
+    optionData,
+    optionAssetIsToken0,
+    tickSpacing,
+    optionAssetDecimals,
+    payoutAssetDecimals,
+  ]);
+
+  const {displayPnl, unrealizedPayout} = useMemo(() => {
+    if (
+      optionAssetIsToken0 === undefined ||
+      currentTick === undefined ||
+      !positionSizeCurrent ||
+      !payoutAssetDecimals
+    )
+      return {};
+
+    const size = positionSizeCurrent.scaled;
+
     const delta = optionAssetIsToken0
-      ? token0ToToken1(positionSizeCurrent, currentTick) -
-        token0ToToken1(positionSizeCurrent, entryTick)
-      : token1ToToken0(positionSizeCurrent, currentTick) -
-        token1ToToken0(positionSizeCurrent, entryTick);
+      ? token0ToToken1(size, currentTick) - token0ToToken1(size, entryTick)
+      : token1ToToken0(size, currentTick) - token1ToToken0(size, entryTick);
 
-    const displayPnl = optionType === 'CALL' ? delta : -delta;
-    const unrealizedPayout = displayPnl < 0 ? 0 : displayPnl;
-
+    const displayPnl = wrapAmount(
+      optionType === 'CALL' ? delta : -delta,
+      payoutAssetDecimals,
+    );
+    const unrealizedPayout = wrapAmount(
+      displayPnl.scaled < 0 ? 0n : displayPnl.scaled,
+      payoutAssetDecimals,
+    );
     return {unrealizedPayout, displayPnl};
   }, [optionData, optionAssetIsToken0, currentTick, positionSizeCurrent]);
 
