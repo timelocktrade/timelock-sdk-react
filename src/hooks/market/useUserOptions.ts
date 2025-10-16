@@ -18,6 +18,7 @@ const useUserOptions = (user?: string, active = false) => {
     select: data =>
       data?.UserOption?.map(option => ({
         ...option,
+        id: BigInt(option.id),
         marketAddr: option.marketAddr as Address,
         optionType: option.optionType as 'CALL' | 'PUT',
         createdAt: new Date(Number(option.createdAt) * 1000),

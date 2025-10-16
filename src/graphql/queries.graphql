@@ -21,6 +21,7 @@ query GetActiveUserOptions($user: String!) {
     marketAddr
     liquiditiesAtOpen
     liquiditiesCurrent
+    fullyExercised
   }
 }
 
@@ -47,5 +48,6 @@ query GetClosedUserOptions($user: String!) {
     marketAddr
     liquiditiesAtOpen
     liquiditiesCurrent
+    fullyExercised
   }
 }

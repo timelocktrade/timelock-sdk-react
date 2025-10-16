@@ -1780,6 +1780,7 @@ export type GetActiveUserOptionsQuery = {
     marketAddr: string;
     liquiditiesAtOpen: Array<any>;
     liquiditiesCurrent: Array<any>;
+    fullyExercised: boolean;
     exerciseEvents: Array<{
       __typename: 'ExerciseOptionEvent';
       transactionHash: string;
@@ -1808,6 +1809,7 @@ export type GetClosedUserOptionsQuery = {
     marketAddr: string;
     liquiditiesAtOpen: Array<any>;
     liquiditiesCurrent: Array<any>;
+    fullyExercised: boolean;
     exerciseEvents: Array<{
       __typename: 'ExerciseOptionEvent';
       transactionHash: string;
@@ -1840,6 +1842,7 @@ export const GetActiveUserOptionsDocument = gql`
       marketAddr
       liquiditiesAtOpen
       liquiditiesCurrent
+      fullyExercised
     }
   }
 `;
@@ -1867,6 +1870,7 @@ export const GetClosedUserOptionsDocument = gql`
       marketAddr
       liquiditiesAtOpen
       liquiditiesCurrent
+      fullyExercised
     }
   }
 `;
