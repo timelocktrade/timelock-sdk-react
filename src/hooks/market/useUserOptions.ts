@@ -24,6 +24,7 @@ const useUserOptions = (user?: string, active = false) => {
         createdAt: new Date(Number(option.createdAt) * 1000),
         expiresAt: new Date(Number(option.expiresAt) * 1000),
         premiumPaid: BigInt(option.premiumPaid),
+        realizedPayout: BigInt(option.realizedPayout),
         liquiditiesAtOpen: option.liquiditiesAtOpen.map(liquidity =>
           BigInt(liquidity),
         ),
