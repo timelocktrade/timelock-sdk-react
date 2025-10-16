@@ -11,7 +11,7 @@ import {
   getPriceAtTick,
   PRICE_PRECISION,
 } from '../../lib/liquidityUtils';
-import {wrapAmount, wrapPrice} from 'src/lib/numberUtils';
+import {wrapAmount, wrapPrice} from '../../lib/numberUtils';
 
 const getPositionSize = (
   liquidities: bigint[],
