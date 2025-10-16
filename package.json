@@ -3,18 +3,26 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "files": ["src"],
+  "files": [
+    "src"
+  ],
   "scripts": {
     "lint": "gts lint",
     "clean": "gts clean",
     "dev": "bun --watch src/index.ts",
     "compile": "tsdown",
-    "fix": "gts fix"
+    "fix": "gts fix",
+    "codegen": "graphql-codegen --config codegen.ts",
+    "codegen:watch": "graphql-codegen --config codegen.ts --watch"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@graphql-codegen/cli": "^6.0.0",
+    "@graphql-codegen/typescript": "^5.0.2",
+    "@graphql-codegen/typescript-graphql-request": "^6.3.0",
+    "@graphql-codegen/typescript-operations": "^5.0.2",
     "@types/big.js": "^6.2.2",
     "@types/node": "^22.7.5",
     "@types/react": "^19.2.0",
@@ -25,15 +33,17 @@
   "dependencies": {
     "@uniswap/v3-sdk": "^3.25.2",
     "big.js": "^7.0.1",
-    "jsbi": "^4.3.2",
-    "lodash": "^4.17.21"
+    "jsbi": "^4.3.2"
   },
   "peerDependencies": {
     "@tanstack/react-query": "^5.90.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "viem": "^2.37.13",
-    "wagmi": "^2.17.5"
+    "wagmi": "^2.17.5",
+    "graphql": "^16.11.0",
+    "graphql-request": "^7.2.0",
+    "graphql-tag": "^2.12.6"
   },
   "engines": {
     "node": ">=14",

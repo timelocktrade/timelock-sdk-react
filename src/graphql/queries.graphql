@@ -1,0 +1,51 @@
+query GetActiveUserOptions($user: String!) {
+  UserOption(
+    where: {owner: {_eq: $user}, fullyExercised: {_eq: false}}
+    limit: 1000
+  ) {
+    id
+    owner
+    exerciseEvents {
+      transactionHash
+    }
+    mintEvent {
+      transactionHash
+    }
+    optionType
+    strikeTick
+    entryTick
+    expiresAt
+    createdAt
+    premiumPaid
+    realizedPayout
+    marketAddr
+    liquiditiesAtOpen
+    liquiditiesCurrent
+  }
+}
+
+query GetClosedUserOptions($user: String!) {
+  UserOption(
+    where: {owner: {_eq: $user}, fullyExercised: {_eq: true}}
+    limit: 1000
+  ) {
+    id
+    owner
+    exerciseEvents {
+      transactionHash
+    }
+    mintEvent {
+      transactionHash
+    }
+    optionType
+    strikeTick
+    entryTick
+    expiresAt
+    createdAt
+    premiumPaid
+    realizedPayout
+    marketAddr
+    liquiditiesAtOpen
+    liquiditiesCurrent
+  }
+}
