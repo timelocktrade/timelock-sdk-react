@@ -40,8 +40,9 @@ const useUserOptions = (user?: string, active = false) => {
 
   const sorted = useMemo(
     () =>
-      options?.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()) ||
-      [],
+      [...(options || [])].sort(
+        (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
+      ),
     [options],
   );
   return {data: sorted, ...rest};
