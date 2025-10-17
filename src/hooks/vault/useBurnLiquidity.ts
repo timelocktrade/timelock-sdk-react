@@ -6,8 +6,7 @@ import {useCurrentTick} from '../pool/useCurrentTick';
 import {useVaultData} from './useVaultData';
 import {useLens} from '../useLens';
 
-import {type TimelockVault} from '../../lib/contracts';
-import {singleOwnerVaultAbi} from '../../abis/singleOwnerVault';
+import {singleOwnerVaultAbi} from '~/abis/singleOwnerVault';
 
 interface BurnPosition {
   tickLower: number;
@@ -15,13 +14,11 @@ interface BurnPosition {
   liquidity: bigint;
 }
 
-export const useBurnLiquidity = (vault?: Address | TimelockVault) => {
+export const useBurnLiquidity = (vaultAddr?: Address) => {
   const client = useClient();
-  const {pool} = useVaultData(vault);
-  const currentTick = useCurrentTick(pool);
   const {timelockLens} = useLens();
-
-  const vaultAddr = typeof vault === 'string' ? vault : vault?.address;
+  const {pool} = useVaultData(vaultAddr);
+  const currentTick = useCurrentTick(pool);
 
   const {writeContractAsync, data: hash, isPending, error} = useWriteContract();
 

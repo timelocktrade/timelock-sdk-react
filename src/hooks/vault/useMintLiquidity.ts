@@ -12,12 +12,8 @@ import {useCurrentTick} from '../pool/useCurrentTick';
 import {usePoolData} from '../pool/usePoolData';
 import {useLens} from '../useLens';
 
-import {
-  getErc20,
-  type TimelockVault,
-  type UniswapMathLens,
-} from '../../lib/contracts';
-import {singleOwnerVaultAbi} from '../../abis/singleOwnerVault';
+import {getErc20, type UniswapMathLens} from '~/lib/contracts';
+import {singleOwnerVaultAbi} from '~/abis/singleOwnerVault';
 
 export const batchGetAmountsFromLiquidity = async (
   lens: UniswapMathLens,
@@ -58,16 +54,14 @@ interface MintPositionParams {
   liquidity: bigint;
 }
 
-export const useMintLiquidity = (vault?: Address | TimelockVault) => {
+export const useMintLiquidity = (vaultAddr?: Address) => {
   const client = useClient();
   const {address} = useAccount();
-  const {pool} = useVaultData(vault);
+  const {pool} = useVaultData(vaultAddr);
   const {timelockLens, uniswapLens} = useLens();
 
   const currentTick = useCurrentTick(pool);
   const {token0, token1} = usePoolData(pool);
-
-  const vaultAddr = typeof vault === 'string' ? vault : vault?.address;
 
   const {writeContractAsync, data: hash, isPending, error} = useWriteContract();
 

@@ -1,6 +1,6 @@
 'use client';
 import type {Address} from 'viem';
-import React, {createContext, useContext, type ReactNode} from 'react';
+import React, {createContext, useContext, useMemo, type ReactNode} from 'react';
 import {useChainId} from 'wagmi';
 import {GraphQLClient} from 'graphql-request';
 
@@ -67,12 +67,17 @@ export const useTimelockConfig = () => {
   if (context === undefined) {
     throw new Error('useConfig must be used within a TimelockMarketProvider');
   }
+  const graphqlClient = useMemo(() => {
+    if (context.envioGraphqlUrl) {
+      return getSdk(new GraphQLClient(context.envioGraphqlUrl));
+    }
+    return undefined;
+  }, [context.envioGraphqlUrl]);
+
   return {
     lensAddr: context.lensAddr,
     uniswapMathLensAddr: context.uniswapMathLensAddr,
     envioGraphqlUrl: context.envioGraphqlUrl,
-    graphqlClient: context.envioGraphqlUrl
-      ? getSdk(new GraphQLClient(context.envioGraphqlUrl))
-      : undefined,
+    graphqlClient,
   };
 };

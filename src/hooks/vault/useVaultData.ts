@@ -1,11 +1,10 @@
 import type {Address} from 'viem';
 import {useReadContract} from 'wagmi';
-import {singleOwnerVaultAbi} from '../../abis/singleOwnerVault';
-import type {TimelockVault} from '../../lib/contracts';
+import {singleOwnerVaultAbi} from '~/abis/singleOwnerVault';
 
-export const useVaultData = (vault?: Address | TimelockVault) => {
+export const useVaultData = (vaultAddr?: Address) => {
   const {data} = useReadContract({
-    address: typeof vault === 'string' ? vault : vault?.address,
+    address: vaultAddr,
     abi: singleOwnerVaultAbi,
     functionName: 'pool',
   });

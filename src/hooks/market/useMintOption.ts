@@ -12,17 +12,14 @@ import {usePoolData} from '../pool/usePoolData';
 import {useMarketData} from './useMarketData';
 import {useLens} from '../useLens';
 
-import {
-  getErc20,
-  getTimelockMarket,
-  type TimelockMarket,
-} from '../../lib/contracts';
-import {roundTickDown, roundTickUp} from '../../lib/liquidityUtils';
+import {getErc20, getTimelockMarket} from '../../lib/contracts';
+import {roundTickDown} from '../../lib/liquidityUtils';
 import {optionsMarketAbi} from '../../abis/optionsMarket';
 
-export const useMintOption = (market?: Address | TimelockMarket) => {
+export const useMintOption = (marketAddr?: Address) => {
   const {timelockLens} = useLens();
-  const {payoutAsset, vault, pool, optionAssetIsToken0} = useMarketData(market);
+  const {payoutAsset, vault, pool, optionAssetIsToken0} =
+    useMarketData(marketAddr);
   const {tickSpacing} = usePoolData(pool);
   const {exact: currentTick} = useCurrentTick(pool);
 
@@ -34,7 +31,6 @@ export const useMintOption = (market?: Address | TimelockMarket) => {
   const {isLoading: isConfirming, isSuccess} = useWaitForTransactionReceipt({
     hash,
   });
-  const marketAddr = typeof market === 'string' ? market : market?.address;
 
   const askForApproval = async (premiumAmount: bigint) => {
     if (!client || !address) throw new Error('Wallet not connected');
@@ -77,17 +73,14 @@ export const useMintOption = (market?: Address | TimelockMarket) => {
       throw new Error('Lowest tick lower not available');
     }
 
-    strikeTick = strikeTick ?? currentTick;
+    strikeTick = roundTickDown(strikeTick ?? currentTick, tickSpacing);
 
     if (
       (optionType === 'CALL' && optionAssetIsToken0) ||
       (optionType === 'PUT' && !optionAssetIsToken0)
     ) {
-      strikeTick = roundTickUp(strikeTick, tickSpacing);
-    } else {
-      strikeTick = roundTickDown(strikeTick, tickSpacing);
+      strikeTick += tickSpacing;
     }
-
     const market = getTimelockMarket(marketAddr, client);
 
     const premium = await market.read.calculatePremium([

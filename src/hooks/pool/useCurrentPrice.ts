@@ -1,12 +1,14 @@
+import {useMemo} from 'react';
 import type {Address} from 'viem';
+import {usePriceAtTick} from './usePriceAtTick';
 import {useCurrentTick} from './useCurrentTick';
 
-import type {UniswapPool} from '../../lib/contracts';
-import {usePriceAtTick} from './usePriceAtTick';
+export const useCurrentPrice = (poolAddr?: Address) => {
+  const currentTick = useCurrentTick(poolAddr);
+  const currentPrice = usePriceAtTick(currentTick.exact, poolAddr);
 
-export const useCurrentPrice = (pool?: Address | UniswapPool) => {
-  const currentTick = useCurrentTick(pool);
-  const currentPrice = usePriceAtTick(currentTick.exact, pool);
-
-  return {currentPrice, currentTick};
+  return useMemo(
+    () => ({currentPrice, currentTick}),
+    [currentPrice, currentTick],
+  );
 };

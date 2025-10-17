@@ -9,12 +9,11 @@ import {
 
 import {useMarketData} from './useMarketData';
 
-import {type TimelockMarket} from '~/lib/contracts';
 import {optionsMarketAbi} from '~/abis/optionsMarket';
 import {singleOwnerVaultAbi} from '~/abis/singleOwnerVault';
 
-export const useExerciseOption = (market?: Address | TimelockMarket) => {
-  const {vault} = useMarketData(market);
+export const useExerciseOption = (marketAddr?: Address) => {
+  const {vault} = useMarketData(marketAddr);
   const client = useClient();
 
   const {data: lowestTick} = useReadContract({
@@ -27,7 +26,6 @@ export const useExerciseOption = (market?: Address | TimelockMarket) => {
   const {isLoading: isConfirming, isSuccess} = useWaitForTransactionReceipt({
     hash,
   });
-  const marketAddr = typeof market === 'string' ? market : market?.address;
 
   const exerciseOption = async (
     optionId: bigint,

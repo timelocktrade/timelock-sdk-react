@@ -6,21 +6,18 @@ import {useCurrentTick} from '../pool/useCurrentTick';
 import {usePoolData} from '../pool/usePoolData';
 import {useMarketData} from './useMarketData';
 
-import type {TimelockMarket} from '~/lib/contracts';
 import {wrapAmount} from '~/lib/numberUtils';
 import {optionsMarketAbi} from '~/abis/optionsMarket';
 
 export const useOptionPremium = (
-  market: Address | TimelockMarket | undefined,
+  marketAddr: Address | undefined,
   optionType: 'CALL' | 'PUT',
   optionAmount: bigint,
   duration: number,
 ) => {
-  const {pool, payoutAssetDecimals} = useMarketData(market);
+  const {pool, payoutAssetDecimals} = useMarketData(marketAddr);
   const {tickSpacing} = usePoolData(pool);
   const currentTick = useCurrentTick(pool);
-
-  const marketAddr = typeof market === 'string' ? market : market?.address;
 
   const strikeTick = useMemo(() => {
     if (currentTick.rounded === undefined || tickSpacing === undefined) {

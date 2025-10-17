@@ -5,19 +5,16 @@ import type {Address} from 'viem';
 import {useLens} from '../useLens';
 import {useMarketData} from './useMarketData';
 
-import type {TimelockMarket} from '~/lib/contracts';
 import {wrapAmount} from '~/lib/numberUtils';
 import {lensAbi} from '~/abis/lens';
 
 export const useMaxPositionSize = (
-  market: Address | TimelockMarket | undefined,
+  marketAddr: Address | undefined,
   strikeTick?: number,
   maxBorrowableRange = 100,
 ) => {
   const {timelockLens} = useLens();
-  const {optionAssetDecimals} = useMarketData(market);
-
-  const marketAddr = typeof market === 'string' ? market : market?.address;
+  const {optionAssetDecimals} = useMarketData(marketAddr);
 
   const {data: data0, refetch: refetch0} = useReadContract({
     address: timelockLens?.address,

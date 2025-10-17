@@ -1,12 +1,10 @@
 import {useQuery, type NonUndefinedGuard} from '@tanstack/react-query';
 import type {Address} from 'viem';
 
-import type {TimelockMarket} from '~/lib/contracts';
 import {useTimelockConfig} from '~/providers/TimelockMarketProvider';
 
-export const useMarketData = (market?: Address | TimelockMarket) => {
+export const useMarketData = (marketAddr?: Address) => {
   const {graphqlClient} = useTimelockConfig();
-  const marketAddr = typeof market === 'string' ? market : market?.address;
 
   const {data} = useQuery({
     queryKey: ['marketData', marketAddr || '--'],

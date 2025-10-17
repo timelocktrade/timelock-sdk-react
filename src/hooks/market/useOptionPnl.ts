@@ -2,22 +2,26 @@ import {useMemo} from 'react';
 import type {Address} from 'viem';
 import {useMarketData} from './useMarketData';
 import {useCurrentTick} from '../pool/useCurrentTick';
-import {token0ToToken1, token1ToToken0} from '~/lib/liquidityUtils';
+import {
+  PRICE_PRECISION,
+  token0ToToken1,
+  token1ToToken0,
+} from '~/lib/liquidityUtils';
 import {wrapAmount} from '~/lib/numberUtils';
 
 export const useOptionPnl = (optionData: {
   marketAddr: Address;
   optionType: 'CALL' | 'PUT';
   positionSizeCurrent: bigint;
-  entryTick: number;
+  entryPrice: bigint;
 }) => {
-  const {marketAddr, optionType, entryTick, positionSizeCurrent} = optionData;
+  const {marketAddr, optionType, entryPrice, positionSizeCurrent} = optionData;
 
   const {pool, optionAssetIsToken0, payoutAssetDecimals} =
     useMarketData(marketAddr);
   const {exact: currentTick} = useCurrentTick(pool);
 
-  const {displayPnl, unrealizedPayout} = useMemo(() => {
+  return useMemo(() => {
     if (
       optionAssetIsToken0 === undefined ||
       currentTick === undefined ||
@@ -26,11 +30,13 @@ export const useOptionPnl = (optionData: {
     )
       return {};
 
-    const delta = optionAssetIsToken0
-      ? token0ToToken1(positionSizeCurrent, currentTick) -
-        token0ToToken1(positionSizeCurrent, entryTick)
-      : token1ToToken0(positionSizeCurrent, currentTick) -
-        token1ToToken0(positionSizeCurrent, entryTick);
+    const entrySize = (positionSizeCurrent * entryPrice) / PRICE_PRECISION;
+
+    const currentSize = optionAssetIsToken0
+      ? token0ToToken1(positionSizeCurrent, currentTick)
+      : token1ToToken0(positionSizeCurrent, currentTick);
+
+    const delta = currentSize - entrySize;
 
     const displayPnl = wrapAmount(
       optionType === 'CALL' ? delta : -delta,
@@ -41,7 +47,12 @@ export const useOptionPnl = (optionData: {
       payoutAssetDecimals,
     );
     return {unrealizedPayout, displayPnl};
-  }, [optionData, optionAssetIsToken0, currentTick, positionSizeCurrent]);
-
-  return {displayPnl, unrealizedPayout};
+  }, [
+    entryPrice,
+    optionType,
+    optionAssetIsToken0,
+    currentTick,
+    positionSizeCurrent,
+    payoutAssetDecimals,
+  ]);
 };

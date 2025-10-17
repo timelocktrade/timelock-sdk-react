@@ -1,6 +1,6 @@
 {
   "name": "timelock-sdk",
-  "version": "0.0.13",
+  "version": "0.0.25",
   "description": "",
   "type": "module",
   "main": "./dist/package.cjs",
@@ -25,6 +25,16 @@
       "require": {
         "types": "./dist/client.d.cts",
         "default": "./dist/client.cjs"
+      }
+    },
+    "./abis": {
+      "import": {
+        "types": "./dist/abis.d.ts",
+        "default": "./dist/abis.js"
+      },
+      "require": {
+        "types": "./dist/abis.d.cts",
+        "default": "./dist/abis.cjs"
       }
     }
   },
@@ -52,22 +62,24 @@
     "@graphql-codegen/typescript-graphql-request": "^6.3.0",
     "@graphql-codegen/typescript-operations": "^5.0.2",
     "@types/big.js": "^6.2.2",
-    "@types/node": "^22.7.5",
-    "@types/react": "^19.2.0",
+    "@types/node": "^24.8.1",
+    "@types/react": "^19.2.2",
     "gts": "^6.0.2",
-    "tsdown": "^0.14.1",
-    "typescript": "^5.6.3"
+    "tsdown": "^0.15.7",
+    "typescript": "^5.9.3"
   },
   "dependencies": {},
   "peerDependencies": {
+    "@uniswap/v3-sdk": "^3.26.0",
+    "jsbi": "^4.3.2",
     "big.js": "^7.0.1",
-    "@tanstack/react-query": "^5.90.2",
+    "@tanstack/react-query": "^5.90.5",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "viem": "^2.37.13",
-    "wagmi": "^2.17.5",
+    "viem": "^2.38.3",
+    "wagmi": "^2.18.1",
     "graphql": "^16.11.0",
-    "graphql-request": "^7.2.0",
+    "graphql-request": "^7.3.0",
     "graphql-tag": "^2.12.6"
   },
   "engines": {

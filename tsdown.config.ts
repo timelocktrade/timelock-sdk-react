@@ -5,6 +5,7 @@ export default defineConfig({
   entry: {
     package: 'src/package/index.ts',
     client: 'src/package/client.ts',
+    abis: 'src/package/abis.ts',
   },
   format: ['esm', 'cjs'],
   dts: true,
@@ -26,7 +27,7 @@ export default defineConfig({
   ],
   platform: 'neutral',
   sourcemap: true,
-  minify: true,
+  minify: false,
   shims: false,
   treeshake: true,
   skipNodeModulesBundle: true,
