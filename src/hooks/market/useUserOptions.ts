@@ -1,8 +1,7 @@
 import {useMemo} from 'react';
 import type {Address} from 'viem';
 import {useQuery} from '@tanstack/react-query';
-
-import {useTimelockConfig} from '../../providers/TimelockMarketProvider';
+import {useTimelockConfig} from '~/providers/TimelockMarketProvider';
 
 export type OptionData = ReturnType<typeof useUserOptions>['data'][0];
 
@@ -31,6 +30,10 @@ const useUserOptions = (user?: string, active = false) => {
         liquiditiesCurrent: option.liquiditiesCurrent.map(liquidity =>
           BigInt(liquidity),
         ),
+        positionSizeAtOpen: BigInt(option.positionSizeAtOpen),
+        positionSizeCurrent: BigInt(option.positionSizeCurrent),
+        strikePrice: BigInt(option.strikePrice),
+        entryPrice: BigInt(option.entryPrice),
       })),
     enabled: !!user && !!graphqlClient,
   });

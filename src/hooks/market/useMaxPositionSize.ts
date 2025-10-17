@@ -5,9 +5,9 @@ import type {Address} from 'viem';
 import {useLens} from '../useLens';
 import {useMarketData} from './useMarketData';
 
-import type {TimelockMarket} from '../../lib/contracts';
-import {wrapAmount} from '../../lib/numberUtils';
-import {lensAbi} from '../../abis/lens';
+import type {TimelockMarket} from '~/lib/contracts';
+import {wrapAmount} from '~/lib/numberUtils';
+import {lensAbi} from '~/abis/lens';
 
 export const useMaxPositionSize = (
   market: Address | TimelockMarket | undefined,

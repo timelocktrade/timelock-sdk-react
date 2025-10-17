@@ -1,10 +1,10 @@
 query GetActiveUserOptions($user: String!) {
   UserOption(
-    where: {owner: {_eq: $user}, fullyExercised: {_eq: false}}
+    where: {ownerAddr: {_eq: $user}, fullyExercised: {_eq: false}}
     limit: 1000
   ) {
     id
-    owner
+    ownerAddr
     exerciseEvents {
       transactionHash
     }
@@ -14,6 +14,8 @@ query GetActiveUserOptions($user: String!) {
     optionType
     strikeTick
     entryTick
+    strikePrice
+    entryPrice
     expiresAt
     createdAt
     premiumPaid
@@ -21,17 +23,19 @@ query GetActiveUserOptions($user: String!) {
     marketAddr
     liquiditiesAtOpen
     liquiditiesCurrent
+    positionSizeAtOpen
+    positionSizeCurrent
     fullyExercised
   }
 }
 
 query GetClosedUserOptions($user: String!) {
   UserOption(
-    where: {owner: {_eq: $user}, fullyExercised: {_eq: true}}
+    where: {ownerAddr: {_eq: $user}, fullyExercised: {_eq: true}}
     limit: 1000
   ) {
     id
-    owner
+    ownerAddr
     exerciseEvents {
       transactionHash
     }
@@ -41,6 +45,8 @@ query GetClosedUserOptions($user: String!) {
     optionType
     strikeTick
     entryTick
+    strikePrice
+    entryPrice
     expiresAt
     createdAt
     premiumPaid
@@ -48,6 +54,28 @@ query GetClosedUserOptions($user: String!) {
     marketAddr
     liquiditiesAtOpen
     liquiditiesCurrent
+    positionSizeAtOpen
+    positionSizeCurrent
     fullyExercised
+  }
+}
+
+query GetMarketData($marketAddr: String!) {
+  TimelockMarket(where: {id: {_eq: $marketAddr}}, limit: 1) {
+    id
+    optionsCount
+    tradersCount
+    vault
+    pool
+    tickSpacing
+    optionAssetIsToken0
+    optionAsset
+    payoutAsset
+    optionAssetDecimals
+    payoutAssetDecimals
+    optionAssetSymbol
+    payoutAssetSymbol
+    optionAssetName
+    payoutAssetName
   }
 }

@@ -75,6 +75,10 @@ export const getUniswapMathLens = (client: Client | PublicClient) =>
     client,
   });
 
+export type TimelockMarketData = Awaited<
+  ReturnType<ReturnType<typeof getTimelockLens>['read']['getMarketData']>
+> & {address: Address};
+
 export const getTimelockLens = (client: Client | PublicClient) =>
   getContract({
     abi: lensAbi,
@@ -87,7 +91,4 @@ export const timelockLenses: Record<number, Address> = {
 };
 export const uniswapMathLenses: Record<number, Address> = {
   [monadTestnet.id]: '0x4C8375D1F6D5F452e92e211C1D3E7a44F78dFc95',
-};
-export const swapRouters: Record<number, Address> = {
-  [monadTestnet.id]: '0x',
 };

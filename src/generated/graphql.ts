@@ -688,12 +688,180 @@ export type TimelockMarket = {
   optionAssetIsToken0: Scalars['Boolean']['output'];
   optionAssetName: Scalars['String']['output'];
   optionAssetSymbol: Scalars['String']['output'];
+  /** An array relationship */
+  options: Array<UserOption>;
   optionsCount: Scalars['numeric']['output'];
   payoutAsset: Scalars['String']['output'];
   payoutAssetDecimals: Scalars['Int']['output'];
   payoutAssetName: Scalars['String']['output'];
   payoutAssetSymbol: Scalars['String']['output'];
+  pool: Scalars['String']['output'];
+  tickSpacing: Scalars['Int']['output'];
+  /** An array relationship */
+  traders: Array<TimelockMarketUser>;
+  tradersCount: Scalars['numeric']['output'];
   vault: Scalars['String']['output'];
+};
+
+/** columns and relationships of "TimelockMarket" */
+export type TimelockMarketOptionsArgs = {
+  distinct_on?: InputMaybe<Array<UserOptionSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<UserOptionOrderBy>>;
+  where?: InputMaybe<UserOptionBoolExp>;
+};
+
+/** columns and relationships of "TimelockMarket" */
+export type TimelockMarketTradersArgs = {
+  distinct_on?: InputMaybe<Array<TimelockMarketUserSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<TimelockMarketUserOrderBy>>;
+  where?: InputMaybe<TimelockMarketUserBoolExp>;
+};
+
+/** columns and relationships of "TimelockMarketUser" */
+export type TimelockMarketUser = {
+  __typename: 'TimelockMarketUser';
+  id: Scalars['String']['output'];
+  /** An object relationship */
+  market?: Maybe<TimelockMarket>;
+  market_id: Scalars['String']['output'];
+  /** An array relationship */
+  options: Array<UserOption>;
+  optionsCount: Scalars['numeric']['output'];
+  userAddr: Scalars['String']['output'];
+};
+
+/** columns and relationships of "TimelockMarketUser" */
+export type TimelockMarketUserOptionsArgs = {
+  distinct_on?: InputMaybe<Array<UserOptionSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<UserOptionOrderBy>>;
+  where?: InputMaybe<UserOptionBoolExp>;
+};
+
+/** order by aggregate values of table "TimelockMarketUser" */
+export type TimelockMarketUserAggregateOrderBy = {
+  avg?: InputMaybe<TimelockMarketUserAvgOrderBy>;
+  count?: InputMaybe<OrderBy>;
+  max?: InputMaybe<TimelockMarketUserMaxOrderBy>;
+  min?: InputMaybe<TimelockMarketUserMinOrderBy>;
+  stddev?: InputMaybe<TimelockMarketUserStddevOrderBy>;
+  stddev_pop?: InputMaybe<TimelockMarketUserStddevPopOrderBy>;
+  stddev_samp?: InputMaybe<TimelockMarketUserStddevSampOrderBy>;
+  sum?: InputMaybe<TimelockMarketUserSumOrderBy>;
+  var_pop?: InputMaybe<TimelockMarketUserVarPopOrderBy>;
+  var_samp?: InputMaybe<TimelockMarketUserVarSampOrderBy>;
+  variance?: InputMaybe<TimelockMarketUserVarianceOrderBy>;
+};
+
+/** order by avg() on columns of table "TimelockMarketUser" */
+export type TimelockMarketUserAvgOrderBy = {
+  optionsCount?: InputMaybe<OrderBy>;
+};
+
+/** Boolean expression to filter rows from the table "TimelockMarketUser". All fields are combined with a logical 'AND'. */
+export type TimelockMarketUserBoolExp = {
+  _and?: InputMaybe<Array<TimelockMarketUserBoolExp>>;
+  _not?: InputMaybe<TimelockMarketUserBoolExp>;
+  _or?: InputMaybe<Array<TimelockMarketUserBoolExp>>;
+  id?: InputMaybe<StringComparisonExp>;
+  market?: InputMaybe<TimelockMarketBoolExp>;
+  market_id?: InputMaybe<StringComparisonExp>;
+  options?: InputMaybe<UserOptionBoolExp>;
+  optionsCount?: InputMaybe<NumericComparisonExp>;
+  userAddr?: InputMaybe<StringComparisonExp>;
+};
+
+/** order by max() on columns of table "TimelockMarketUser" */
+export type TimelockMarketUserMaxOrderBy = {
+  id?: InputMaybe<OrderBy>;
+  market_id?: InputMaybe<OrderBy>;
+  optionsCount?: InputMaybe<OrderBy>;
+  userAddr?: InputMaybe<OrderBy>;
+};
+
+/** order by min() on columns of table "TimelockMarketUser" */
+export type TimelockMarketUserMinOrderBy = {
+  id?: InputMaybe<OrderBy>;
+  market_id?: InputMaybe<OrderBy>;
+  optionsCount?: InputMaybe<OrderBy>;
+  userAddr?: InputMaybe<OrderBy>;
+};
+
+/** Ordering options when selecting data from "TimelockMarketUser". */
+export type TimelockMarketUserOrderBy = {
+  id?: InputMaybe<OrderBy>;
+  market?: InputMaybe<TimelockMarketOrderBy>;
+  market_id?: InputMaybe<OrderBy>;
+  optionsCount?: InputMaybe<OrderBy>;
+  options_aggregate?: InputMaybe<UserOptionAggregateOrderBy>;
+  userAddr?: InputMaybe<OrderBy>;
+};
+
+/** select columns of table "TimelockMarketUser" */
+export type TimelockMarketUserSelectColumn =
+  /** column name */
+  | 'id'
+  /** column name */
+  | 'market_id'
+  /** column name */
+  | 'optionsCount'
+  /** column name */
+  | 'userAddr';
+
+/** order by stddev() on columns of table "TimelockMarketUser" */
+export type TimelockMarketUserStddevOrderBy = {
+  optionsCount?: InputMaybe<OrderBy>;
+};
+
+/** order by stddev_pop() on columns of table "TimelockMarketUser" */
+export type TimelockMarketUserStddevPopOrderBy = {
+  optionsCount?: InputMaybe<OrderBy>;
+};
+
+/** order by stddev_samp() on columns of table "TimelockMarketUser" */
+export type TimelockMarketUserStddevSampOrderBy = {
+  optionsCount?: InputMaybe<OrderBy>;
+};
+
+/** Streaming cursor of the table "TimelockMarketUser" */
+export type TimelockMarketUserStreamCursorInput = {
+  /** Stream column input with initial value */
+  initial_value: TimelockMarketUserStreamCursorValueInput;
+  /** cursor ordering */
+  ordering?: InputMaybe<CursorOrdering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type TimelockMarketUserStreamCursorValueInput = {
+  id?: InputMaybe<Scalars['String']['input']>;
+  market_id?: InputMaybe<Scalars['String']['input']>;
+  optionsCount?: InputMaybe<Scalars['numeric']['input']>;
+  userAddr?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** order by sum() on columns of table "TimelockMarketUser" */
+export type TimelockMarketUserSumOrderBy = {
+  optionsCount?: InputMaybe<OrderBy>;
+};
+
+/** order by var_pop() on columns of table "TimelockMarketUser" */
+export type TimelockMarketUserVarPopOrderBy = {
+  optionsCount?: InputMaybe<OrderBy>;
+};
+
+/** order by var_samp() on columns of table "TimelockMarketUser" */
+export type TimelockMarketUserVarSampOrderBy = {
+  optionsCount?: InputMaybe<OrderBy>;
+};
+
+/** order by variance() on columns of table "TimelockMarketUser" */
+export type TimelockMarketUserVarianceOrderBy = {
+  optionsCount?: InputMaybe<OrderBy>;
 };
 
 /** Boolean expression to filter rows from the table "TimelockMarket". All fields are combined with a logical 'AND'. */
@@ -707,11 +875,16 @@ export type TimelockMarketBoolExp = {
   optionAssetIsToken0?: InputMaybe<BooleanComparisonExp>;
   optionAssetName?: InputMaybe<StringComparisonExp>;
   optionAssetSymbol?: InputMaybe<StringComparisonExp>;
+  options?: InputMaybe<UserOptionBoolExp>;
   optionsCount?: InputMaybe<NumericComparisonExp>;
   payoutAsset?: InputMaybe<StringComparisonExp>;
   payoutAssetDecimals?: InputMaybe<IntComparisonExp>;
   payoutAssetName?: InputMaybe<StringComparisonExp>;
   payoutAssetSymbol?: InputMaybe<StringComparisonExp>;
+  pool?: InputMaybe<StringComparisonExp>;
+  tickSpacing?: InputMaybe<IntComparisonExp>;
+  traders?: InputMaybe<TimelockMarketUserBoolExp>;
+  tradersCount?: InputMaybe<NumericComparisonExp>;
   vault?: InputMaybe<StringComparisonExp>;
 };
 
@@ -724,10 +897,15 @@ export type TimelockMarketOrderBy = {
   optionAssetName?: InputMaybe<OrderBy>;
   optionAssetSymbol?: InputMaybe<OrderBy>;
   optionsCount?: InputMaybe<OrderBy>;
+  options_aggregate?: InputMaybe<UserOptionAggregateOrderBy>;
   payoutAsset?: InputMaybe<OrderBy>;
   payoutAssetDecimals?: InputMaybe<OrderBy>;
   payoutAssetName?: InputMaybe<OrderBy>;
   payoutAssetSymbol?: InputMaybe<OrderBy>;
+  pool?: InputMaybe<OrderBy>;
+  tickSpacing?: InputMaybe<OrderBy>;
+  tradersCount?: InputMaybe<OrderBy>;
+  traders_aggregate?: InputMaybe<TimelockMarketUserAggregateOrderBy>;
   vault?: InputMaybe<OrderBy>;
 };
 
@@ -756,6 +934,12 @@ export type TimelockMarketSelectColumn =
   /** column name */
   | 'payoutAssetSymbol'
   /** column name */
+  | 'pool'
+  /** column name */
+  | 'tickSpacing'
+  /** column name */
+  | 'tradersCount'
+  /** column name */
   | 'vault';
 
 /** Streaming cursor of the table "TimelockMarket" */
@@ -779,6 +963,9 @@ export type TimelockMarketStreamCursorValueInput = {
   payoutAssetDecimals?: InputMaybe<Scalars['Int']['input']>;
   payoutAssetName?: InputMaybe<Scalars['String']['input']>;
   payoutAssetSymbol?: InputMaybe<Scalars['String']['input']>;
+  pool?: InputMaybe<Scalars['String']['input']>;
+  tickSpacing?: InputMaybe<Scalars['Int']['input']>;
+  tradersCount?: InputMaybe<Scalars['numeric']['input']>;
   vault?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -786,6 +973,7 @@ export type TimelockMarketStreamCursorValueInput = {
 export type UserOption = {
   __typename: 'UserOption';
   createdAt: Scalars['Int']['output'];
+  entryPrice: Scalars['numeric']['output'];
   entryTick: Scalars['Int']['output'];
   /** An array relationship */
   exerciseEvents: Array<ExerciseOptionEvent>;
@@ -794,14 +982,23 @@ export type UserOption = {
   id: Scalars['String']['output'];
   liquiditiesAtOpen: Array<Scalars['numeric']['output']>;
   liquiditiesCurrent: Array<Scalars['numeric']['output']>;
+  /** An object relationship */
+  market?: Maybe<TimelockMarket>;
   marketAddr: Scalars['String']['output'];
+  market_id: Scalars['String']['output'];
   /** An object relationship */
   mintEvent?: Maybe<MintOptionEvent>;
   mintEvent_id: Scalars['String']['output'];
   optionType: Scalars['optiontype']['output'];
-  owner: Scalars['String']['output'];
+  /** An object relationship */
+  owner?: Maybe<TimelockMarketUser>;
+  ownerAddr: Scalars['String']['output'];
+  owner_id: Scalars['String']['output'];
+  positionSizeAtOpen: Scalars['numeric']['output'];
+  positionSizeCurrent: Scalars['numeric']['output'];
   premiumPaid: Scalars['numeric']['output'];
   realizedPayout: Scalars['numeric']['output'];
+  strikePrice: Scalars['numeric']['output'];
   strikeTick: Scalars['Int']['output'];
 };
 
@@ -814,12 +1011,42 @@ export type UserOptionExerciseEventsArgs = {
   where?: InputMaybe<ExerciseOptionEventBoolExp>;
 };
 
+/** order by aggregate values of table "UserOption" */
+export type UserOptionAggregateOrderBy = {
+  avg?: InputMaybe<UserOptionAvgOrderBy>;
+  count?: InputMaybe<OrderBy>;
+  max?: InputMaybe<UserOptionMaxOrderBy>;
+  min?: InputMaybe<UserOptionMinOrderBy>;
+  stddev?: InputMaybe<UserOptionStddevOrderBy>;
+  stddev_pop?: InputMaybe<UserOptionStddevPopOrderBy>;
+  stddev_samp?: InputMaybe<UserOptionStddevSampOrderBy>;
+  sum?: InputMaybe<UserOptionSumOrderBy>;
+  var_pop?: InputMaybe<UserOptionVarPopOrderBy>;
+  var_samp?: InputMaybe<UserOptionVarSampOrderBy>;
+  variance?: InputMaybe<UserOptionVarianceOrderBy>;
+};
+
+/** order by avg() on columns of table "UserOption" */
+export type UserOptionAvgOrderBy = {
+  createdAt?: InputMaybe<OrderBy>;
+  entryPrice?: InputMaybe<OrderBy>;
+  entryTick?: InputMaybe<OrderBy>;
+  expiresAt?: InputMaybe<OrderBy>;
+  positionSizeAtOpen?: InputMaybe<OrderBy>;
+  positionSizeCurrent?: InputMaybe<OrderBy>;
+  premiumPaid?: InputMaybe<OrderBy>;
+  realizedPayout?: InputMaybe<OrderBy>;
+  strikePrice?: InputMaybe<OrderBy>;
+  strikeTick?: InputMaybe<OrderBy>;
+};
+
 /** Boolean expression to filter rows from the table "UserOption". All fields are combined with a logical 'AND'. */
 export type UserOptionBoolExp = {
   _and?: InputMaybe<Array<UserOptionBoolExp>>;
   _not?: InputMaybe<UserOptionBoolExp>;
   _or?: InputMaybe<Array<UserOptionBoolExp>>;
   createdAt?: InputMaybe<IntComparisonExp>;
+  entryPrice?: InputMaybe<NumericComparisonExp>;
   entryTick?: InputMaybe<IntComparisonExp>;
   exerciseEvents?: InputMaybe<ExerciseOptionEventBoolExp>;
   expiresAt?: InputMaybe<IntComparisonExp>;
@@ -827,19 +1054,73 @@ export type UserOptionBoolExp = {
   id?: InputMaybe<StringComparisonExp>;
   liquiditiesAtOpen?: InputMaybe<NumericArrayComparisonExp>;
   liquiditiesCurrent?: InputMaybe<NumericArrayComparisonExp>;
+  market?: InputMaybe<TimelockMarketBoolExp>;
   marketAddr?: InputMaybe<StringComparisonExp>;
+  market_id?: InputMaybe<StringComparisonExp>;
   mintEvent?: InputMaybe<MintOptionEventBoolExp>;
   mintEvent_id?: InputMaybe<StringComparisonExp>;
   optionType?: InputMaybe<OptiontypeComparisonExp>;
-  owner?: InputMaybe<StringComparisonExp>;
+  owner?: InputMaybe<TimelockMarketUserBoolExp>;
+  ownerAddr?: InputMaybe<StringComparisonExp>;
+  owner_id?: InputMaybe<StringComparisonExp>;
+  positionSizeAtOpen?: InputMaybe<NumericComparisonExp>;
+  positionSizeCurrent?: InputMaybe<NumericComparisonExp>;
   premiumPaid?: InputMaybe<NumericComparisonExp>;
   realizedPayout?: InputMaybe<NumericComparisonExp>;
+  strikePrice?: InputMaybe<NumericComparisonExp>;
   strikeTick?: InputMaybe<IntComparisonExp>;
+};
+
+/** order by max() on columns of table "UserOption" */
+export type UserOptionMaxOrderBy = {
+  createdAt?: InputMaybe<OrderBy>;
+  entryPrice?: InputMaybe<OrderBy>;
+  entryTick?: InputMaybe<OrderBy>;
+  expiresAt?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  liquiditiesAtOpen?: InputMaybe<OrderBy>;
+  liquiditiesCurrent?: InputMaybe<OrderBy>;
+  marketAddr?: InputMaybe<OrderBy>;
+  market_id?: InputMaybe<OrderBy>;
+  mintEvent_id?: InputMaybe<OrderBy>;
+  optionType?: InputMaybe<OrderBy>;
+  ownerAddr?: InputMaybe<OrderBy>;
+  owner_id?: InputMaybe<OrderBy>;
+  positionSizeAtOpen?: InputMaybe<OrderBy>;
+  positionSizeCurrent?: InputMaybe<OrderBy>;
+  premiumPaid?: InputMaybe<OrderBy>;
+  realizedPayout?: InputMaybe<OrderBy>;
+  strikePrice?: InputMaybe<OrderBy>;
+  strikeTick?: InputMaybe<OrderBy>;
+};
+
+/** order by min() on columns of table "UserOption" */
+export type UserOptionMinOrderBy = {
+  createdAt?: InputMaybe<OrderBy>;
+  entryPrice?: InputMaybe<OrderBy>;
+  entryTick?: InputMaybe<OrderBy>;
+  expiresAt?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  liquiditiesAtOpen?: InputMaybe<OrderBy>;
+  liquiditiesCurrent?: InputMaybe<OrderBy>;
+  marketAddr?: InputMaybe<OrderBy>;
+  market_id?: InputMaybe<OrderBy>;
+  mintEvent_id?: InputMaybe<OrderBy>;
+  optionType?: InputMaybe<OrderBy>;
+  ownerAddr?: InputMaybe<OrderBy>;
+  owner_id?: InputMaybe<OrderBy>;
+  positionSizeAtOpen?: InputMaybe<OrderBy>;
+  positionSizeCurrent?: InputMaybe<OrderBy>;
+  premiumPaid?: InputMaybe<OrderBy>;
+  realizedPayout?: InputMaybe<OrderBy>;
+  strikePrice?: InputMaybe<OrderBy>;
+  strikeTick?: InputMaybe<OrderBy>;
 };
 
 /** Ordering options when selecting data from "UserOption". */
 export type UserOptionOrderBy = {
   createdAt?: InputMaybe<OrderBy>;
+  entryPrice?: InputMaybe<OrderBy>;
   entryTick?: InputMaybe<OrderBy>;
   exerciseEvents_aggregate?: InputMaybe<ExerciseOptionEventAggregateOrderBy>;
   expiresAt?: InputMaybe<OrderBy>;
@@ -847,13 +1128,20 @@ export type UserOptionOrderBy = {
   id?: InputMaybe<OrderBy>;
   liquiditiesAtOpen?: InputMaybe<OrderBy>;
   liquiditiesCurrent?: InputMaybe<OrderBy>;
+  market?: InputMaybe<TimelockMarketOrderBy>;
   marketAddr?: InputMaybe<OrderBy>;
+  market_id?: InputMaybe<OrderBy>;
   mintEvent?: InputMaybe<MintOptionEventOrderBy>;
   mintEvent_id?: InputMaybe<OrderBy>;
   optionType?: InputMaybe<OrderBy>;
-  owner?: InputMaybe<OrderBy>;
+  owner?: InputMaybe<TimelockMarketUserOrderBy>;
+  ownerAddr?: InputMaybe<OrderBy>;
+  owner_id?: InputMaybe<OrderBy>;
+  positionSizeAtOpen?: InputMaybe<OrderBy>;
+  positionSizeCurrent?: InputMaybe<OrderBy>;
   premiumPaid?: InputMaybe<OrderBy>;
   realizedPayout?: InputMaybe<OrderBy>;
+  strikePrice?: InputMaybe<OrderBy>;
   strikeTick?: InputMaybe<OrderBy>;
 };
 
@@ -861,6 +1149,8 @@ export type UserOptionOrderBy = {
 export type UserOptionSelectColumn =
   /** column name */
   | 'createdAt'
+  /** column name */
+  | 'entryPrice'
   /** column name */
   | 'entryTick'
   /** column name */
@@ -876,17 +1166,69 @@ export type UserOptionSelectColumn =
   /** column name */
   | 'marketAddr'
   /** column name */
+  | 'market_id'
+  /** column name */
   | 'mintEvent_id'
   /** column name */
   | 'optionType'
   /** column name */
-  | 'owner'
+  | 'ownerAddr'
+  /** column name */
+  | 'owner_id'
+  /** column name */
+  | 'positionSizeAtOpen'
+  /** column name */
+  | 'positionSizeCurrent'
   /** column name */
   | 'premiumPaid'
   /** column name */
   | 'realizedPayout'
   /** column name */
+  | 'strikePrice'
+  /** column name */
   | 'strikeTick';
+
+/** order by stddev() on columns of table "UserOption" */
+export type UserOptionStddevOrderBy = {
+  createdAt?: InputMaybe<OrderBy>;
+  entryPrice?: InputMaybe<OrderBy>;
+  entryTick?: InputMaybe<OrderBy>;
+  expiresAt?: InputMaybe<OrderBy>;
+  positionSizeAtOpen?: InputMaybe<OrderBy>;
+  positionSizeCurrent?: InputMaybe<OrderBy>;
+  premiumPaid?: InputMaybe<OrderBy>;
+  realizedPayout?: InputMaybe<OrderBy>;
+  strikePrice?: InputMaybe<OrderBy>;
+  strikeTick?: InputMaybe<OrderBy>;
+};
+
+/** order by stddev_pop() on columns of table "UserOption" */
+export type UserOptionStddevPopOrderBy = {
+  createdAt?: InputMaybe<OrderBy>;
+  entryPrice?: InputMaybe<OrderBy>;
+  entryTick?: InputMaybe<OrderBy>;
+  expiresAt?: InputMaybe<OrderBy>;
+  positionSizeAtOpen?: InputMaybe<OrderBy>;
+  positionSizeCurrent?: InputMaybe<OrderBy>;
+  premiumPaid?: InputMaybe<OrderBy>;
+  realizedPayout?: InputMaybe<OrderBy>;
+  strikePrice?: InputMaybe<OrderBy>;
+  strikeTick?: InputMaybe<OrderBy>;
+};
+
+/** order by stddev_samp() on columns of table "UserOption" */
+export type UserOptionStddevSampOrderBy = {
+  createdAt?: InputMaybe<OrderBy>;
+  entryPrice?: InputMaybe<OrderBy>;
+  entryTick?: InputMaybe<OrderBy>;
+  expiresAt?: InputMaybe<OrderBy>;
+  positionSizeAtOpen?: InputMaybe<OrderBy>;
+  positionSizeCurrent?: InputMaybe<OrderBy>;
+  premiumPaid?: InputMaybe<OrderBy>;
+  realizedPayout?: InputMaybe<OrderBy>;
+  strikePrice?: InputMaybe<OrderBy>;
+  strikeTick?: InputMaybe<OrderBy>;
+};
 
 /** Streaming cursor of the table "UserOption" */
 export type UserOptionStreamCursorInput = {
@@ -899,6 +1241,7 @@ export type UserOptionStreamCursorInput = {
 /** Initial value of the column from where the streaming should start */
 export type UserOptionStreamCursorValueInput = {
   createdAt?: InputMaybe<Scalars['Int']['input']>;
+  entryPrice?: InputMaybe<Scalars['numeric']['input']>;
   entryTick?: InputMaybe<Scalars['Int']['input']>;
   expiresAt?: InputMaybe<Scalars['Int']['input']>;
   fullyExercised?: InputMaybe<Scalars['Boolean']['input']>;
@@ -906,12 +1249,73 @@ export type UserOptionStreamCursorValueInput = {
   liquiditiesAtOpen?: InputMaybe<Array<Scalars['numeric']['input']>>;
   liquiditiesCurrent?: InputMaybe<Array<Scalars['numeric']['input']>>;
   marketAddr?: InputMaybe<Scalars['String']['input']>;
+  market_id?: InputMaybe<Scalars['String']['input']>;
   mintEvent_id?: InputMaybe<Scalars['String']['input']>;
   optionType?: InputMaybe<Scalars['optiontype']['input']>;
-  owner?: InputMaybe<Scalars['String']['input']>;
+  ownerAddr?: InputMaybe<Scalars['String']['input']>;
+  owner_id?: InputMaybe<Scalars['String']['input']>;
+  positionSizeAtOpen?: InputMaybe<Scalars['numeric']['input']>;
+  positionSizeCurrent?: InputMaybe<Scalars['numeric']['input']>;
   premiumPaid?: InputMaybe<Scalars['numeric']['input']>;
   realizedPayout?: InputMaybe<Scalars['numeric']['input']>;
+  strikePrice?: InputMaybe<Scalars['numeric']['input']>;
   strikeTick?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** order by sum() on columns of table "UserOption" */
+export type UserOptionSumOrderBy = {
+  createdAt?: InputMaybe<OrderBy>;
+  entryPrice?: InputMaybe<OrderBy>;
+  entryTick?: InputMaybe<OrderBy>;
+  expiresAt?: InputMaybe<OrderBy>;
+  positionSizeAtOpen?: InputMaybe<OrderBy>;
+  positionSizeCurrent?: InputMaybe<OrderBy>;
+  premiumPaid?: InputMaybe<OrderBy>;
+  realizedPayout?: InputMaybe<OrderBy>;
+  strikePrice?: InputMaybe<OrderBy>;
+  strikeTick?: InputMaybe<OrderBy>;
+};
+
+/** order by var_pop() on columns of table "UserOption" */
+export type UserOptionVarPopOrderBy = {
+  createdAt?: InputMaybe<OrderBy>;
+  entryPrice?: InputMaybe<OrderBy>;
+  entryTick?: InputMaybe<OrderBy>;
+  expiresAt?: InputMaybe<OrderBy>;
+  positionSizeAtOpen?: InputMaybe<OrderBy>;
+  positionSizeCurrent?: InputMaybe<OrderBy>;
+  premiumPaid?: InputMaybe<OrderBy>;
+  realizedPayout?: InputMaybe<OrderBy>;
+  strikePrice?: InputMaybe<OrderBy>;
+  strikeTick?: InputMaybe<OrderBy>;
+};
+
+/** order by var_samp() on columns of table "UserOption" */
+export type UserOptionVarSampOrderBy = {
+  createdAt?: InputMaybe<OrderBy>;
+  entryPrice?: InputMaybe<OrderBy>;
+  entryTick?: InputMaybe<OrderBy>;
+  expiresAt?: InputMaybe<OrderBy>;
+  positionSizeAtOpen?: InputMaybe<OrderBy>;
+  positionSizeCurrent?: InputMaybe<OrderBy>;
+  premiumPaid?: InputMaybe<OrderBy>;
+  realizedPayout?: InputMaybe<OrderBy>;
+  strikePrice?: InputMaybe<OrderBy>;
+  strikeTick?: InputMaybe<OrderBy>;
+};
+
+/** order by variance() on columns of table "UserOption" */
+export type UserOptionVarianceOrderBy = {
+  createdAt?: InputMaybe<OrderBy>;
+  entryPrice?: InputMaybe<OrderBy>;
+  entryTick?: InputMaybe<OrderBy>;
+  expiresAt?: InputMaybe<OrderBy>;
+  positionSizeAtOpen?: InputMaybe<OrderBy>;
+  positionSizeCurrent?: InputMaybe<OrderBy>;
+  premiumPaid?: InputMaybe<OrderBy>;
+  realizedPayout?: InputMaybe<OrderBy>;
+  strikePrice?: InputMaybe<OrderBy>;
+  strikeTick?: InputMaybe<OrderBy>;
 };
 
 /** columns and relationships of "_meta" */
@@ -1227,6 +1631,10 @@ export type QueryRoot = {
   RepayEvent_by_pk?: Maybe<RepayEvent>;
   /** fetch data from the table: "TimelockMarket" */
   TimelockMarket: Array<TimelockMarket>;
+  /** fetch data from the table: "TimelockMarketUser" */
+  TimelockMarketUser: Array<TimelockMarketUser>;
+  /** fetch data from the table: "TimelockMarketUser" using primary key columns */
+  TimelockMarketUser_by_pk?: Maybe<TimelockMarketUser>;
   /** fetch data from the table: "TimelockMarket" using primary key columns */
   TimelockMarket_by_pk?: Maybe<TimelockMarket>;
   /** fetch data from the table: "UserOption" */
@@ -1321,6 +1729,18 @@ export type QueryRootTimelockMarketArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   order_by?: InputMaybe<Array<TimelockMarketOrderBy>>;
   where?: InputMaybe<TimelockMarketBoolExp>;
+};
+
+export type QueryRootTimelockMarketUserArgs = {
+  distinct_on?: InputMaybe<Array<TimelockMarketUserSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<TimelockMarketUserOrderBy>>;
+  where?: InputMaybe<TimelockMarketUserBoolExp>;
+};
+
+export type QueryRootTimelockMarketUserByPkArgs = {
+  id: Scalars['String']['input'];
 };
 
 export type QueryRootTimelockMarketByPkArgs = {
@@ -1531,6 +1951,12 @@ export type SubscriptionRoot = {
   RepayEvent_stream: Array<RepayEvent>;
   /** fetch data from the table: "TimelockMarket" */
   TimelockMarket: Array<TimelockMarket>;
+  /** fetch data from the table: "TimelockMarketUser" */
+  TimelockMarketUser: Array<TimelockMarketUser>;
+  /** fetch data from the table: "TimelockMarketUser" using primary key columns */
+  TimelockMarketUser_by_pk?: Maybe<TimelockMarketUser>;
+  /** fetch data from the table in a streaming manner: "TimelockMarketUser" */
+  TimelockMarketUser_stream: Array<TimelockMarketUser>;
   /** fetch data from the table: "TimelockMarket" using primary key columns */
   TimelockMarket_by_pk?: Maybe<TimelockMarket>;
   /** fetch data from the table in a streaming manner: "TimelockMarket" */
@@ -1673,6 +2099,24 @@ export type SubscriptionRootTimelockMarketArgs = {
   where?: InputMaybe<TimelockMarketBoolExp>;
 };
 
+export type SubscriptionRootTimelockMarketUserArgs = {
+  distinct_on?: InputMaybe<Array<TimelockMarketUserSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<TimelockMarketUserOrderBy>>;
+  where?: InputMaybe<TimelockMarketUserBoolExp>;
+};
+
+export type SubscriptionRootTimelockMarketUserByPkArgs = {
+  id: Scalars['String']['input'];
+};
+
+export type SubscriptionRootTimelockMarketUserStreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<TimelockMarketUserStreamCursorInput>>;
+  where?: InputMaybe<TimelockMarketUserBoolExp>;
+};
+
 export type SubscriptionRootTimelockMarketByPkArgs = {
   id: Scalars['String']['input'];
 };
@@ -1769,10 +2213,12 @@ export type GetActiveUserOptionsQuery = {
   UserOption: Array<{
     __typename: 'UserOption';
     id: string;
-    owner: string;
+    ownerAddr: string;
     optionType: any;
     strikeTick: number;
     entryTick: number;
+    strikePrice: any;
+    entryPrice: any;
     expiresAt: number;
     createdAt: number;
     premiumPaid: any;
@@ -1780,6 +2226,8 @@ export type GetActiveUserOptionsQuery = {
     marketAddr: string;
     liquiditiesAtOpen: Array<any>;
     liquiditiesCurrent: Array<any>;
+    positionSizeAtOpen: any;
+    positionSizeCurrent: any;
     fullyExercised: boolean;
     exerciseEvents: Array<{
       __typename: 'ExerciseOptionEvent';
@@ -1798,10 +2246,12 @@ export type GetClosedUserOptionsQuery = {
   UserOption: Array<{
     __typename: 'UserOption';
     id: string;
-    owner: string;
+    ownerAddr: string;
     optionType: any;
     strikeTick: number;
     entryTick: number;
+    strikePrice: any;
+    entryPrice: any;
     expiresAt: number;
     createdAt: number;
     premiumPaid: any;
@@ -1809,6 +2259,8 @@ export type GetClosedUserOptionsQuery = {
     marketAddr: string;
     liquiditiesAtOpen: Array<any>;
     liquiditiesCurrent: Array<any>;
+    positionSizeAtOpen: any;
+    positionSizeCurrent: any;
     fullyExercised: boolean;
     exerciseEvents: Array<{
       __typename: 'ExerciseOptionEvent';
@@ -1818,14 +2270,40 @@ export type GetClosedUserOptionsQuery = {
   }>;
 };
 
+export type GetMarketDataQueryVariables = Exact<{
+  marketAddr: Scalars['String']['input'];
+}>;
+
+export type GetMarketDataQuery = {
+  __typename: 'query_root';
+  TimelockMarket: Array<{
+    __typename: 'TimelockMarket';
+    id: string;
+    optionsCount: any;
+    tradersCount: any;
+    vault: string;
+    pool: string;
+    tickSpacing: number;
+    optionAssetIsToken0: boolean;
+    optionAsset: string;
+    payoutAsset: string;
+    optionAssetDecimals: number;
+    payoutAssetDecimals: number;
+    optionAssetSymbol: string;
+    payoutAssetSymbol: string;
+    optionAssetName: string;
+    payoutAssetName: string;
+  }>;
+};
+
 export const GetActiveUserOptionsDocument = gql`
   query GetActiveUserOptions($user: String!) {
     UserOption(
-      where: {owner: {_eq: $user}, fullyExercised: {_eq: false}}
+      where: {ownerAddr: {_eq: $user}, fullyExercised: {_eq: false}}
       limit: 1000
     ) {
       id
-      owner
+      ownerAddr
       exerciseEvents {
         transactionHash
       }
@@ -1835,6 +2313,8 @@ export const GetActiveUserOptionsDocument = gql`
       optionType
       strikeTick
       entryTick
+      strikePrice
+      entryPrice
       expiresAt
       createdAt
       premiumPaid
@@ -1842,6 +2322,8 @@ export const GetActiveUserOptionsDocument = gql`
       marketAddr
       liquiditiesAtOpen
       liquiditiesCurrent
+      positionSizeAtOpen
+      positionSizeCurrent
       fullyExercised
     }
   }
@@ -1849,11 +2331,11 @@ export const GetActiveUserOptionsDocument = gql`
 export const GetClosedUserOptionsDocument = gql`
   query GetClosedUserOptions($user: String!) {
     UserOption(
-      where: {owner: {_eq: $user}, fullyExercised: {_eq: true}}
+      where: {ownerAddr: {_eq: $user}, fullyExercised: {_eq: true}}
       limit: 1000
     ) {
       id
-      owner
+      ownerAddr
       exerciseEvents {
         transactionHash
       }
@@ -1863,6 +2345,8 @@ export const GetClosedUserOptionsDocument = gql`
       optionType
       strikeTick
       entryTick
+      strikePrice
+      entryPrice
       expiresAt
       createdAt
       premiumPaid
@@ -1870,7 +2354,30 @@ export const GetClosedUserOptionsDocument = gql`
       marketAddr
       liquiditiesAtOpen
       liquiditiesCurrent
+      positionSizeAtOpen
+      positionSizeCurrent
       fullyExercised
+    }
+  }
+`;
+export const GetMarketDataDocument = gql`
+  query GetMarketData($marketAddr: String!) {
+    TimelockMarket(where: {id: {_eq: $marketAddr}}, limit: 1) {
+      id
+      optionsCount
+      tradersCount
+      vault
+      pool
+      tickSpacing
+      optionAssetIsToken0
+      optionAsset
+      payoutAsset
+      optionAssetDecimals
+      payoutAssetDecimals
+      optionAssetSymbol
+      payoutAssetSymbol
+      optionAssetName
+      payoutAssetName
     }
   }
 `;
@@ -1926,6 +2433,24 @@ export function getSdk(
             signal,
           }),
         'GetClosedUserOptions',
+        'query',
+        variables,
+      );
+    },
+    GetMarketData(
+      variables: GetMarketDataQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+      signal?: RequestInit['signal'],
+    ): Promise<GetMarketDataQuery> {
+      return withWrapper(
+        wrappedRequestHeaders =>
+          client.request<GetMarketDataQuery>({
+            document: GetMarketDataDocument,
+            variables,
+            requestHeaders: {...requestHeaders, ...wrappedRequestHeaders},
+            signal,
+          }),
+        'GetMarketData',
         'query',
         variables,
       );

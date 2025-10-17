@@ -1,12 +1,15 @@
 'use client';
 import type {Address} from 'viem';
-import {createContext, useContext, type ReactNode} from 'react';
+import React, {createContext, useContext, type ReactNode} from 'react';
 import {useChainId} from 'wagmi';
 import {GraphQLClient} from 'graphql-request';
 
-import type {TimelockMarketData} from '../hooks/market/useMarketData';
-import {timelockLenses, uniswapMathLenses} from '../lib/contracts';
-import {getSdk} from '../generated/graphql';
+import {
+  type TimelockMarketData,
+  timelockLenses,
+  uniswapMathLenses,
+} from '~/lib/contracts';
+import {getSdk} from '~/generated/graphql';
 
 type TimelockMarketContextValue = {
   marketData: Partial<TimelockMarketData>;

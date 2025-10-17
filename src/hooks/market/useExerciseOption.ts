@@ -9,9 +9,9 @@ import {
 
 import {useMarketData} from './useMarketData';
 
-import {type TimelockMarket} from '../../lib/contracts';
-import {optionsMarketAbi} from '../../abis/optionsMarket';
-import {singleOwnerVaultAbi} from '../../abis/singleOwnerVault';
+import {type TimelockMarket} from '~/lib/contracts';
+import {optionsMarketAbi} from '~/abis/optionsMarket';
+import {singleOwnerVaultAbi} from '~/abis/singleOwnerVault';
 
 export const useExerciseOption = (market?: Address | TimelockMarket) => {
   const {vault} = useMarketData(market);

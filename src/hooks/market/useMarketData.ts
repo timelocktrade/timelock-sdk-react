@@ -1,32 +1,28 @@
+import {useQuery, type NonUndefinedGuard} from '@tanstack/react-query';
 import type {Address} from 'viem';
-import {useClient, useReadContract} from 'wagmi';
-import {useLens} from '../useLens';
-import type {TimelockMarket} from '../../lib/contracts';
-import {lensAbi} from '../../abis/lens';
 
-export type TimelockMarketData = Required<ReturnType<typeof useMarketData>>;
+import type {TimelockMarket} from '~/lib/contracts';
+import {useTimelockConfig} from '~/providers/TimelockMarketProvider';
 
 export const useMarketData = (market?: Address | TimelockMarket) => {
-  const {timelockLens} = useLens();
-  const client = useClient();
+  const {graphqlClient} = useTimelockConfig();
   const marketAddr = typeof market === 'string' ? market : market?.address;
 
-  const {data: rawMarketData} = useReadContract({
-    address: timelockLens?.address,
-    abi: lensAbi,
-    functionName: 'getMarketData',
-    args: marketAddr ? [marketAddr] : undefined,
-    query: {enabled: marketAddr !== undefined},
+  const {data} = useQuery({
+    queryKey: ['marketData', marketAddr || '--'],
+    queryFn: () =>
+      graphqlClient!.GetMarketData({marketAddr: marketAddr!.toLowerCase()}),
+    select: data => ({
+      ...data.TimelockMarket[0],
+      pool: data.TimelockMarket[0].pool as Address,
+      vault: data.TimelockMarket[0].vault as Address,
+      optionAsset: data.TimelockMarket[0].optionAsset as Address,
+      payoutAsset: data.TimelockMarket[0].payoutAsset as Address,
+      optionsCount: BigInt(data.TimelockMarket[0].optionsCount),
+      tradersCount: BigInt(data.TimelockMarket[0].tradersCount),
+    }),
+    enabled: !!marketAddr && !!graphqlClient,
   });
-  type TimelockMarketData = typeof rawMarketData & {
-    address: Address;
-  };
 
-  if (!rawMarketData || !marketAddr || !client) {
-    return {} as Partial<TimelockMarketData>;
-  }
-  return {
-    ...rawMarketData,
-    address: marketAddr,
-  } as Partial<TimelockMarketData>;
+  return (data || {}) as Partial<NonUndefinedGuard<typeof data>>;
 };
