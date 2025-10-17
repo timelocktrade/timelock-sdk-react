@@ -3,14 +3,32 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
+  "main": "./dist/package.cjs",
+  "module": "./dist/package.js",
+  "types": "./dist/package.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/package.d.ts",
+        "default": "./dist/package.js"
+      },
+      "require": {
+        "types": "./dist/package.d.cts",
+        "default": "./dist/package.cjs"
+      }
+    }
+  },
   "files": [
-    "src"
+    "dist"
   ],
+  "sideEffects": false,
   "scripts": {
     "lint": "gts lint",
     "clean": "gts clean",
     "dev": "bun --watch src/index.ts",
+    "build": "tsdown",
     "compile": "tsdown",
+    "prepublishOnly": "bun run build",
     "fix": "gts fix",
     "codegen": "graphql-codegen --config codegen.ts",
     "codegen:watch": "graphql-codegen --config codegen.ts --watch"
@@ -30,12 +48,9 @@
     "tsdown": "^0.14.1",
     "typescript": "^5.6.3"
   },
-  "dependencies": {
-    "@uniswap/v3-sdk": "^3.25.2",
-    "big.js": "^7.0.1",
-    "jsbi": "^4.3.2"
-  },
+  "dependencies": {},
   "peerDependencies": {
+    "big.js": "^7.0.1",
     "@tanstack/react-query": "^5.90.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

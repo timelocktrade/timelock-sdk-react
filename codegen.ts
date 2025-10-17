@@ -1,6 +1,3 @@
-import {config as envConfig} from 'dotenv';
-envConfig();
-
 import type {CodegenConfig} from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {

@@ -1,36 +1,72 @@
-import {type Address, type Client, getContract, type PublicClient} from 'viem';
+import {
+  type Address,
+  type Client,
+  getContract,
+  type PublicClient,
+  type GetContractReturnType,
+} from 'viem';
 import {monadTestnet} from 'viem/chains';
 
 import {erc20Abi} from '../abis/erc20';
-import {swapRouterAbi} from '../abis/swapRouter';
 import {uniswapV3PoolAbi} from '../abis/uniswapV3Pool';
 import {uniswapMathLensAbi} from '../abis/uniswapMathLens';
 import {lensAbi} from '../abis/lens';
 import {singleOwnerVaultAbi} from '../abis/singleOwnerVault';
 import {optionsMarketAbi} from '../abis/optionsMarket';
 
-export type UniswapPool = ReturnType<typeof getUniswapPool>;
-export type TimelockMarket = ReturnType<typeof getTimelockMarket>;
-export type TimelockVault = ReturnType<typeof getTimelockVault>;
-export type TimelockLens = ReturnType<typeof getTimelockLens>;
-export type UniswapMathLens = ReturnType<typeof getUniswapMathLens>;
-export type SwapRouter = ReturnType<typeof getSwapRouter>;
+export type UniswapPool = GetContractReturnType<
+  typeof uniswapV3PoolAbi,
+  Client,
+  Address
+>;
+export type TimelockMarket = GetContractReturnType<
+  typeof optionsMarketAbi,
+  Client,
+  Address
+>;
+export type TimelockVault = GetContractReturnType<
+  typeof singleOwnerVaultAbi,
+  Client,
+  Address
+>;
+export type TimelockLens = GetContractReturnType<
+  typeof lensAbi,
+  Client,
+  Address
+>;
+export type UniswapMathLens = GetContractReturnType<
+  typeof uniswapMathLensAbi,
+  Client,
+  Address
+>;
 
 export const getErc20 = (address: Address, client: Client) =>
   getContract({abi: erc20Abi, address, client});
 
-export const getTimelockVault = (address: Address, client: Client) =>
-  getContract({
+export const getTimelockVault = (
+  address: Address,
+  client: Client,
+): TimelockVault => {
+  return getContract({
     abi: singleOwnerVaultAbi,
     address,
     client,
   });
+};
 
-export const getTimelockMarket = (address: Address, client: Client) =>
-  getContract({abi: optionsMarketAbi, address, client});
+export const getTimelockMarket = (
+  address: Address,
+  client: Client,
+): TimelockMarket => {
+  return getContract({abi: optionsMarketAbi, address, client});
+};
 
-export const getUniswapPool = (address: Address, client: Client) =>
-  getContract({abi: uniswapV3PoolAbi, address, client});
+export const getUniswapPool = (
+  address: Address,
+  client: Client,
+): UniswapPool => {
+  return getContract({abi: uniswapV3PoolAbi, address, client});
+};
 
 export const getUniswapMathLens = (client: Client | PublicClient) =>
   getContract({
@@ -43,13 +79,6 @@ export const getTimelockLens = (client: Client | PublicClient) =>
   getContract({
     abi: lensAbi,
     address: timelockLenses[client.chain!.id],
-    client,
-  });
-
-export const getSwapRouter = (client: Client | PublicClient) =>
-  getContract({
-    abi: swapRouterAbi,
-    address: swapRouters[client.chain!.id],
     client,
   });
 
