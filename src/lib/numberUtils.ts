@@ -100,20 +100,10 @@ export const formatAmount = (value?: Big | number | string) => {
 
 export const formatVagueAmount = (value: number | bigint) => {
   value = Number(value);
+  if (value === 0) return '0';
 
-  if (value >= 1e12) {
-    return `${(value / 1e12).toFixed(2)}T`;
-  } else if (value >= 1e9) {
-    return `${(value / 1e9).toFixed(2)}B`;
-  } else if (value >= 1e6) {
-    return `${(value / 1e6).toFixed(2)}M`;
-  } else if (value >= 1000) {
-    return `${(value / 1000).toFixed(2)}K`;
-  } else if (value < 1) {
-    return value.toPrecision(2);
-  } else {
-    return value.toFixed(2);
-  }
+  const formatted = value.toExponential(2);
+  return formatted.replace(/\.?0+e/, 'e').replace(/e\+/, 'e');
 };
 
 export const formatCondensed = (

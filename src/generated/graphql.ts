@@ -989,6 +989,7 @@ export type UserOption = {
   /** An object relationship */
   mintEvent?: Maybe<MintOptionEvent>;
   mintEvent_id: Scalars['String']['output'];
+  optionId: Scalars['numeric']['output'];
   optionType: Scalars['optiontype']['output'];
   /** An object relationship */
   owner?: Maybe<TimelockMarketUser>;
@@ -998,6 +999,7 @@ export type UserOption = {
   positionSizeCurrent: Scalars['numeric']['output'];
   premiumPaid: Scalars['numeric']['output'];
   realizedPayout: Scalars['numeric']['output'];
+  startTick: Scalars['Int']['output'];
   strikePrice: Scalars['numeric']['output'];
   strikeTick: Scalars['Int']['output'];
 };
@@ -1032,10 +1034,12 @@ export type UserOptionAvgOrderBy = {
   entryPrice?: InputMaybe<OrderBy>;
   entryTick?: InputMaybe<OrderBy>;
   expiresAt?: InputMaybe<OrderBy>;
+  optionId?: InputMaybe<OrderBy>;
   positionSizeAtOpen?: InputMaybe<OrderBy>;
   positionSizeCurrent?: InputMaybe<OrderBy>;
   premiumPaid?: InputMaybe<OrderBy>;
   realizedPayout?: InputMaybe<OrderBy>;
+  startTick?: InputMaybe<OrderBy>;
   strikePrice?: InputMaybe<OrderBy>;
   strikeTick?: InputMaybe<OrderBy>;
 };
@@ -1059,6 +1063,7 @@ export type UserOptionBoolExp = {
   market_id?: InputMaybe<StringComparisonExp>;
   mintEvent?: InputMaybe<MintOptionEventBoolExp>;
   mintEvent_id?: InputMaybe<StringComparisonExp>;
+  optionId?: InputMaybe<NumericComparisonExp>;
   optionType?: InputMaybe<OptiontypeComparisonExp>;
   owner?: InputMaybe<TimelockMarketUserBoolExp>;
   ownerAddr?: InputMaybe<StringComparisonExp>;
@@ -1067,6 +1072,7 @@ export type UserOptionBoolExp = {
   positionSizeCurrent?: InputMaybe<NumericComparisonExp>;
   premiumPaid?: InputMaybe<NumericComparisonExp>;
   realizedPayout?: InputMaybe<NumericComparisonExp>;
+  startTick?: InputMaybe<IntComparisonExp>;
   strikePrice?: InputMaybe<NumericComparisonExp>;
   strikeTick?: InputMaybe<IntComparisonExp>;
 };
@@ -1083,6 +1089,7 @@ export type UserOptionMaxOrderBy = {
   marketAddr?: InputMaybe<OrderBy>;
   market_id?: InputMaybe<OrderBy>;
   mintEvent_id?: InputMaybe<OrderBy>;
+  optionId?: InputMaybe<OrderBy>;
   optionType?: InputMaybe<OrderBy>;
   ownerAddr?: InputMaybe<OrderBy>;
   owner_id?: InputMaybe<OrderBy>;
@@ -1090,6 +1097,7 @@ export type UserOptionMaxOrderBy = {
   positionSizeCurrent?: InputMaybe<OrderBy>;
   premiumPaid?: InputMaybe<OrderBy>;
   realizedPayout?: InputMaybe<OrderBy>;
+  startTick?: InputMaybe<OrderBy>;
   strikePrice?: InputMaybe<OrderBy>;
   strikeTick?: InputMaybe<OrderBy>;
 };
@@ -1106,6 +1114,7 @@ export type UserOptionMinOrderBy = {
   marketAddr?: InputMaybe<OrderBy>;
   market_id?: InputMaybe<OrderBy>;
   mintEvent_id?: InputMaybe<OrderBy>;
+  optionId?: InputMaybe<OrderBy>;
   optionType?: InputMaybe<OrderBy>;
   ownerAddr?: InputMaybe<OrderBy>;
   owner_id?: InputMaybe<OrderBy>;
@@ -1113,6 +1122,7 @@ export type UserOptionMinOrderBy = {
   positionSizeCurrent?: InputMaybe<OrderBy>;
   premiumPaid?: InputMaybe<OrderBy>;
   realizedPayout?: InputMaybe<OrderBy>;
+  startTick?: InputMaybe<OrderBy>;
   strikePrice?: InputMaybe<OrderBy>;
   strikeTick?: InputMaybe<OrderBy>;
 };
@@ -1133,6 +1143,7 @@ export type UserOptionOrderBy = {
   market_id?: InputMaybe<OrderBy>;
   mintEvent?: InputMaybe<MintOptionEventOrderBy>;
   mintEvent_id?: InputMaybe<OrderBy>;
+  optionId?: InputMaybe<OrderBy>;
   optionType?: InputMaybe<OrderBy>;
   owner?: InputMaybe<TimelockMarketUserOrderBy>;
   ownerAddr?: InputMaybe<OrderBy>;
@@ -1141,6 +1152,7 @@ export type UserOptionOrderBy = {
   positionSizeCurrent?: InputMaybe<OrderBy>;
   premiumPaid?: InputMaybe<OrderBy>;
   realizedPayout?: InputMaybe<OrderBy>;
+  startTick?: InputMaybe<OrderBy>;
   strikePrice?: InputMaybe<OrderBy>;
   strikeTick?: InputMaybe<OrderBy>;
 };
@@ -1170,6 +1182,8 @@ export type UserOptionSelectColumn =
   /** column name */
   | 'mintEvent_id'
   /** column name */
+  | 'optionId'
+  /** column name */
   | 'optionType'
   /** column name */
   | 'ownerAddr'
@@ -1184,6 +1198,8 @@ export type UserOptionSelectColumn =
   /** column name */
   | 'realizedPayout'
   /** column name */
+  | 'startTick'
+  /** column name */
   | 'strikePrice'
   /** column name */
   | 'strikeTick';
@@ -1194,10 +1210,12 @@ export type UserOptionStddevOrderBy = {
   entryPrice?: InputMaybe<OrderBy>;
   entryTick?: InputMaybe<OrderBy>;
   expiresAt?: InputMaybe<OrderBy>;
+  optionId?: InputMaybe<OrderBy>;
   positionSizeAtOpen?: InputMaybe<OrderBy>;
   positionSizeCurrent?: InputMaybe<OrderBy>;
   premiumPaid?: InputMaybe<OrderBy>;
   realizedPayout?: InputMaybe<OrderBy>;
+  startTick?: InputMaybe<OrderBy>;
   strikePrice?: InputMaybe<OrderBy>;
   strikeTick?: InputMaybe<OrderBy>;
 };
@@ -1208,10 +1226,12 @@ export type UserOptionStddevPopOrderBy = {
   entryPrice?: InputMaybe<OrderBy>;
   entryTick?: InputMaybe<OrderBy>;
   expiresAt?: InputMaybe<OrderBy>;
+  optionId?: InputMaybe<OrderBy>;
   positionSizeAtOpen?: InputMaybe<OrderBy>;
   positionSizeCurrent?: InputMaybe<OrderBy>;
   premiumPaid?: InputMaybe<OrderBy>;
   realizedPayout?: InputMaybe<OrderBy>;
+  startTick?: InputMaybe<OrderBy>;
   strikePrice?: InputMaybe<OrderBy>;
   strikeTick?: InputMaybe<OrderBy>;
 };
@@ -1222,10 +1242,12 @@ export type UserOptionStddevSampOrderBy = {
   entryPrice?: InputMaybe<OrderBy>;
   entryTick?: InputMaybe<OrderBy>;
   expiresAt?: InputMaybe<OrderBy>;
+  optionId?: InputMaybe<OrderBy>;
   positionSizeAtOpen?: InputMaybe<OrderBy>;
   positionSizeCurrent?: InputMaybe<OrderBy>;
   premiumPaid?: InputMaybe<OrderBy>;
   realizedPayout?: InputMaybe<OrderBy>;
+  startTick?: InputMaybe<OrderBy>;
   strikePrice?: InputMaybe<OrderBy>;
   strikeTick?: InputMaybe<OrderBy>;
 };
@@ -1251,6 +1273,7 @@ export type UserOptionStreamCursorValueInput = {
   marketAddr?: InputMaybe<Scalars['String']['input']>;
   market_id?: InputMaybe<Scalars['String']['input']>;
   mintEvent_id?: InputMaybe<Scalars['String']['input']>;
+  optionId?: InputMaybe<Scalars['numeric']['input']>;
   optionType?: InputMaybe<Scalars['optiontype']['input']>;
   ownerAddr?: InputMaybe<Scalars['String']['input']>;
   owner_id?: InputMaybe<Scalars['String']['input']>;
@@ -1258,6 +1281,7 @@ export type UserOptionStreamCursorValueInput = {
   positionSizeCurrent?: InputMaybe<Scalars['numeric']['input']>;
   premiumPaid?: InputMaybe<Scalars['numeric']['input']>;
   realizedPayout?: InputMaybe<Scalars['numeric']['input']>;
+  startTick?: InputMaybe<Scalars['Int']['input']>;
   strikePrice?: InputMaybe<Scalars['numeric']['input']>;
   strikeTick?: InputMaybe<Scalars['Int']['input']>;
 };
@@ -1268,10 +1292,12 @@ export type UserOptionSumOrderBy = {
   entryPrice?: InputMaybe<OrderBy>;
   entryTick?: InputMaybe<OrderBy>;
   expiresAt?: InputMaybe<OrderBy>;
+  optionId?: InputMaybe<OrderBy>;
   positionSizeAtOpen?: InputMaybe<OrderBy>;
   positionSizeCurrent?: InputMaybe<OrderBy>;
   premiumPaid?: InputMaybe<OrderBy>;
   realizedPayout?: InputMaybe<OrderBy>;
+  startTick?: InputMaybe<OrderBy>;
   strikePrice?: InputMaybe<OrderBy>;
   strikeTick?: InputMaybe<OrderBy>;
 };
@@ -1282,10 +1308,12 @@ export type UserOptionVarPopOrderBy = {
   entryPrice?: InputMaybe<OrderBy>;
   entryTick?: InputMaybe<OrderBy>;
   expiresAt?: InputMaybe<OrderBy>;
+  optionId?: InputMaybe<OrderBy>;
   positionSizeAtOpen?: InputMaybe<OrderBy>;
   positionSizeCurrent?: InputMaybe<OrderBy>;
   premiumPaid?: InputMaybe<OrderBy>;
   realizedPayout?: InputMaybe<OrderBy>;
+  startTick?: InputMaybe<OrderBy>;
   strikePrice?: InputMaybe<OrderBy>;
   strikeTick?: InputMaybe<OrderBy>;
 };
@@ -1296,10 +1324,12 @@ export type UserOptionVarSampOrderBy = {
   entryPrice?: InputMaybe<OrderBy>;
   entryTick?: InputMaybe<OrderBy>;
   expiresAt?: InputMaybe<OrderBy>;
+  optionId?: InputMaybe<OrderBy>;
   positionSizeAtOpen?: InputMaybe<OrderBy>;
   positionSizeCurrent?: InputMaybe<OrderBy>;
   premiumPaid?: InputMaybe<OrderBy>;
   realizedPayout?: InputMaybe<OrderBy>;
+  startTick?: InputMaybe<OrderBy>;
   strikePrice?: InputMaybe<OrderBy>;
   strikeTick?: InputMaybe<OrderBy>;
 };
@@ -1310,10 +1340,12 @@ export type UserOptionVarianceOrderBy = {
   entryPrice?: InputMaybe<OrderBy>;
   entryTick?: InputMaybe<OrderBy>;
   expiresAt?: InputMaybe<OrderBy>;
+  optionId?: InputMaybe<OrderBy>;
   positionSizeAtOpen?: InputMaybe<OrderBy>;
   positionSizeCurrent?: InputMaybe<OrderBy>;
   premiumPaid?: InputMaybe<OrderBy>;
   realizedPayout?: InputMaybe<OrderBy>;
+  startTick?: InputMaybe<OrderBy>;
   strikePrice?: InputMaybe<OrderBy>;
   strikeTick?: InputMaybe<OrderBy>;
 };
@@ -2213,10 +2245,12 @@ export type GetActiveUserOptionsQuery = {
   UserOption: Array<{
     __typename: 'UserOption';
     id: string;
+    optionId: any;
     ownerAddr: string;
     optionType: any;
     strikeTick: number;
     entryTick: number;
+    startTick: number;
     strikePrice: any;
     entryPrice: any;
     expiresAt: number;
@@ -2246,10 +2280,12 @@ export type GetClosedUserOptionsQuery = {
   UserOption: Array<{
     __typename: 'UserOption';
     id: string;
+    optionId: any;
     ownerAddr: string;
     optionType: any;
     strikeTick: number;
     entryTick: number;
+    startTick: number;
     strikePrice: any;
     entryPrice: any;
     expiresAt: number;
@@ -2303,6 +2339,7 @@ export const GetActiveUserOptionsDocument = gql`
       limit: 1000
     ) {
       id
+      optionId
       ownerAddr
       exerciseEvents {
         transactionHash
@@ -2313,6 +2350,7 @@ export const GetActiveUserOptionsDocument = gql`
       optionType
       strikeTick
       entryTick
+      startTick
       strikePrice
       entryPrice
       expiresAt
@@ -2335,6 +2373,7 @@ export const GetClosedUserOptionsDocument = gql`
       limit: 1000
     ) {
       id
+      optionId
       ownerAddr
       exerciseEvents {
         transactionHash
@@ -2345,6 +2384,7 @@ export const GetClosedUserOptionsDocument = gql`
       optionType
       strikeTick
       entryTick
+      startTick
       strikePrice
       entryPrice
       expiresAt

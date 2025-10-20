@@ -16,6 +16,7 @@ type TimelockMarketContextValue = {
   lensAddr?: Address;
   uniswapMathLensAddr?: Address;
   envioGraphqlUrl?: string;
+  graphqlClient?: ReturnType<typeof getSdk>;
 };
 
 const TimelockMarketContext = createContext<
@@ -36,15 +37,26 @@ export const TimelockMarketProvider = ({
   const lensAddr = timelockLenses[chainId];
   const uniswapMathLensAddr = uniswapMathLenses[chainId];
 
+  const graphqlClient = useMemo(() => {
+    if (envioGraphqlUrl) {
+      return getSdk(new GraphQLClient(envioGraphqlUrl));
+    }
+    return undefined;
+  }, [envioGraphqlUrl]);
+
+  const contextValue = useMemo(
+    () => ({
+      marketData: marketData || {},
+      lensAddr,
+      uniswapMathLensAddr,
+      envioGraphqlUrl,
+      graphqlClient,
+    }),
+    [marketData, lensAddr, uniswapMathLensAddr, envioGraphqlUrl, graphqlClient],
+  );
+
   return (
-    <TimelockMarketContext.Provider
-      value={{
-        marketData: marketData || {},
-        lensAddr,
-        uniswapMathLensAddr,
-        envioGraphqlUrl,
-      }}
-    >
+    <TimelockMarketContext.Provider value={contextValue}>
       {children}
     </TimelockMarketContext.Provider>
   );
@@ -67,17 +79,5 @@ export const useTimelockConfig = () => {
   if (context === undefined) {
     throw new Error('useConfig must be used within a TimelockMarketProvider');
   }
-  const graphqlClient = useMemo(() => {
-    if (context.envioGraphqlUrl) {
-      return getSdk(new GraphQLClient(context.envioGraphqlUrl));
-    }
-    return undefined;
-  }, [context.envioGraphqlUrl]);
-
-  return {
-    lensAddr: context.lensAddr,
-    uniswapMathLensAddr: context.uniswapMathLensAddr,
-    envioGraphqlUrl: context.envioGraphqlUrl,
-    graphqlClient,
-  };
+  return context;
 };

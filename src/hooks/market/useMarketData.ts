@@ -8,19 +8,21 @@ export const useMarketData = (marketAddr?: Address) => {
 
   const {data} = useQuery({
     queryKey: ['marketData', marketAddr || '--'],
-    queryFn: () =>
-      graphqlClient!.GetMarketData({marketAddr: marketAddr!.toLowerCase()}),
-    select: data => ({
-      ...data.TimelockMarket[0],
-      pool: data.TimelockMarket[0].pool as Address,
-      vault: data.TimelockMarket[0].vault as Address,
-      optionAsset: data.TimelockMarket[0].optionAsset as Address,
-      payoutAsset: data.TimelockMarket[0].payoutAsset as Address,
-      optionsCount: BigInt(data.TimelockMarket[0].optionsCount),
-      tradersCount: BigInt(data.TimelockMarket[0].tradersCount),
-    }),
+    queryFn: async () => {
+      const result = await graphqlClient!.GetMarketData({
+        marketAddr: marketAddr!.toLowerCase(),
+      });
+      return {
+        ...result.TimelockMarket[0],
+        pool: result.TimelockMarket[0].pool as Address,
+        vault: result.TimelockMarket[0].vault as Address,
+        optionAsset: result.TimelockMarket[0].optionAsset as Address,
+        payoutAsset: result.TimelockMarket[0].payoutAsset as Address,
+        optionsCount: BigInt(result.TimelockMarket[0].optionsCount),
+        tradersCount: BigInt(result.TimelockMarket[0].tradersCount),
+      };
+    },
     enabled: !!marketAddr && !!graphqlClient,
   });
-
   return (data || {}) as Partial<NonUndefinedGuard<typeof data>>;
 };

@@ -13,9 +13,9 @@ export const useOptionPnl = (optionData: {
   marketAddr: Address;
   optionType: 'CALL' | 'PUT';
   positionSizeCurrent: bigint;
-  entryPrice: bigint;
+  strikePrice: bigint;
 }) => {
-  const {marketAddr, optionType, entryPrice, positionSizeCurrent} = optionData;
+  const {marketAddr, optionType, strikePrice, positionSizeCurrent} = optionData;
 
   const {pool, optionAssetIsToken0, payoutAssetDecimals} =
     useMarketData(marketAddr);
@@ -30,13 +30,13 @@ export const useOptionPnl = (optionData: {
     )
       return {};
 
-    const entrySize = (positionSizeCurrent * entryPrice) / PRICE_PRECISION;
+    const strikeSize = (positionSizeCurrent * strikePrice) / PRICE_PRECISION;
 
     const currentSize = optionAssetIsToken0
       ? token0ToToken1(positionSizeCurrent, currentTick)
       : token1ToToken0(positionSizeCurrent, currentTick);
 
-    const delta = currentSize - entrySize;
+    const delta = currentSize - strikeSize;
 
     const displayPnl = wrapAmount(
       optionType === 'CALL' ? delta : -delta,
@@ -48,7 +48,7 @@ export const useOptionPnl = (optionData: {
     );
     return {unrealizedPayout, displayPnl};
   }, [
-    entryPrice,
+    strikePrice,
     optionType,
     optionAssetIsToken0,
     currentTick,

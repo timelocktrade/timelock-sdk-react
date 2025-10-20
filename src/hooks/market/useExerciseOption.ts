@@ -1,26 +1,18 @@
 import type {Address} from 'viem';
 import {waitForTransactionReceipt} from 'viem/actions';
-import {
-  useWriteContract,
-  useWaitForTransactionReceipt,
-  useReadContract,
-  useClient,
-} from 'wagmi';
+import {useWriteContract, useWaitForTransactionReceipt, useClient} from 'wagmi';
 
 import {useMarketData} from './useMarketData';
 
 import {optionsMarketAbi} from '~/abis/optionsMarket';
-import {singleOwnerVaultAbi} from '~/abis/singleOwnerVault';
+import type {OptionData} from './useUserOptions';
+import {useLens} from '../useLens';
 
 export const useExerciseOption = (marketAddr?: Address) => {
   const {vault} = useMarketData(marketAddr);
+  const {timelockLens} = useLens();
   const client = useClient();
 
-  const {data: lowestTick} = useReadContract({
-    address: vault,
-    abi: singleOwnerVaultAbi,
-    functionName: 'lowestTick',
-  });
   const {writeContractAsync, data: hash, isPending, error} = useWriteContract();
 
   const {isLoading: isConfirming, isSuccess} = useWaitForTransactionReceipt({
@@ -28,19 +20,21 @@ export const useExerciseOption = (marketAddr?: Address) => {
   });
 
   const exerciseOption = async (
-    optionId: bigint,
+    option: OptionData,
     liquidities: readonly bigint[],
   ) => {
-    if (!client) throw new Error('Wallet not connected');
+    if (!client || !timelockLens || !vault || !marketAddr)
+      throw new Error('Wallet not connected');
 
-    if (lowestTick === undefined || !marketAddr) {
-      throw new Error('Lowest tick lower not available');
-    }
+    const refTick = await timelockLens.read.getRefTick([
+      vault,
+      option.startTick,
+    ]);
     const hash = await writeContractAsync({
       address: marketAddr,
       abi: optionsMarketAbi,
       functionName: 'exerciseOption',
-      args: [optionId, liquidities, 0n, lowestTick],
+      args: [option.optionId, liquidities, 0n, refTick],
     });
     await waitForTransactionReceipt(client, {hash});
     return hash;

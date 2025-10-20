@@ -4,6 +4,7 @@ query GetActiveUserOptions($user: String!) {
     limit: 1000
   ) {
     id
+    optionId
     ownerAddr
     exerciseEvents {
       transactionHash
@@ -14,6 +15,7 @@ query GetActiveUserOptions($user: String!) {
     optionType
     strikeTick
     entryTick
+    startTick
     strikePrice
     entryPrice
     expiresAt
@@ -35,6 +37,7 @@ query GetClosedUserOptions($user: String!) {
     limit: 1000
   ) {
     id
+    optionId
     ownerAddr
     exerciseEvents {
       transactionHash
@@ -45,6 +48,7 @@ query GetClosedUserOptions($user: String!) {
     optionType
     strikeTick
     entryTick
+    startTick
     strikePrice
     entryPrice
     expiresAt

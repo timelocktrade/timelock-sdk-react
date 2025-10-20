@@ -8,46 +8,51 @@ import {useMarketData} from './useMarketData';
 
 import {wrapAmount} from '~/lib/numberUtils';
 import {optionsMarketAbi} from '~/abis/optionsMarket';
+import {roundTickDown} from '~/lib/liquidityUtils';
 
 export const useOptionPremium = (
   marketAddr: Address | undefined,
   optionType: 'CALL' | 'PUT',
   optionAmount: bigint,
   duration: number,
+  strikeTick?: number,
 ) => {
-  const {pool, payoutAssetDecimals} = useMarketData(marketAddr);
+  const {pool, payoutAssetDecimals, optionAssetIsToken0} =
+    useMarketData(marketAddr);
   const {tickSpacing} = usePoolData(pool);
-  const currentTick = useCurrentTick(pool);
+  const {exact: currentTick} = useCurrentTick(pool);
 
-  const strikeTick = useMemo(() => {
-    if (currentTick.rounded === undefined || tickSpacing === undefined) {
+  const strikeTickRounded = useMemo(() => {
+    if (!tickSpacing || currentTick === undefined) {
       return undefined;
     }
-    return optionType === 'CALL'
-      ? currentTick.rounded + tickSpacing
-      : currentTick.rounded;
-  }, [currentTick.rounded, tickSpacing, optionType]);
+    let strikeTickRounded = roundTickDown(
+      strikeTick ?? currentTick,
+      tickSpacing,
+    );
+    if (
+      (optionType === 'CALL' && optionAssetIsToken0) ||
+      (optionType === 'PUT' && !optionAssetIsToken0)
+    ) {
+      strikeTickRounded += tickSpacing;
+    }
+    return strikeTickRounded;
+  }, [currentTick, tickSpacing, optionType, optionAssetIsToken0, strikeTick]);
 
   const {data: premiumData} = useReadContract({
     address: marketAddr,
     abi: optionsMarketAbi,
     functionName: 'calculatePremium',
     args:
-      strikeTick !== undefined
+      strikeTickRounded !== undefined
         ? [
             optionType === 'CALL' ? 0 : 1,
             optionAmount,
-            strikeTick,
+            strikeTickRounded,
             BigInt(duration),
           ]
         : undefined,
-    query: {
-      enabled:
-        currentTick.rounded !== undefined &&
-        payoutAssetDecimals !== undefined &&
-        tickSpacing !== undefined &&
-        strikeTick !== undefined,
-    },
+    query: {enabled: strikeTickRounded !== undefined},
   });
 
   const premium = useMemo(() => {
