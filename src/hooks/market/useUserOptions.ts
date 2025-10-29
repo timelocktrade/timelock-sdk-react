@@ -4,26 +4,30 @@ import {useTimelockConfig} from '~/providers/TimelockMarketProvider';
 
 export type OptionData = ReturnType<typeof useUserOptions>['data'][0];
 
-const useUserOptions = (user?: string, active = false) => {
+const useUserOptions = (user?: Address, active = false) => {
   const {graphqlClient} = useTimelockConfig();
 
+  user = user?.toLowerCase() as Address | undefined;
+
   const {data, ...rest} = useQuery({
-    queryKey: ['userTrades', user || '--', active],
+    queryKey: ['userOptions', user?.toLowerCase() || '--', active],
     queryFn: async () => {
-      if (!graphqlClient) return [];
+      if (!graphqlClient || !user) return [];
 
       const data = active
-        ? await graphqlClient.GetActiveUserOptions({user: user!.toLowerCase()})
-        : await graphqlClient.GetClosedUserOptions({user: user!.toLowerCase()});
+        ? await graphqlClient.GetActiveUserOptions({user})
+        : await graphqlClient.GetClosedUserOptions({user});
 
       return data.UserOption.map(option => ({
         ...option,
         optionId: BigInt(option.optionId),
-        marketAddr: option.marketAddr as Address,
+        marketAddr: option.market!.address as Address,
+        ownerAddr: option.owner!.address as Address,
         optionType: option.optionType as 'CALL' | 'PUT',
         createdAt: new Date(Number(option.createdAt) * 1000),
         expiresAt: new Date(Number(option.expiresAt) * 1000),
-        premiumPaid: BigInt(option.premiumPaid),
+        premium: BigInt(option.premium),
+        protocolFee: BigInt(option.protocolFee),
         realizedPayout: BigInt(option.realizedPayout),
         liquiditiesAtOpen: option.liquiditiesAtOpen.map(l => BigInt(l)),
         liquiditiesCurrent: option.liquiditiesCurrent.map(l => BigInt(l)),
@@ -38,10 +42,10 @@ const useUserOptions = (user?: string, active = false) => {
   return {data: data || [], ...rest};
 };
 
-export const useActiveUserOptions = (user?: string) => {
+export const useActiveUserOptions = (user?: Address) => {
   return useUserOptions(user, true);
 };
 
-export const useClosedUserOptions = (user?: string) => {
+export const useClosedUserOptions = (user?: Address) => {
   return useUserOptions(user, false);
 };

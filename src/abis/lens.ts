@@ -96,7 +96,7 @@ export const lensAbi = [
           },
           {name: 'owner', type: 'address', internalType: 'address'},
           {name: 'optionType', type: 'uint8', internalType: 'uint8'},
-          {name: 'leftTick', type: 'int24', internalType: 'int24'},
+          {name: 'startTick', type: 'int24', internalType: 'int24'},
           {name: 'strikeTick', type: 'int24', internalType: 'int24'},
           {name: 'entryTick', type: 'int24', internalType: 'int24'},
           {
@@ -139,13 +139,7 @@ export const lensAbi = [
             type: 'uint256',
             internalType: 'uint256',
           },
-          {
-            name: 'premiumPaid',
-            type: 'uint128',
-            internalType: 'uint128',
-          },
-          {name: 'expiresAt', type: 'uint64', internalType: 'uint64'},
-          {name: 'createdAt', type: 'uint64', internalType: 'uint64'},
+          {name: 'expiresAt', type: 'uint32', internalType: 'uint32'},
           {
             name: 'liquidities',
             type: 'uint128[]',
@@ -331,7 +325,7 @@ export const lensAbi = [
           },
           {name: 'owner', type: 'address', internalType: 'address'},
           {name: 'optionType', type: 'uint8', internalType: 'uint8'},
-          {name: 'leftTick', type: 'int24', internalType: 'int24'},
+          {name: 'startTick', type: 'int24', internalType: 'int24'},
           {name: 'strikeTick', type: 'int24', internalType: 'int24'},
           {name: 'entryTick', type: 'int24', internalType: 'int24'},
           {
@@ -374,13 +368,7 @@ export const lensAbi = [
             type: 'uint256',
             internalType: 'uint256',
           },
-          {
-            name: 'premiumPaid',
-            type: 'uint128',
-            internalType: 'uint128',
-          },
-          {name: 'expiresAt', type: 'uint64', internalType: 'uint64'},
-          {name: 'createdAt', type: 'uint64', internalType: 'uint64'},
+          {name: 'expiresAt', type: 'uint32', internalType: 'uint32'},
           {
             name: 'liquidities',
             type: 'uint128[]',
@@ -419,7 +407,7 @@ export const lensAbi = [
           },
           {name: 'owner', type: 'address', internalType: 'address'},
           {name: 'optionType', type: 'uint8', internalType: 'uint8'},
-          {name: 'leftTick', type: 'int24', internalType: 'int24'},
+          {name: 'startTick', type: 'int24', internalType: 'int24'},
           {name: 'strikeTick', type: 'int24', internalType: 'int24'},
           {name: 'entryTick', type: 'int24', internalType: 'int24'},
           {
@@ -462,13 +450,7 @@ export const lensAbi = [
             type: 'uint256',
             internalType: 'uint256',
           },
-          {
-            name: 'premiumPaid',
-            type: 'uint128',
-            internalType: 'uint128',
-          },
-          {name: 'expiresAt', type: 'uint64', internalType: 'uint64'},
-          {name: 'createdAt', type: 'uint64', internalType: 'uint64'},
+          {name: 'expiresAt', type: 'uint32', internalType: 'uint32'},
           {
             name: 'liquidities',
             type: 'uint128[]',
@@ -574,7 +556,7 @@ export const lensAbi = [
           },
           {name: 'owner', type: 'address', internalType: 'address'},
           {name: 'optionType', type: 'uint8', internalType: 'uint8'},
-          {name: 'leftTick', type: 'int24', internalType: 'int24'},
+          {name: 'startTick', type: 'int24', internalType: 'int24'},
           {name: 'strikeTick', type: 'int24', internalType: 'int24'},
           {name: 'entryTick', type: 'int24', internalType: 'int24'},
           {
@@ -617,13 +599,7 @@ export const lensAbi = [
             type: 'uint256',
             internalType: 'uint256',
           },
-          {
-            name: 'premiumPaid',
-            type: 'uint128',
-            internalType: 'uint128',
-          },
-          {name: 'expiresAt', type: 'uint64', internalType: 'uint64'},
-          {name: 'createdAt', type: 'uint64', internalType: 'uint64'},
+          {name: 'expiresAt', type: 'uint32', internalType: 'uint32'},
           {
             name: 'liquidities',
             type: 'uint128[]',

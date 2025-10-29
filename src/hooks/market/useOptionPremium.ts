@@ -1,9 +1,9 @@
-import {useReadContract} from 'wagmi';
 import type {Address} from 'viem';
+import {useReadContract} from 'wagmi';
 import {useMemo} from 'react';
 
-import {useCurrentTick} from '../pool/useCurrentTick';
-import {usePoolData} from '../pool/usePoolData';
+import {useCurrentTick} from '~/hooks/pool/useCurrentTick';
+import {usePoolData} from '~/hooks/pool/usePoolData';
 import {useMarketData} from './useMarketData';
 
 import {wrapAmount} from '~/lib/numberUtils';
@@ -14,7 +14,8 @@ export const useOptionPremium = (
   marketAddr: Address | undefined,
   optionType: 'CALL' | 'PUT',
   optionAmount: bigint,
-  duration: number,
+  addedDuration: number,
+  remainingDuration = 0,
   strikeTick?: number,
 ) => {
   const {pool, payoutAssetDecimals, optionAssetIsToken0} =
@@ -39,7 +40,7 @@ export const useOptionPremium = (
     return strikeTickRounded;
   }, [currentTick, tickSpacing, optionType, optionAssetIsToken0, strikeTick]);
 
-  const {data: premiumData} = useReadContract({
+  const {data: [premium, protocolFee] = []} = useReadContract({
     address: marketAddr,
     abi: optionsMarketAbi,
     functionName: 'calculatePremium',
@@ -49,18 +50,25 @@ export const useOptionPremium = (
             optionType === 'CALL' ? 0 : 1,
             optionAmount,
             strikeTickRounded,
-            BigInt(duration),
+            addedDuration,
+            remainingDuration,
           ]
         : undefined,
     query: {enabled: strikeTickRounded !== undefined},
   });
 
-  const premium = useMemo(() => {
-    if (premiumData === undefined || payoutAssetDecimals === undefined) {
-      return undefined;
+  return useMemo(() => {
+    if (
+      premium === undefined ||
+      protocolFee === undefined ||
+      payoutAssetDecimals === undefined
+    ) {
+      return {};
     }
-    return wrapAmount(premiumData, payoutAssetDecimals);
-  }, [premiumData, payoutAssetDecimals]);
-
-  return premium;
+    return {
+      premium: wrapAmount(premium, payoutAssetDecimals),
+      protocolFee: wrapAmount(protocolFee, payoutAssetDecimals),
+      totalPremium: wrapAmount(premium + protocolFee, payoutAssetDecimals),
+    };
+  }, [premium, protocolFee, payoutAssetDecimals]);
 };

@@ -204,12 +204,12 @@ export type BurnEventStreamCursorValueInput = {
 export type ExerciseOptionEvent = {
   __typename: 'ExerciseOptionEvent';
   blockNumber: Scalars['numeric']['output'];
+  currentTick: Scalars['Int']['output'];
   id: Scalars['String']['output'];
-  liquidities: Array<Scalars['numeric']['output']>;
+  liquidities: Array<Scalars['String']['output']>;
   /** An object relationship */
   option?: Maybe<UserOption>;
   option_id: Scalars['String']['output'];
-  owner: Scalars['String']['output'];
   payout: Scalars['numeric']['output'];
   timestamp: Scalars['numeric']['output'];
   transactionHash: Scalars['String']['output'];
@@ -233,6 +233,7 @@ export type ExerciseOptionEventAggregateOrderBy = {
 /** order by avg() on columns of table "ExerciseOptionEvent" */
 export type ExerciseOptionEventAvgOrderBy = {
   blockNumber?: InputMaybe<OrderBy>;
+  currentTick?: InputMaybe<OrderBy>;
   payout?: InputMaybe<OrderBy>;
   timestamp?: InputMaybe<OrderBy>;
 };
@@ -243,11 +244,11 @@ export type ExerciseOptionEventBoolExp = {
   _not?: InputMaybe<ExerciseOptionEventBoolExp>;
   _or?: InputMaybe<Array<ExerciseOptionEventBoolExp>>;
   blockNumber?: InputMaybe<NumericComparisonExp>;
+  currentTick?: InputMaybe<IntComparisonExp>;
   id?: InputMaybe<StringComparisonExp>;
-  liquidities?: InputMaybe<NumericArrayComparisonExp>;
+  liquidities?: InputMaybe<StringArrayComparisonExp>;
   option?: InputMaybe<UserOptionBoolExp>;
   option_id?: InputMaybe<StringComparisonExp>;
-  owner?: InputMaybe<StringComparisonExp>;
   payout?: InputMaybe<NumericComparisonExp>;
   timestamp?: InputMaybe<NumericComparisonExp>;
   transactionHash?: InputMaybe<StringComparisonExp>;
@@ -256,10 +257,10 @@ export type ExerciseOptionEventBoolExp = {
 /** order by max() on columns of table "ExerciseOptionEvent" */
 export type ExerciseOptionEventMaxOrderBy = {
   blockNumber?: InputMaybe<OrderBy>;
+  currentTick?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   liquidities?: InputMaybe<OrderBy>;
   option_id?: InputMaybe<OrderBy>;
-  owner?: InputMaybe<OrderBy>;
   payout?: InputMaybe<OrderBy>;
   timestamp?: InputMaybe<OrderBy>;
   transactionHash?: InputMaybe<OrderBy>;
@@ -268,10 +269,10 @@ export type ExerciseOptionEventMaxOrderBy = {
 /** order by min() on columns of table "ExerciseOptionEvent" */
 export type ExerciseOptionEventMinOrderBy = {
   blockNumber?: InputMaybe<OrderBy>;
+  currentTick?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   liquidities?: InputMaybe<OrderBy>;
   option_id?: InputMaybe<OrderBy>;
-  owner?: InputMaybe<OrderBy>;
   payout?: InputMaybe<OrderBy>;
   timestamp?: InputMaybe<OrderBy>;
   transactionHash?: InputMaybe<OrderBy>;
@@ -280,11 +281,11 @@ export type ExerciseOptionEventMinOrderBy = {
 /** Ordering options when selecting data from "ExerciseOptionEvent". */
 export type ExerciseOptionEventOrderBy = {
   blockNumber?: InputMaybe<OrderBy>;
+  currentTick?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   liquidities?: InputMaybe<OrderBy>;
   option?: InputMaybe<UserOptionOrderBy>;
   option_id?: InputMaybe<OrderBy>;
-  owner?: InputMaybe<OrderBy>;
   payout?: InputMaybe<OrderBy>;
   timestamp?: InputMaybe<OrderBy>;
   transactionHash?: InputMaybe<OrderBy>;
@@ -295,13 +296,13 @@ export type ExerciseOptionEventSelectColumn =
   /** column name */
   | 'blockNumber'
   /** column name */
+  | 'currentTick'
+  /** column name */
   | 'id'
   /** column name */
   | 'liquidities'
   /** column name */
   | 'option_id'
-  /** column name */
-  | 'owner'
   /** column name */
   | 'payout'
   /** column name */
@@ -312,6 +313,7 @@ export type ExerciseOptionEventSelectColumn =
 /** order by stddev() on columns of table "ExerciseOptionEvent" */
 export type ExerciseOptionEventStddevOrderBy = {
   blockNumber?: InputMaybe<OrderBy>;
+  currentTick?: InputMaybe<OrderBy>;
   payout?: InputMaybe<OrderBy>;
   timestamp?: InputMaybe<OrderBy>;
 };
@@ -319,6 +321,7 @@ export type ExerciseOptionEventStddevOrderBy = {
 /** order by stddev_pop() on columns of table "ExerciseOptionEvent" */
 export type ExerciseOptionEventStddevPopOrderBy = {
   blockNumber?: InputMaybe<OrderBy>;
+  currentTick?: InputMaybe<OrderBy>;
   payout?: InputMaybe<OrderBy>;
   timestamp?: InputMaybe<OrderBy>;
 };
@@ -326,6 +329,7 @@ export type ExerciseOptionEventStddevPopOrderBy = {
 /** order by stddev_samp() on columns of table "ExerciseOptionEvent" */
 export type ExerciseOptionEventStddevSampOrderBy = {
   blockNumber?: InputMaybe<OrderBy>;
+  currentTick?: InputMaybe<OrderBy>;
   payout?: InputMaybe<OrderBy>;
   timestamp?: InputMaybe<OrderBy>;
 };
@@ -341,10 +345,10 @@ export type ExerciseOptionEventStreamCursorInput = {
 /** Initial value of the column from where the streaming should start */
 export type ExerciseOptionEventStreamCursorValueInput = {
   blockNumber?: InputMaybe<Scalars['numeric']['input']>;
+  currentTick?: InputMaybe<Scalars['Int']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
-  liquidities?: InputMaybe<Array<Scalars['numeric']['input']>>;
+  liquidities?: InputMaybe<Array<Scalars['String']['input']>>;
   option_id?: InputMaybe<Scalars['String']['input']>;
-  owner?: InputMaybe<Scalars['String']['input']>;
   payout?: InputMaybe<Scalars['numeric']['input']>;
   timestamp?: InputMaybe<Scalars['numeric']['input']>;
   transactionHash?: InputMaybe<Scalars['String']['input']>;
@@ -353,6 +357,7 @@ export type ExerciseOptionEventStreamCursorValueInput = {
 /** order by sum() on columns of table "ExerciseOptionEvent" */
 export type ExerciseOptionEventSumOrderBy = {
   blockNumber?: InputMaybe<OrderBy>;
+  currentTick?: InputMaybe<OrderBy>;
   payout?: InputMaybe<OrderBy>;
   timestamp?: InputMaybe<OrderBy>;
 };
@@ -360,6 +365,7 @@ export type ExerciseOptionEventSumOrderBy = {
 /** order by var_pop() on columns of table "ExerciseOptionEvent" */
 export type ExerciseOptionEventVarPopOrderBy = {
   blockNumber?: InputMaybe<OrderBy>;
+  currentTick?: InputMaybe<OrderBy>;
   payout?: InputMaybe<OrderBy>;
   timestamp?: InputMaybe<OrderBy>;
 };
@@ -367,6 +373,7 @@ export type ExerciseOptionEventVarPopOrderBy = {
 /** order by var_samp() on columns of table "ExerciseOptionEvent" */
 export type ExerciseOptionEventVarSampOrderBy = {
   blockNumber?: InputMaybe<OrderBy>;
+  currentTick?: InputMaybe<OrderBy>;
   payout?: InputMaybe<OrderBy>;
   timestamp?: InputMaybe<OrderBy>;
 };
@@ -374,8 +381,98 @@ export type ExerciseOptionEventVarSampOrderBy = {
 /** order by variance() on columns of table "ExerciseOptionEvent" */
 export type ExerciseOptionEventVarianceOrderBy = {
   blockNumber?: InputMaybe<OrderBy>;
+  currentTick?: InputMaybe<OrderBy>;
   payout?: InputMaybe<OrderBy>;
   timestamp?: InputMaybe<OrderBy>;
+};
+
+/** columns and relationships of "ExtendOptionEvent" */
+export type ExtendOptionEvent = {
+  __typename: 'ExtendOptionEvent';
+  addedDuration: Scalars['numeric']['output'];
+  blockNumber: Scalars['numeric']['output'];
+  currentTick: Scalars['Int']['output'];
+  id: Scalars['String']['output'];
+  /** An object relationship */
+  option?: Maybe<UserOption>;
+  option_id: Scalars['String']['output'];
+  premium: Scalars['numeric']['output'];
+  protocolFee: Scalars['numeric']['output'];
+  timestamp: Scalars['numeric']['output'];
+  transactionHash: Scalars['String']['output'];
+};
+
+/** Boolean expression to filter rows from the table "ExtendOptionEvent". All fields are combined with a logical 'AND'. */
+export type ExtendOptionEventBoolExp = {
+  _and?: InputMaybe<Array<ExtendOptionEventBoolExp>>;
+  _not?: InputMaybe<ExtendOptionEventBoolExp>;
+  _or?: InputMaybe<Array<ExtendOptionEventBoolExp>>;
+  addedDuration?: InputMaybe<NumericComparisonExp>;
+  blockNumber?: InputMaybe<NumericComparisonExp>;
+  currentTick?: InputMaybe<IntComparisonExp>;
+  id?: InputMaybe<StringComparisonExp>;
+  option?: InputMaybe<UserOptionBoolExp>;
+  option_id?: InputMaybe<StringComparisonExp>;
+  premium?: InputMaybe<NumericComparisonExp>;
+  protocolFee?: InputMaybe<NumericComparisonExp>;
+  timestamp?: InputMaybe<NumericComparisonExp>;
+  transactionHash?: InputMaybe<StringComparisonExp>;
+};
+
+/** Ordering options when selecting data from "ExtendOptionEvent". */
+export type ExtendOptionEventOrderBy = {
+  addedDuration?: InputMaybe<OrderBy>;
+  blockNumber?: InputMaybe<OrderBy>;
+  currentTick?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  option?: InputMaybe<UserOptionOrderBy>;
+  option_id?: InputMaybe<OrderBy>;
+  premium?: InputMaybe<OrderBy>;
+  protocolFee?: InputMaybe<OrderBy>;
+  timestamp?: InputMaybe<OrderBy>;
+  transactionHash?: InputMaybe<OrderBy>;
+};
+
+/** select columns of table "ExtendOptionEvent" */
+export type ExtendOptionEventSelectColumn =
+  /** column name */
+  | 'addedDuration'
+  /** column name */
+  | 'blockNumber'
+  /** column name */
+  | 'currentTick'
+  /** column name */
+  | 'id'
+  /** column name */
+  | 'option_id'
+  /** column name */
+  | 'premium'
+  /** column name */
+  | 'protocolFee'
+  /** column name */
+  | 'timestamp'
+  /** column name */
+  | 'transactionHash';
+
+/** Streaming cursor of the table "ExtendOptionEvent" */
+export type ExtendOptionEventStreamCursorInput = {
+  /** Stream column input with initial value */
+  initial_value: ExtendOptionEventStreamCursorValueInput;
+  /** cursor ordering */
+  ordering?: InputMaybe<CursorOrdering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type ExtendOptionEventStreamCursorValueInput = {
+  addedDuration?: InputMaybe<Scalars['numeric']['input']>;
+  blockNumber?: InputMaybe<Scalars['numeric']['input']>;
+  currentTick?: InputMaybe<Scalars['Int']['input']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  option_id?: InputMaybe<Scalars['String']['input']>;
+  premium?: InputMaybe<Scalars['numeric']['input']>;
+  protocolFee?: InputMaybe<Scalars['numeric']['input']>;
+  timestamp?: InputMaybe<Scalars['numeric']['input']>;
+  transactionHash?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'. */
@@ -389,6 +486,72 @@ export type IntComparisonExp = {
   _lte?: InputMaybe<Scalars['Int']['input']>;
   _neq?: InputMaybe<Scalars['Int']['input']>;
   _nin?: InputMaybe<Array<Scalars['Int']['input']>>;
+};
+
+/** columns and relationships of "MarketOperator" */
+export type MarketOperator = {
+  __typename: 'MarketOperator';
+  address: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  /** An object relationship */
+  market?: Maybe<TimelockMarket>;
+  market_id: Scalars['String']['output'];
+  /** An array relationship */
+  userPermissions: Array<UserMarketOperator>;
+};
+
+/** columns and relationships of "MarketOperator" */
+export type MarketOperatorUserPermissionsArgs = {
+  distinct_on?: InputMaybe<Array<UserMarketOperatorSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<UserMarketOperatorOrderBy>>;
+  where?: InputMaybe<UserMarketOperatorBoolExp>;
+};
+
+/** Boolean expression to filter rows from the table "MarketOperator". All fields are combined with a logical 'AND'. */
+export type MarketOperatorBoolExp = {
+  _and?: InputMaybe<Array<MarketOperatorBoolExp>>;
+  _not?: InputMaybe<MarketOperatorBoolExp>;
+  _or?: InputMaybe<Array<MarketOperatorBoolExp>>;
+  address?: InputMaybe<StringComparisonExp>;
+  id?: InputMaybe<StringComparisonExp>;
+  market?: InputMaybe<TimelockMarketBoolExp>;
+  market_id?: InputMaybe<StringComparisonExp>;
+  userPermissions?: InputMaybe<UserMarketOperatorBoolExp>;
+};
+
+/** Ordering options when selecting data from "MarketOperator". */
+export type MarketOperatorOrderBy = {
+  address?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  market?: InputMaybe<TimelockMarketOrderBy>;
+  market_id?: InputMaybe<OrderBy>;
+  userPermissions_aggregate?: InputMaybe<UserMarketOperatorAggregateOrderBy>;
+};
+
+/** select columns of table "MarketOperator" */
+export type MarketOperatorSelectColumn =
+  /** column name */
+  | 'address'
+  /** column name */
+  | 'id'
+  /** column name */
+  | 'market_id';
+
+/** Streaming cursor of the table "MarketOperator" */
+export type MarketOperatorStreamCursorInput = {
+  /** Stream column input with initial value */
+  initial_value: MarketOperatorStreamCursorValueInput;
+  /** cursor ordering */
+  ordering?: InputMaybe<CursorOrdering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type MarketOperatorStreamCursorValueInput = {
+  address?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  market_id?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** columns and relationships of "MintEvent" */
@@ -474,15 +637,16 @@ export type MintEventStreamCursorValueInput = {
 export type MintOptionEvent = {
   __typename: 'MintOptionEvent';
   blockNumber: Scalars['numeric']['output'];
-  buyer: Scalars['String']['output'];
   currentTick: Scalars['Int']['output'];
   expiresAt: Scalars['numeric']['output'];
   id: Scalars['String']['output'];
-  liquidities: Array<Scalars['numeric']['output']>;
+  liquidities: Array<Scalars['String']['output']>;
   optionType: Scalars['Int']['output'];
+  owner: Scalars['String']['output'];
+  premium: Scalars['numeric']['output'];
+  protocolFee: Scalars['numeric']['output'];
   strikeTick: Scalars['Int']['output'];
   timestamp: Scalars['numeric']['output'];
-  totalPremium: Scalars['numeric']['output'];
   transactionHash: Scalars['String']['output'];
 };
 
@@ -492,30 +656,32 @@ export type MintOptionEventBoolExp = {
   _not?: InputMaybe<MintOptionEventBoolExp>;
   _or?: InputMaybe<Array<MintOptionEventBoolExp>>;
   blockNumber?: InputMaybe<NumericComparisonExp>;
-  buyer?: InputMaybe<StringComparisonExp>;
   currentTick?: InputMaybe<IntComparisonExp>;
   expiresAt?: InputMaybe<NumericComparisonExp>;
   id?: InputMaybe<StringComparisonExp>;
-  liquidities?: InputMaybe<NumericArrayComparisonExp>;
+  liquidities?: InputMaybe<StringArrayComparisonExp>;
   optionType?: InputMaybe<IntComparisonExp>;
+  owner?: InputMaybe<StringComparisonExp>;
+  premium?: InputMaybe<NumericComparisonExp>;
+  protocolFee?: InputMaybe<NumericComparisonExp>;
   strikeTick?: InputMaybe<IntComparisonExp>;
   timestamp?: InputMaybe<NumericComparisonExp>;
-  totalPremium?: InputMaybe<NumericComparisonExp>;
   transactionHash?: InputMaybe<StringComparisonExp>;
 };
 
 /** Ordering options when selecting data from "MintOptionEvent". */
 export type MintOptionEventOrderBy = {
   blockNumber?: InputMaybe<OrderBy>;
-  buyer?: InputMaybe<OrderBy>;
   currentTick?: InputMaybe<OrderBy>;
   expiresAt?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   liquidities?: InputMaybe<OrderBy>;
   optionType?: InputMaybe<OrderBy>;
+  owner?: InputMaybe<OrderBy>;
+  premium?: InputMaybe<OrderBy>;
+  protocolFee?: InputMaybe<OrderBy>;
   strikeTick?: InputMaybe<OrderBy>;
   timestamp?: InputMaybe<OrderBy>;
-  totalPremium?: InputMaybe<OrderBy>;
   transactionHash?: InputMaybe<OrderBy>;
 };
 
@@ -523,8 +689,6 @@ export type MintOptionEventOrderBy = {
 export type MintOptionEventSelectColumn =
   /** column name */
   | 'blockNumber'
-  /** column name */
-  | 'buyer'
   /** column name */
   | 'currentTick'
   /** column name */
@@ -536,11 +700,15 @@ export type MintOptionEventSelectColumn =
   /** column name */
   | 'optionType'
   /** column name */
+  | 'owner'
+  /** column name */
+  | 'premium'
+  /** column name */
+  | 'protocolFee'
+  /** column name */
   | 'strikeTick'
   /** column name */
   | 'timestamp'
-  /** column name */
-  | 'totalPremium'
   /** column name */
   | 'transactionHash';
 
@@ -555,15 +723,16 @@ export type MintOptionEventStreamCursorInput = {
 /** Initial value of the column from where the streaming should start */
 export type MintOptionEventStreamCursorValueInput = {
   blockNumber?: InputMaybe<Scalars['numeric']['input']>;
-  buyer?: InputMaybe<Scalars['String']['input']>;
   currentTick?: InputMaybe<Scalars['Int']['input']>;
   expiresAt?: InputMaybe<Scalars['numeric']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
-  liquidities?: InputMaybe<Array<Scalars['numeric']['input']>>;
+  liquidities?: InputMaybe<Array<Scalars['String']['input']>>;
   optionType?: InputMaybe<Scalars['Int']['input']>;
+  owner?: InputMaybe<Scalars['String']['input']>;
+  premium?: InputMaybe<Scalars['numeric']['input']>;
+  protocolFee?: InputMaybe<Scalars['numeric']['input']>;
   strikeTick?: InputMaybe<Scalars['Int']['input']>;
   timestamp?: InputMaybe<Scalars['numeric']['input']>;
-  totalPremium?: InputMaybe<Scalars['numeric']['input']>;
   transactionHash?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -647,6 +816,23 @@ export type RepayEventStreamCursorValueInput = {
 };
 
 /** Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'. */
+export type StringArrayComparisonExp = {
+  /** is the array contained in the given array value */
+  _contained_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  /** does the array contain the given value */
+  _contains?: InputMaybe<Array<Scalars['String']['input']>>;
+  _eq?: InputMaybe<Array<Scalars['String']['input']>>;
+  _gt?: InputMaybe<Array<Scalars['String']['input']>>;
+  _gte?: InputMaybe<Array<Scalars['String']['input']>>;
+  _in?: InputMaybe<Array<Array<Scalars['String']['input']>>>;
+  _is_null?: InputMaybe<Scalars['Boolean']['input']>;
+  _lt?: InputMaybe<Array<Scalars['String']['input']>>;
+  _lte?: InputMaybe<Array<Scalars['String']['input']>>;
+  _neq?: InputMaybe<Array<Scalars['String']['input']>>;
+  _nin?: InputMaybe<Array<Array<Scalars['String']['input']>>>;
+};
+
+/** Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'. */
 export type StringComparisonExp = {
   _eq?: InputMaybe<Scalars['String']['input']>;
   _gt?: InputMaybe<Scalars['String']['input']>;
@@ -682,6 +868,7 @@ export type StringComparisonExp = {
 /** columns and relationships of "TimelockMarket" */
 export type TimelockMarket = {
   __typename: 'TimelockMarket';
+  address: Scalars['String']['output'];
   id: Scalars['String']['output'];
   optionAsset: Scalars['String']['output'];
   optionAssetDecimals: Scalars['Int']['output'];
@@ -724,14 +911,25 @@ export type TimelockMarketTradersArgs = {
 /** columns and relationships of "TimelockMarketUser" */
 export type TimelockMarketUser = {
   __typename: 'TimelockMarketUser';
+  address: Scalars['String']['output'];
   id: Scalars['String']['output'];
   /** An object relationship */
   market?: Maybe<TimelockMarket>;
   market_id: Scalars['String']['output'];
   /** An array relationship */
+  operators: Array<UserMarketOperator>;
+  /** An array relationship */
   options: Array<UserOption>;
   optionsCount: Scalars['numeric']['output'];
-  userAddr: Scalars['String']['output'];
+};
+
+/** columns and relationships of "TimelockMarketUser" */
+export type TimelockMarketUserOperatorsArgs = {
+  distinct_on?: InputMaybe<Array<UserMarketOperatorSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<UserMarketOperatorOrderBy>>;
+  where?: InputMaybe<UserMarketOperatorBoolExp>;
 };
 
 /** columns and relationships of "TimelockMarketUser" */
@@ -768,50 +966,52 @@ export type TimelockMarketUserBoolExp = {
   _and?: InputMaybe<Array<TimelockMarketUserBoolExp>>;
   _not?: InputMaybe<TimelockMarketUserBoolExp>;
   _or?: InputMaybe<Array<TimelockMarketUserBoolExp>>;
+  address?: InputMaybe<StringComparisonExp>;
   id?: InputMaybe<StringComparisonExp>;
   market?: InputMaybe<TimelockMarketBoolExp>;
   market_id?: InputMaybe<StringComparisonExp>;
+  operators?: InputMaybe<UserMarketOperatorBoolExp>;
   options?: InputMaybe<UserOptionBoolExp>;
   optionsCount?: InputMaybe<NumericComparisonExp>;
-  userAddr?: InputMaybe<StringComparisonExp>;
 };
 
 /** order by max() on columns of table "TimelockMarketUser" */
 export type TimelockMarketUserMaxOrderBy = {
+  address?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   market_id?: InputMaybe<OrderBy>;
   optionsCount?: InputMaybe<OrderBy>;
-  userAddr?: InputMaybe<OrderBy>;
 };
 
 /** order by min() on columns of table "TimelockMarketUser" */
 export type TimelockMarketUserMinOrderBy = {
+  address?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   market_id?: InputMaybe<OrderBy>;
   optionsCount?: InputMaybe<OrderBy>;
-  userAddr?: InputMaybe<OrderBy>;
 };
 
 /** Ordering options when selecting data from "TimelockMarketUser". */
 export type TimelockMarketUserOrderBy = {
+  address?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   market?: InputMaybe<TimelockMarketOrderBy>;
   market_id?: InputMaybe<OrderBy>;
+  operators_aggregate?: InputMaybe<UserMarketOperatorAggregateOrderBy>;
   optionsCount?: InputMaybe<OrderBy>;
   options_aggregate?: InputMaybe<UserOptionAggregateOrderBy>;
-  userAddr?: InputMaybe<OrderBy>;
 };
 
 /** select columns of table "TimelockMarketUser" */
 export type TimelockMarketUserSelectColumn =
   /** column name */
+  | 'address'
+  /** column name */
   | 'id'
   /** column name */
   | 'market_id'
   /** column name */
-  | 'optionsCount'
-  /** column name */
-  | 'userAddr';
+  | 'optionsCount';
 
 /** order by stddev() on columns of table "TimelockMarketUser" */
 export type TimelockMarketUserStddevOrderBy = {
@@ -838,10 +1038,10 @@ export type TimelockMarketUserStreamCursorInput = {
 
 /** Initial value of the column from where the streaming should start */
 export type TimelockMarketUserStreamCursorValueInput = {
+  address?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
   market_id?: InputMaybe<Scalars['String']['input']>;
   optionsCount?: InputMaybe<Scalars['numeric']['input']>;
-  userAddr?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** order by sum() on columns of table "TimelockMarketUser" */
@@ -869,6 +1069,7 @@ export type TimelockMarketBoolExp = {
   _and?: InputMaybe<Array<TimelockMarketBoolExp>>;
   _not?: InputMaybe<TimelockMarketBoolExp>;
   _or?: InputMaybe<Array<TimelockMarketBoolExp>>;
+  address?: InputMaybe<StringComparisonExp>;
   id?: InputMaybe<StringComparisonExp>;
   optionAsset?: InputMaybe<StringComparisonExp>;
   optionAssetDecimals?: InputMaybe<IntComparisonExp>;
@@ -890,6 +1091,7 @@ export type TimelockMarketBoolExp = {
 
 /** Ordering options when selecting data from "TimelockMarket". */
 export type TimelockMarketOrderBy = {
+  address?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   optionAsset?: InputMaybe<OrderBy>;
   optionAssetDecimals?: InputMaybe<OrderBy>;
@@ -911,6 +1113,8 @@ export type TimelockMarketOrderBy = {
 
 /** select columns of table "TimelockMarket" */
 export type TimelockMarketSelectColumn =
+  /** column name */
+  | 'address'
   /** column name */
   | 'id'
   /** column name */
@@ -952,6 +1156,7 @@ export type TimelockMarketStreamCursorInput = {
 
 /** Initial value of the column from where the streaming should start */
 export type TimelockMarketStreamCursorValueInput = {
+  address?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
   optionAsset?: InputMaybe<Scalars['String']['input']>;
   optionAssetDecimals?: InputMaybe<Scalars['Int']['input']>;
@@ -969,22 +1174,298 @@ export type TimelockMarketStreamCursorValueInput = {
   vault?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** columns and relationships of "UpdateOperatorPermsEvent" */
+export type UpdateOperatorPermsEvent = {
+  __typename: 'UpdateOperatorPermsEvent';
+  blockNumber: Scalars['numeric']['output'];
+  canExercise: Scalars['Boolean']['output'];
+  canExtend: Scalars['Boolean']['output'];
+  canMint: Scalars['Boolean']['output'];
+  canTransfer: Scalars['Boolean']['output'];
+  id: Scalars['String']['output'];
+  /** An object relationship */
+  market?: Maybe<TimelockMarket>;
+  market_id: Scalars['String']['output'];
+  operator: Scalars['String']['output'];
+  owner: Scalars['String']['output'];
+  spendingApproval: Scalars['numeric']['output'];
+  timestamp: Scalars['numeric']['output'];
+  transactionHash: Scalars['String']['output'];
+};
+
+/** Boolean expression to filter rows from the table "UpdateOperatorPermsEvent". All fields are combined with a logical 'AND'. */
+export type UpdateOperatorPermsEventBoolExp = {
+  _and?: InputMaybe<Array<UpdateOperatorPermsEventBoolExp>>;
+  _not?: InputMaybe<UpdateOperatorPermsEventBoolExp>;
+  _or?: InputMaybe<Array<UpdateOperatorPermsEventBoolExp>>;
+  blockNumber?: InputMaybe<NumericComparisonExp>;
+  canExercise?: InputMaybe<BooleanComparisonExp>;
+  canExtend?: InputMaybe<BooleanComparisonExp>;
+  canMint?: InputMaybe<BooleanComparisonExp>;
+  canTransfer?: InputMaybe<BooleanComparisonExp>;
+  id?: InputMaybe<StringComparisonExp>;
+  market?: InputMaybe<TimelockMarketBoolExp>;
+  market_id?: InputMaybe<StringComparisonExp>;
+  operator?: InputMaybe<StringComparisonExp>;
+  owner?: InputMaybe<StringComparisonExp>;
+  spendingApproval?: InputMaybe<NumericComparisonExp>;
+  timestamp?: InputMaybe<NumericComparisonExp>;
+  transactionHash?: InputMaybe<StringComparisonExp>;
+};
+
+/** Ordering options when selecting data from "UpdateOperatorPermsEvent". */
+export type UpdateOperatorPermsEventOrderBy = {
+  blockNumber?: InputMaybe<OrderBy>;
+  canExercise?: InputMaybe<OrderBy>;
+  canExtend?: InputMaybe<OrderBy>;
+  canMint?: InputMaybe<OrderBy>;
+  canTransfer?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  market?: InputMaybe<TimelockMarketOrderBy>;
+  market_id?: InputMaybe<OrderBy>;
+  operator?: InputMaybe<OrderBy>;
+  owner?: InputMaybe<OrderBy>;
+  spendingApproval?: InputMaybe<OrderBy>;
+  timestamp?: InputMaybe<OrderBy>;
+  transactionHash?: InputMaybe<OrderBy>;
+};
+
+/** select columns of table "UpdateOperatorPermsEvent" */
+export type UpdateOperatorPermsEventSelectColumn =
+  /** column name */
+  | 'blockNumber'
+  /** column name */
+  | 'canExercise'
+  /** column name */
+  | 'canExtend'
+  /** column name */
+  | 'canMint'
+  /** column name */
+  | 'canTransfer'
+  /** column name */
+  | 'id'
+  /** column name */
+  | 'market_id'
+  /** column name */
+  | 'operator'
+  /** column name */
+  | 'owner'
+  /** column name */
+  | 'spendingApproval'
+  /** column name */
+  | 'timestamp'
+  /** column name */
+  | 'transactionHash';
+
+/** Streaming cursor of the table "UpdateOperatorPermsEvent" */
+export type UpdateOperatorPermsEventStreamCursorInput = {
+  /** Stream column input with initial value */
+  initial_value: UpdateOperatorPermsEventStreamCursorValueInput;
+  /** cursor ordering */
+  ordering?: InputMaybe<CursorOrdering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type UpdateOperatorPermsEventStreamCursorValueInput = {
+  blockNumber?: InputMaybe<Scalars['numeric']['input']>;
+  canExercise?: InputMaybe<Scalars['Boolean']['input']>;
+  canExtend?: InputMaybe<Scalars['Boolean']['input']>;
+  canMint?: InputMaybe<Scalars['Boolean']['input']>;
+  canTransfer?: InputMaybe<Scalars['Boolean']['input']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  market_id?: InputMaybe<Scalars['String']['input']>;
+  operator?: InputMaybe<Scalars['String']['input']>;
+  owner?: InputMaybe<Scalars['String']['input']>;
+  spendingApproval?: InputMaybe<Scalars['numeric']['input']>;
+  timestamp?: InputMaybe<Scalars['numeric']['input']>;
+  transactionHash?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** columns and relationships of "UserMarketOperator" */
+export type UserMarketOperator = {
+  __typename: 'UserMarketOperator';
+  canExercise: Scalars['Boolean']['output'];
+  canExtend: Scalars['Boolean']['output'];
+  canMint: Scalars['Boolean']['output'];
+  canTransfer: Scalars['Boolean']['output'];
+  id: Scalars['String']['output'];
+  /** An object relationship */
+  market?: Maybe<TimelockMarket>;
+  market_id: Scalars['String']['output'];
+  /** An object relationship */
+  operator?: Maybe<MarketOperator>;
+  operator_id: Scalars['String']['output'];
+  spendingApproval: Scalars['numeric']['output'];
+  /** An object relationship */
+  user?: Maybe<TimelockMarketUser>;
+  user_id: Scalars['String']['output'];
+};
+
+/** order by aggregate values of table "UserMarketOperator" */
+export type UserMarketOperatorAggregateOrderBy = {
+  avg?: InputMaybe<UserMarketOperatorAvgOrderBy>;
+  count?: InputMaybe<OrderBy>;
+  max?: InputMaybe<UserMarketOperatorMaxOrderBy>;
+  min?: InputMaybe<UserMarketOperatorMinOrderBy>;
+  stddev?: InputMaybe<UserMarketOperatorStddevOrderBy>;
+  stddev_pop?: InputMaybe<UserMarketOperatorStddevPopOrderBy>;
+  stddev_samp?: InputMaybe<UserMarketOperatorStddevSampOrderBy>;
+  sum?: InputMaybe<UserMarketOperatorSumOrderBy>;
+  var_pop?: InputMaybe<UserMarketOperatorVarPopOrderBy>;
+  var_samp?: InputMaybe<UserMarketOperatorVarSampOrderBy>;
+  variance?: InputMaybe<UserMarketOperatorVarianceOrderBy>;
+};
+
+/** order by avg() on columns of table "UserMarketOperator" */
+export type UserMarketOperatorAvgOrderBy = {
+  spendingApproval?: InputMaybe<OrderBy>;
+};
+
+/** Boolean expression to filter rows from the table "UserMarketOperator". All fields are combined with a logical 'AND'. */
+export type UserMarketOperatorBoolExp = {
+  _and?: InputMaybe<Array<UserMarketOperatorBoolExp>>;
+  _not?: InputMaybe<UserMarketOperatorBoolExp>;
+  _or?: InputMaybe<Array<UserMarketOperatorBoolExp>>;
+  canExercise?: InputMaybe<BooleanComparisonExp>;
+  canExtend?: InputMaybe<BooleanComparisonExp>;
+  canMint?: InputMaybe<BooleanComparisonExp>;
+  canTransfer?: InputMaybe<BooleanComparisonExp>;
+  id?: InputMaybe<StringComparisonExp>;
+  market?: InputMaybe<TimelockMarketBoolExp>;
+  market_id?: InputMaybe<StringComparisonExp>;
+  operator?: InputMaybe<MarketOperatorBoolExp>;
+  operator_id?: InputMaybe<StringComparisonExp>;
+  spendingApproval?: InputMaybe<NumericComparisonExp>;
+  user?: InputMaybe<TimelockMarketUserBoolExp>;
+  user_id?: InputMaybe<StringComparisonExp>;
+};
+
+/** order by max() on columns of table "UserMarketOperator" */
+export type UserMarketOperatorMaxOrderBy = {
+  id?: InputMaybe<OrderBy>;
+  market_id?: InputMaybe<OrderBy>;
+  operator_id?: InputMaybe<OrderBy>;
+  spendingApproval?: InputMaybe<OrderBy>;
+  user_id?: InputMaybe<OrderBy>;
+};
+
+/** order by min() on columns of table "UserMarketOperator" */
+export type UserMarketOperatorMinOrderBy = {
+  id?: InputMaybe<OrderBy>;
+  market_id?: InputMaybe<OrderBy>;
+  operator_id?: InputMaybe<OrderBy>;
+  spendingApproval?: InputMaybe<OrderBy>;
+  user_id?: InputMaybe<OrderBy>;
+};
+
+/** Ordering options when selecting data from "UserMarketOperator". */
+export type UserMarketOperatorOrderBy = {
+  canExercise?: InputMaybe<OrderBy>;
+  canExtend?: InputMaybe<OrderBy>;
+  canMint?: InputMaybe<OrderBy>;
+  canTransfer?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  market?: InputMaybe<TimelockMarketOrderBy>;
+  market_id?: InputMaybe<OrderBy>;
+  operator?: InputMaybe<MarketOperatorOrderBy>;
+  operator_id?: InputMaybe<OrderBy>;
+  spendingApproval?: InputMaybe<OrderBy>;
+  user?: InputMaybe<TimelockMarketUserOrderBy>;
+  user_id?: InputMaybe<OrderBy>;
+};
+
+/** select columns of table "UserMarketOperator" */
+export type UserMarketOperatorSelectColumn =
+  /** column name */
+  | 'canExercise'
+  /** column name */
+  | 'canExtend'
+  /** column name */
+  | 'canMint'
+  /** column name */
+  | 'canTransfer'
+  /** column name */
+  | 'id'
+  /** column name */
+  | 'market_id'
+  /** column name */
+  | 'operator_id'
+  /** column name */
+  | 'spendingApproval'
+  /** column name */
+  | 'user_id';
+
+/** order by stddev() on columns of table "UserMarketOperator" */
+export type UserMarketOperatorStddevOrderBy = {
+  spendingApproval?: InputMaybe<OrderBy>;
+};
+
+/** order by stddev_pop() on columns of table "UserMarketOperator" */
+export type UserMarketOperatorStddevPopOrderBy = {
+  spendingApproval?: InputMaybe<OrderBy>;
+};
+
+/** order by stddev_samp() on columns of table "UserMarketOperator" */
+export type UserMarketOperatorStddevSampOrderBy = {
+  spendingApproval?: InputMaybe<OrderBy>;
+};
+
+/** Streaming cursor of the table "UserMarketOperator" */
+export type UserMarketOperatorStreamCursorInput = {
+  /** Stream column input with initial value */
+  initial_value: UserMarketOperatorStreamCursorValueInput;
+  /** cursor ordering */
+  ordering?: InputMaybe<CursorOrdering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type UserMarketOperatorStreamCursorValueInput = {
+  canExercise?: InputMaybe<Scalars['Boolean']['input']>;
+  canExtend?: InputMaybe<Scalars['Boolean']['input']>;
+  canMint?: InputMaybe<Scalars['Boolean']['input']>;
+  canTransfer?: InputMaybe<Scalars['Boolean']['input']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  market_id?: InputMaybe<Scalars['String']['input']>;
+  operator_id?: InputMaybe<Scalars['String']['input']>;
+  spendingApproval?: InputMaybe<Scalars['numeric']['input']>;
+  user_id?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** order by sum() on columns of table "UserMarketOperator" */
+export type UserMarketOperatorSumOrderBy = {
+  spendingApproval?: InputMaybe<OrderBy>;
+};
+
+/** order by var_pop() on columns of table "UserMarketOperator" */
+export type UserMarketOperatorVarPopOrderBy = {
+  spendingApproval?: InputMaybe<OrderBy>;
+};
+
+/** order by var_samp() on columns of table "UserMarketOperator" */
+export type UserMarketOperatorVarSampOrderBy = {
+  spendingApproval?: InputMaybe<OrderBy>;
+};
+
+/** order by variance() on columns of table "UserMarketOperator" */
+export type UserMarketOperatorVarianceOrderBy = {
+  spendingApproval?: InputMaybe<OrderBy>;
+};
+
 /** columns and relationships of "UserOption" */
 export type UserOption = {
   __typename: 'UserOption';
-  createdAt: Scalars['Int']['output'];
+  createdAt: Scalars['numeric']['output'];
   entryPrice: Scalars['numeric']['output'];
   entryTick: Scalars['Int']['output'];
   /** An array relationship */
   exerciseEvents: Array<ExerciseOptionEvent>;
-  expiresAt: Scalars['Int']['output'];
+  expiresAt: Scalars['numeric']['output'];
   fullyExercised: Scalars['Boolean']['output'];
   id: Scalars['String']['output'];
-  liquiditiesAtOpen: Array<Scalars['numeric']['output']>;
-  liquiditiesCurrent: Array<Scalars['numeric']['output']>;
+  liquiditiesAtOpen: Array<Scalars['String']['output']>;
+  liquiditiesCurrent: Array<Scalars['String']['output']>;
   /** An object relationship */
   market?: Maybe<TimelockMarket>;
-  marketAddr: Scalars['String']['output'];
   market_id: Scalars['String']['output'];
   /** An object relationship */
   mintEvent?: Maybe<MintOptionEvent>;
@@ -993,11 +1474,11 @@ export type UserOption = {
   optionType: Scalars['optiontype']['output'];
   /** An object relationship */
   owner?: Maybe<TimelockMarketUser>;
-  ownerAddr: Scalars['String']['output'];
   owner_id: Scalars['String']['output'];
   positionSizeAtOpen: Scalars['numeric']['output'];
   positionSizeCurrent: Scalars['numeric']['output'];
-  premiumPaid: Scalars['numeric']['output'];
+  premium: Scalars['numeric']['output'];
+  protocolFee: Scalars['numeric']['output'];
   realizedPayout: Scalars['numeric']['output'];
   startTick: Scalars['Int']['output'];
   strikePrice: Scalars['numeric']['output'];
@@ -1037,7 +1518,8 @@ export type UserOptionAvgOrderBy = {
   optionId?: InputMaybe<OrderBy>;
   positionSizeAtOpen?: InputMaybe<OrderBy>;
   positionSizeCurrent?: InputMaybe<OrderBy>;
-  premiumPaid?: InputMaybe<OrderBy>;
+  premium?: InputMaybe<OrderBy>;
+  protocolFee?: InputMaybe<OrderBy>;
   realizedPayout?: InputMaybe<OrderBy>;
   startTick?: InputMaybe<OrderBy>;
   strikePrice?: InputMaybe<OrderBy>;
@@ -1049,28 +1531,27 @@ export type UserOptionBoolExp = {
   _and?: InputMaybe<Array<UserOptionBoolExp>>;
   _not?: InputMaybe<UserOptionBoolExp>;
   _or?: InputMaybe<Array<UserOptionBoolExp>>;
-  createdAt?: InputMaybe<IntComparisonExp>;
+  createdAt?: InputMaybe<NumericComparisonExp>;
   entryPrice?: InputMaybe<NumericComparisonExp>;
   entryTick?: InputMaybe<IntComparisonExp>;
   exerciseEvents?: InputMaybe<ExerciseOptionEventBoolExp>;
-  expiresAt?: InputMaybe<IntComparisonExp>;
+  expiresAt?: InputMaybe<NumericComparisonExp>;
   fullyExercised?: InputMaybe<BooleanComparisonExp>;
   id?: InputMaybe<StringComparisonExp>;
-  liquiditiesAtOpen?: InputMaybe<NumericArrayComparisonExp>;
-  liquiditiesCurrent?: InputMaybe<NumericArrayComparisonExp>;
+  liquiditiesAtOpen?: InputMaybe<StringArrayComparisonExp>;
+  liquiditiesCurrent?: InputMaybe<StringArrayComparisonExp>;
   market?: InputMaybe<TimelockMarketBoolExp>;
-  marketAddr?: InputMaybe<StringComparisonExp>;
   market_id?: InputMaybe<StringComparisonExp>;
   mintEvent?: InputMaybe<MintOptionEventBoolExp>;
   mintEvent_id?: InputMaybe<StringComparisonExp>;
   optionId?: InputMaybe<NumericComparisonExp>;
   optionType?: InputMaybe<OptiontypeComparisonExp>;
   owner?: InputMaybe<TimelockMarketUserBoolExp>;
-  ownerAddr?: InputMaybe<StringComparisonExp>;
   owner_id?: InputMaybe<StringComparisonExp>;
   positionSizeAtOpen?: InputMaybe<NumericComparisonExp>;
   positionSizeCurrent?: InputMaybe<NumericComparisonExp>;
-  premiumPaid?: InputMaybe<NumericComparisonExp>;
+  premium?: InputMaybe<NumericComparisonExp>;
+  protocolFee?: InputMaybe<NumericComparisonExp>;
   realizedPayout?: InputMaybe<NumericComparisonExp>;
   startTick?: InputMaybe<IntComparisonExp>;
   strikePrice?: InputMaybe<NumericComparisonExp>;
@@ -1086,16 +1567,15 @@ export type UserOptionMaxOrderBy = {
   id?: InputMaybe<OrderBy>;
   liquiditiesAtOpen?: InputMaybe<OrderBy>;
   liquiditiesCurrent?: InputMaybe<OrderBy>;
-  marketAddr?: InputMaybe<OrderBy>;
   market_id?: InputMaybe<OrderBy>;
   mintEvent_id?: InputMaybe<OrderBy>;
   optionId?: InputMaybe<OrderBy>;
   optionType?: InputMaybe<OrderBy>;
-  ownerAddr?: InputMaybe<OrderBy>;
   owner_id?: InputMaybe<OrderBy>;
   positionSizeAtOpen?: InputMaybe<OrderBy>;
   positionSizeCurrent?: InputMaybe<OrderBy>;
-  premiumPaid?: InputMaybe<OrderBy>;
+  premium?: InputMaybe<OrderBy>;
+  protocolFee?: InputMaybe<OrderBy>;
   realizedPayout?: InputMaybe<OrderBy>;
   startTick?: InputMaybe<OrderBy>;
   strikePrice?: InputMaybe<OrderBy>;
@@ -1111,16 +1591,15 @@ export type UserOptionMinOrderBy = {
   id?: InputMaybe<OrderBy>;
   liquiditiesAtOpen?: InputMaybe<OrderBy>;
   liquiditiesCurrent?: InputMaybe<OrderBy>;
-  marketAddr?: InputMaybe<OrderBy>;
   market_id?: InputMaybe<OrderBy>;
   mintEvent_id?: InputMaybe<OrderBy>;
   optionId?: InputMaybe<OrderBy>;
   optionType?: InputMaybe<OrderBy>;
-  ownerAddr?: InputMaybe<OrderBy>;
   owner_id?: InputMaybe<OrderBy>;
   positionSizeAtOpen?: InputMaybe<OrderBy>;
   positionSizeCurrent?: InputMaybe<OrderBy>;
-  premiumPaid?: InputMaybe<OrderBy>;
+  premium?: InputMaybe<OrderBy>;
+  protocolFee?: InputMaybe<OrderBy>;
   realizedPayout?: InputMaybe<OrderBy>;
   startTick?: InputMaybe<OrderBy>;
   strikePrice?: InputMaybe<OrderBy>;
@@ -1139,18 +1618,17 @@ export type UserOptionOrderBy = {
   liquiditiesAtOpen?: InputMaybe<OrderBy>;
   liquiditiesCurrent?: InputMaybe<OrderBy>;
   market?: InputMaybe<TimelockMarketOrderBy>;
-  marketAddr?: InputMaybe<OrderBy>;
   market_id?: InputMaybe<OrderBy>;
   mintEvent?: InputMaybe<MintOptionEventOrderBy>;
   mintEvent_id?: InputMaybe<OrderBy>;
   optionId?: InputMaybe<OrderBy>;
   optionType?: InputMaybe<OrderBy>;
   owner?: InputMaybe<TimelockMarketUserOrderBy>;
-  ownerAddr?: InputMaybe<OrderBy>;
   owner_id?: InputMaybe<OrderBy>;
   positionSizeAtOpen?: InputMaybe<OrderBy>;
   positionSizeCurrent?: InputMaybe<OrderBy>;
-  premiumPaid?: InputMaybe<OrderBy>;
+  premium?: InputMaybe<OrderBy>;
+  protocolFee?: InputMaybe<OrderBy>;
   realizedPayout?: InputMaybe<OrderBy>;
   startTick?: InputMaybe<OrderBy>;
   strikePrice?: InputMaybe<OrderBy>;
@@ -1176,8 +1654,6 @@ export type UserOptionSelectColumn =
   /** column name */
   | 'liquiditiesCurrent'
   /** column name */
-  | 'marketAddr'
-  /** column name */
   | 'market_id'
   /** column name */
   | 'mintEvent_id'
@@ -1186,15 +1662,15 @@ export type UserOptionSelectColumn =
   /** column name */
   | 'optionType'
   /** column name */
-  | 'ownerAddr'
-  /** column name */
   | 'owner_id'
   /** column name */
   | 'positionSizeAtOpen'
   /** column name */
   | 'positionSizeCurrent'
   /** column name */
-  | 'premiumPaid'
+  | 'premium'
+  /** column name */
+  | 'protocolFee'
   /** column name */
   | 'realizedPayout'
   /** column name */
@@ -1213,7 +1689,8 @@ export type UserOptionStddevOrderBy = {
   optionId?: InputMaybe<OrderBy>;
   positionSizeAtOpen?: InputMaybe<OrderBy>;
   positionSizeCurrent?: InputMaybe<OrderBy>;
-  premiumPaid?: InputMaybe<OrderBy>;
+  premium?: InputMaybe<OrderBy>;
+  protocolFee?: InputMaybe<OrderBy>;
   realizedPayout?: InputMaybe<OrderBy>;
   startTick?: InputMaybe<OrderBy>;
   strikePrice?: InputMaybe<OrderBy>;
@@ -1229,7 +1706,8 @@ export type UserOptionStddevPopOrderBy = {
   optionId?: InputMaybe<OrderBy>;
   positionSizeAtOpen?: InputMaybe<OrderBy>;
   positionSizeCurrent?: InputMaybe<OrderBy>;
-  premiumPaid?: InputMaybe<OrderBy>;
+  premium?: InputMaybe<OrderBy>;
+  protocolFee?: InputMaybe<OrderBy>;
   realizedPayout?: InputMaybe<OrderBy>;
   startTick?: InputMaybe<OrderBy>;
   strikePrice?: InputMaybe<OrderBy>;
@@ -1245,7 +1723,8 @@ export type UserOptionStddevSampOrderBy = {
   optionId?: InputMaybe<OrderBy>;
   positionSizeAtOpen?: InputMaybe<OrderBy>;
   positionSizeCurrent?: InputMaybe<OrderBy>;
-  premiumPaid?: InputMaybe<OrderBy>;
+  premium?: InputMaybe<OrderBy>;
+  protocolFee?: InputMaybe<OrderBy>;
   realizedPayout?: InputMaybe<OrderBy>;
   startTick?: InputMaybe<OrderBy>;
   strikePrice?: InputMaybe<OrderBy>;
@@ -1262,24 +1741,23 @@ export type UserOptionStreamCursorInput = {
 
 /** Initial value of the column from where the streaming should start */
 export type UserOptionStreamCursorValueInput = {
-  createdAt?: InputMaybe<Scalars['Int']['input']>;
+  createdAt?: InputMaybe<Scalars['numeric']['input']>;
   entryPrice?: InputMaybe<Scalars['numeric']['input']>;
   entryTick?: InputMaybe<Scalars['Int']['input']>;
-  expiresAt?: InputMaybe<Scalars['Int']['input']>;
+  expiresAt?: InputMaybe<Scalars['numeric']['input']>;
   fullyExercised?: InputMaybe<Scalars['Boolean']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
-  liquiditiesAtOpen?: InputMaybe<Array<Scalars['numeric']['input']>>;
-  liquiditiesCurrent?: InputMaybe<Array<Scalars['numeric']['input']>>;
-  marketAddr?: InputMaybe<Scalars['String']['input']>;
+  liquiditiesAtOpen?: InputMaybe<Array<Scalars['String']['input']>>;
+  liquiditiesCurrent?: InputMaybe<Array<Scalars['String']['input']>>;
   market_id?: InputMaybe<Scalars['String']['input']>;
   mintEvent_id?: InputMaybe<Scalars['String']['input']>;
   optionId?: InputMaybe<Scalars['numeric']['input']>;
   optionType?: InputMaybe<Scalars['optiontype']['input']>;
-  ownerAddr?: InputMaybe<Scalars['String']['input']>;
   owner_id?: InputMaybe<Scalars['String']['input']>;
   positionSizeAtOpen?: InputMaybe<Scalars['numeric']['input']>;
   positionSizeCurrent?: InputMaybe<Scalars['numeric']['input']>;
-  premiumPaid?: InputMaybe<Scalars['numeric']['input']>;
+  premium?: InputMaybe<Scalars['numeric']['input']>;
+  protocolFee?: InputMaybe<Scalars['numeric']['input']>;
   realizedPayout?: InputMaybe<Scalars['numeric']['input']>;
   startTick?: InputMaybe<Scalars['Int']['input']>;
   strikePrice?: InputMaybe<Scalars['numeric']['input']>;
@@ -1295,7 +1773,8 @@ export type UserOptionSumOrderBy = {
   optionId?: InputMaybe<OrderBy>;
   positionSizeAtOpen?: InputMaybe<OrderBy>;
   positionSizeCurrent?: InputMaybe<OrderBy>;
-  premiumPaid?: InputMaybe<OrderBy>;
+  premium?: InputMaybe<OrderBy>;
+  protocolFee?: InputMaybe<OrderBy>;
   realizedPayout?: InputMaybe<OrderBy>;
   startTick?: InputMaybe<OrderBy>;
   strikePrice?: InputMaybe<OrderBy>;
@@ -1311,7 +1790,8 @@ export type UserOptionVarPopOrderBy = {
   optionId?: InputMaybe<OrderBy>;
   positionSizeAtOpen?: InputMaybe<OrderBy>;
   positionSizeCurrent?: InputMaybe<OrderBy>;
-  premiumPaid?: InputMaybe<OrderBy>;
+  premium?: InputMaybe<OrderBy>;
+  protocolFee?: InputMaybe<OrderBy>;
   realizedPayout?: InputMaybe<OrderBy>;
   startTick?: InputMaybe<OrderBy>;
   strikePrice?: InputMaybe<OrderBy>;
@@ -1327,7 +1807,8 @@ export type UserOptionVarSampOrderBy = {
   optionId?: InputMaybe<OrderBy>;
   positionSizeAtOpen?: InputMaybe<OrderBy>;
   positionSizeCurrent?: InputMaybe<OrderBy>;
-  premiumPaid?: InputMaybe<OrderBy>;
+  premium?: InputMaybe<OrderBy>;
+  protocolFee?: InputMaybe<OrderBy>;
   realizedPayout?: InputMaybe<OrderBy>;
   startTick?: InputMaybe<OrderBy>;
   strikePrice?: InputMaybe<OrderBy>;
@@ -1343,7 +1824,8 @@ export type UserOptionVarianceOrderBy = {
   optionId?: InputMaybe<OrderBy>;
   positionSizeAtOpen?: InputMaybe<OrderBy>;
   positionSizeCurrent?: InputMaybe<OrderBy>;
-  premiumPaid?: InputMaybe<OrderBy>;
+  premium?: InputMaybe<OrderBy>;
+  protocolFee?: InputMaybe<OrderBy>;
   realizedPayout?: InputMaybe<OrderBy>;
   startTick?: InputMaybe<OrderBy>;
   strikePrice?: InputMaybe<OrderBy>;
@@ -1578,23 +2060,6 @@ export type JsonbComparisonExp = {
 };
 
 /** Boolean expression to compare columns of type "numeric". All fields are combined with logical 'AND'. */
-export type NumericArrayComparisonExp = {
-  /** is the array contained in the given array value */
-  _contained_in?: InputMaybe<Array<Scalars['numeric']['input']>>;
-  /** does the array contain the given value */
-  _contains?: InputMaybe<Array<Scalars['numeric']['input']>>;
-  _eq?: InputMaybe<Array<Scalars['numeric']['input']>>;
-  _gt?: InputMaybe<Array<Scalars['numeric']['input']>>;
-  _gte?: InputMaybe<Array<Scalars['numeric']['input']>>;
-  _in?: InputMaybe<Array<Array<Scalars['numeric']['input']>>>;
-  _is_null?: InputMaybe<Scalars['Boolean']['input']>;
-  _lt?: InputMaybe<Array<Scalars['numeric']['input']>>;
-  _lte?: InputMaybe<Array<Scalars['numeric']['input']>>;
-  _neq?: InputMaybe<Array<Scalars['numeric']['input']>>;
-  _nin?: InputMaybe<Array<Array<Scalars['numeric']['input']>>>;
-};
-
-/** Boolean expression to compare columns of type "numeric". All fields are combined with logical 'AND'. */
 export type NumericComparisonExp = {
   _eq?: InputMaybe<Scalars['numeric']['input']>;
   _gt?: InputMaybe<Scalars['numeric']['input']>;
@@ -1649,6 +2114,14 @@ export type QueryRoot = {
   ExerciseOptionEvent: Array<ExerciseOptionEvent>;
   /** fetch data from the table: "ExerciseOptionEvent" using primary key columns */
   ExerciseOptionEvent_by_pk?: Maybe<ExerciseOptionEvent>;
+  /** fetch data from the table: "ExtendOptionEvent" */
+  ExtendOptionEvent: Array<ExtendOptionEvent>;
+  /** fetch data from the table: "ExtendOptionEvent" using primary key columns */
+  ExtendOptionEvent_by_pk?: Maybe<ExtendOptionEvent>;
+  /** fetch data from the table: "MarketOperator" */
+  MarketOperator: Array<MarketOperator>;
+  /** fetch data from the table: "MarketOperator" using primary key columns */
+  MarketOperator_by_pk?: Maybe<MarketOperator>;
   /** fetch data from the table: "MintEvent" */
   MintEvent: Array<MintEvent>;
   /** fetch data from the table: "MintEvent" using primary key columns */
@@ -1669,6 +2142,14 @@ export type QueryRoot = {
   TimelockMarketUser_by_pk?: Maybe<TimelockMarketUser>;
   /** fetch data from the table: "TimelockMarket" using primary key columns */
   TimelockMarket_by_pk?: Maybe<TimelockMarket>;
+  /** fetch data from the table: "UpdateOperatorPermsEvent" */
+  UpdateOperatorPermsEvent: Array<UpdateOperatorPermsEvent>;
+  /** fetch data from the table: "UpdateOperatorPermsEvent" using primary key columns */
+  UpdateOperatorPermsEvent_by_pk?: Maybe<UpdateOperatorPermsEvent>;
+  /** fetch data from the table: "UserMarketOperator" */
+  UserMarketOperator: Array<UserMarketOperator>;
+  /** fetch data from the table: "UserMarketOperator" using primary key columns */
+  UserMarketOperator_by_pk?: Maybe<UserMarketOperator>;
   /** fetch data from the table: "UserOption" */
   UserOption: Array<UserOption>;
   /** fetch data from the table: "UserOption" using primary key columns */
@@ -1716,6 +2197,30 @@ export type QueryRootExerciseOptionEventArgs = {
 };
 
 export type QueryRootExerciseOptionEventByPkArgs = {
+  id: Scalars['String']['input'];
+};
+
+export type QueryRootExtendOptionEventArgs = {
+  distinct_on?: InputMaybe<Array<ExtendOptionEventSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<ExtendOptionEventOrderBy>>;
+  where?: InputMaybe<ExtendOptionEventBoolExp>;
+};
+
+export type QueryRootExtendOptionEventByPkArgs = {
+  id: Scalars['String']['input'];
+};
+
+export type QueryRootMarketOperatorArgs = {
+  distinct_on?: InputMaybe<Array<MarketOperatorSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<MarketOperatorOrderBy>>;
+  where?: InputMaybe<MarketOperatorBoolExp>;
+};
+
+export type QueryRootMarketOperatorByPkArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -1776,6 +2281,30 @@ export type QueryRootTimelockMarketUserByPkArgs = {
 };
 
 export type QueryRootTimelockMarketByPkArgs = {
+  id: Scalars['String']['input'];
+};
+
+export type QueryRootUpdateOperatorPermsEventArgs = {
+  distinct_on?: InputMaybe<Array<UpdateOperatorPermsEventSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<UpdateOperatorPermsEventOrderBy>>;
+  where?: InputMaybe<UpdateOperatorPermsEventBoolExp>;
+};
+
+export type QueryRootUpdateOperatorPermsEventByPkArgs = {
+  id: Scalars['String']['input'];
+};
+
+export type QueryRootUserMarketOperatorArgs = {
+  distinct_on?: InputMaybe<Array<UserMarketOperatorSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<UserMarketOperatorOrderBy>>;
+  where?: InputMaybe<UserMarketOperatorBoolExp>;
+};
+
+export type QueryRootUserMarketOperatorByPkArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -1963,6 +2492,18 @@ export type SubscriptionRoot = {
   ExerciseOptionEvent_by_pk?: Maybe<ExerciseOptionEvent>;
   /** fetch data from the table in a streaming manner: "ExerciseOptionEvent" */
   ExerciseOptionEvent_stream: Array<ExerciseOptionEvent>;
+  /** fetch data from the table: "ExtendOptionEvent" */
+  ExtendOptionEvent: Array<ExtendOptionEvent>;
+  /** fetch data from the table: "ExtendOptionEvent" using primary key columns */
+  ExtendOptionEvent_by_pk?: Maybe<ExtendOptionEvent>;
+  /** fetch data from the table in a streaming manner: "ExtendOptionEvent" */
+  ExtendOptionEvent_stream: Array<ExtendOptionEvent>;
+  /** fetch data from the table: "MarketOperator" */
+  MarketOperator: Array<MarketOperator>;
+  /** fetch data from the table: "MarketOperator" using primary key columns */
+  MarketOperator_by_pk?: Maybe<MarketOperator>;
+  /** fetch data from the table in a streaming manner: "MarketOperator" */
+  MarketOperator_stream: Array<MarketOperator>;
   /** fetch data from the table: "MintEvent" */
   MintEvent: Array<MintEvent>;
   /** fetch data from the table: "MintEvent" using primary key columns */
@@ -1993,6 +2534,18 @@ export type SubscriptionRoot = {
   TimelockMarket_by_pk?: Maybe<TimelockMarket>;
   /** fetch data from the table in a streaming manner: "TimelockMarket" */
   TimelockMarket_stream: Array<TimelockMarket>;
+  /** fetch data from the table: "UpdateOperatorPermsEvent" */
+  UpdateOperatorPermsEvent: Array<UpdateOperatorPermsEvent>;
+  /** fetch data from the table: "UpdateOperatorPermsEvent" using primary key columns */
+  UpdateOperatorPermsEvent_by_pk?: Maybe<UpdateOperatorPermsEvent>;
+  /** fetch data from the table in a streaming manner: "UpdateOperatorPermsEvent" */
+  UpdateOperatorPermsEvent_stream: Array<UpdateOperatorPermsEvent>;
+  /** fetch data from the table: "UserMarketOperator" */
+  UserMarketOperator: Array<UserMarketOperator>;
+  /** fetch data from the table: "UserMarketOperator" using primary key columns */
+  UserMarketOperator_by_pk?: Maybe<UserMarketOperator>;
+  /** fetch data from the table in a streaming manner: "UserMarketOperator" */
+  UserMarketOperator_stream: Array<UserMarketOperator>;
   /** fetch data from the table: "UserOption" */
   UserOption: Array<UserOption>;
   /** fetch data from the table: "UserOption" using primary key columns */
@@ -2067,6 +2620,42 @@ export type SubscriptionRootExerciseOptionEventStreamArgs = {
   batch_size: Scalars['Int']['input'];
   cursor: Array<InputMaybe<ExerciseOptionEventStreamCursorInput>>;
   where?: InputMaybe<ExerciseOptionEventBoolExp>;
+};
+
+export type SubscriptionRootExtendOptionEventArgs = {
+  distinct_on?: InputMaybe<Array<ExtendOptionEventSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<ExtendOptionEventOrderBy>>;
+  where?: InputMaybe<ExtendOptionEventBoolExp>;
+};
+
+export type SubscriptionRootExtendOptionEventByPkArgs = {
+  id: Scalars['String']['input'];
+};
+
+export type SubscriptionRootExtendOptionEventStreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<ExtendOptionEventStreamCursorInput>>;
+  where?: InputMaybe<ExtendOptionEventBoolExp>;
+};
+
+export type SubscriptionRootMarketOperatorArgs = {
+  distinct_on?: InputMaybe<Array<MarketOperatorSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<MarketOperatorOrderBy>>;
+  where?: InputMaybe<MarketOperatorBoolExp>;
+};
+
+export type SubscriptionRootMarketOperatorByPkArgs = {
+  id: Scalars['String']['input'];
+};
+
+export type SubscriptionRootMarketOperatorStreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<MarketOperatorStreamCursorInput>>;
+  where?: InputMaybe<MarketOperatorBoolExp>;
 };
 
 export type SubscriptionRootMintEventArgs = {
@@ -2159,6 +2748,42 @@ export type SubscriptionRootTimelockMarketStreamArgs = {
   where?: InputMaybe<TimelockMarketBoolExp>;
 };
 
+export type SubscriptionRootUpdateOperatorPermsEventArgs = {
+  distinct_on?: InputMaybe<Array<UpdateOperatorPermsEventSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<UpdateOperatorPermsEventOrderBy>>;
+  where?: InputMaybe<UpdateOperatorPermsEventBoolExp>;
+};
+
+export type SubscriptionRootUpdateOperatorPermsEventByPkArgs = {
+  id: Scalars['String']['input'];
+};
+
+export type SubscriptionRootUpdateOperatorPermsEventStreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<UpdateOperatorPermsEventStreamCursorInput>>;
+  where?: InputMaybe<UpdateOperatorPermsEventBoolExp>;
+};
+
+export type SubscriptionRootUserMarketOperatorArgs = {
+  distinct_on?: InputMaybe<Array<UserMarketOperatorSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<UserMarketOperatorOrderBy>>;
+  where?: InputMaybe<UserMarketOperatorBoolExp>;
+};
+
+export type SubscriptionRootUserMarketOperatorByPkArgs = {
+  id: Scalars['String']['input'];
+};
+
+export type SubscriptionRootUserMarketOperatorStreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<UserMarketOperatorStreamCursorInput>>;
+  where?: InputMaybe<UserMarketOperatorBoolExp>;
+};
+
 export type SubscriptionRootUserOptionArgs = {
   distinct_on?: InputMaybe<Array<UserOptionSelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -2246,23 +2871,24 @@ export type GetActiveUserOptionsQuery = {
     __typename: 'UserOption';
     id: string;
     optionId: any;
-    ownerAddr: string;
     optionType: any;
     strikeTick: number;
     entryTick: number;
     startTick: number;
     strikePrice: any;
     entryPrice: any;
-    expiresAt: number;
-    createdAt: number;
-    premiumPaid: any;
+    expiresAt: any;
+    createdAt: any;
+    premium: any;
+    protocolFee: any;
     realizedPayout: any;
-    marketAddr: string;
-    liquiditiesAtOpen: Array<any>;
-    liquiditiesCurrent: Array<any>;
+    liquiditiesAtOpen: Array<string>;
+    liquiditiesCurrent: Array<string>;
     positionSizeAtOpen: any;
     positionSizeCurrent: any;
     fullyExercised: boolean;
+    owner?: {__typename: 'TimelockMarketUser'; address: string} | null;
+    market?: {__typename: 'TimelockMarket'; address: string} | null;
     exerciseEvents: Array<{
       __typename: 'ExerciseOptionEvent';
       transactionHash: string;
@@ -2281,23 +2907,24 @@ export type GetClosedUserOptionsQuery = {
     __typename: 'UserOption';
     id: string;
     optionId: any;
-    ownerAddr: string;
     optionType: any;
     strikeTick: number;
     entryTick: number;
     startTick: number;
     strikePrice: any;
     entryPrice: any;
-    expiresAt: number;
-    createdAt: number;
-    premiumPaid: any;
+    expiresAt: any;
+    createdAt: any;
+    premium: any;
+    protocolFee: any;
     realizedPayout: any;
-    marketAddr: string;
-    liquiditiesAtOpen: Array<any>;
-    liquiditiesCurrent: Array<any>;
+    liquiditiesAtOpen: Array<string>;
+    liquiditiesCurrent: Array<string>;
     positionSizeAtOpen: any;
     positionSizeCurrent: any;
     fullyExercised: boolean;
+    owner?: {__typename: 'TimelockMarketUser'; address: string} | null;
+    market?: {__typename: 'TimelockMarket'; address: string} | null;
     exerciseEvents: Array<{
       __typename: 'ExerciseOptionEvent';
       transactionHash: string;
@@ -2315,6 +2942,7 @@ export type GetMarketDataQuery = {
   TimelockMarket: Array<{
     __typename: 'TimelockMarket';
     id: string;
+    address: string;
     optionsCount: any;
     tradersCount: any;
     vault: string;
@@ -2332,15 +2960,39 @@ export type GetMarketDataQuery = {
   }>;
 };
 
+export type GetUserMarketOperatorsQueryVariables = Exact<{
+  userAddr: Scalars['String']['input'];
+  marketAddr: Scalars['String']['input'];
+}>;
+
+export type GetUserMarketOperatorsQuery = {
+  __typename: 'query_root';
+  UserMarketOperator: Array<{
+    __typename: 'UserMarketOperator';
+    id: string;
+    canExtend: boolean;
+    canExercise: boolean;
+    canTransfer: boolean;
+    canMint: boolean;
+    spendingApproval: any;
+    operator?: {__typename: 'MarketOperator'; address: string} | null;
+  }>;
+};
+
 export const GetActiveUserOptionsDocument = gql`
   query GetActiveUserOptions($user: String!) {
     UserOption(
-      where: {ownerAddr: {_eq: $user}, fullyExercised: {_eq: false}}
+      where: {owner: {address: {_eq: $user}}, fullyExercised: {_eq: false}}
       limit: 1000
     ) {
       id
       optionId
-      ownerAddr
+      owner {
+        address
+      }
+      market {
+        address
+      }
       exerciseEvents {
         transactionHash
       }
@@ -2355,9 +3007,9 @@ export const GetActiveUserOptionsDocument = gql`
       entryPrice
       expiresAt
       createdAt
-      premiumPaid
+      premium
+      protocolFee
       realizedPayout
-      marketAddr
       liquiditiesAtOpen
       liquiditiesCurrent
       positionSizeAtOpen
@@ -2369,12 +3021,17 @@ export const GetActiveUserOptionsDocument = gql`
 export const GetClosedUserOptionsDocument = gql`
   query GetClosedUserOptions($user: String!) {
     UserOption(
-      where: {ownerAddr: {_eq: $user}, fullyExercised: {_eq: true}}
+      where: {owner: {address: {_eq: $user}}, fullyExercised: {_eq: true}}
       limit: 1000
     ) {
       id
       optionId
-      ownerAddr
+      owner {
+        address
+      }
+      market {
+        address
+      }
       exerciseEvents {
         transactionHash
       }
@@ -2389,9 +3046,9 @@ export const GetClosedUserOptionsDocument = gql`
       entryPrice
       expiresAt
       createdAt
-      premiumPaid
+      premium
+      protocolFee
       realizedPayout
-      marketAddr
       liquiditiesAtOpen
       liquiditiesCurrent
       positionSizeAtOpen
@@ -2402,8 +3059,9 @@ export const GetClosedUserOptionsDocument = gql`
 `;
 export const GetMarketDataDocument = gql`
   query GetMarketData($marketAddr: String!) {
-    TimelockMarket(where: {id: {_eq: $marketAddr}}, limit: 1) {
+    TimelockMarket(where: {address: {_eq: $marketAddr}}, limit: 1) {
       id
+      address
       optionsCount
       tradersCount
       vault
@@ -2418,6 +3076,27 @@ export const GetMarketDataDocument = gql`
       payoutAssetSymbol
       optionAssetName
       payoutAssetName
+    }
+  }
+`;
+export const GetUserMarketOperatorsDocument = gql`
+  query GetUserMarketOperators($userAddr: String!, $marketAddr: String!) {
+    UserMarketOperator(
+      where: {
+        user: {address: {_eq: $userAddr}}
+        market: {address: {_eq: $marketAddr}}
+      }
+      limit: 1000
+    ) {
+      id
+      operator {
+        address
+      }
+      canExtend
+      canExercise
+      canTransfer
+      canMint
+      spendingApproval
     }
   }
 `;
@@ -2491,6 +3170,24 @@ export function getSdk(
             signal,
           }),
         'GetMarketData',
+        'query',
+        variables,
+      );
+    },
+    GetUserMarketOperators(
+      variables: GetUserMarketOperatorsQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+      signal?: RequestInit['signal'],
+    ): Promise<GetUserMarketOperatorsQuery> {
+      return withWrapper(
+        wrappedRequestHeaders =>
+          client.request<GetUserMarketOperatorsQuery>({
+            document: GetUserMarketOperatorsDocument,
+            variables,
+            requestHeaders: {...requestHeaders, ...wrappedRequestHeaders},
+            signal,
+          }),
+        'GetUserMarketOperators',
         'query',
         variables,
       );

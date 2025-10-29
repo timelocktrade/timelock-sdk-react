@@ -10,6 +10,9 @@ export * from '~/hooks/market/useMintOption';
 export * from '~/hooks/market/useOptionPnl';
 export * from '~/hooks/market/useOptionPremium';
 export * from '~/hooks/market/useUserOptions';
+export * from '~/hooks/market/useExtendOption';
+export * from '~/hooks/market/useUserOperators';
+export * from '~/hooks/market/useSetOperatorPerms';
 
 // Pool Hooks
 export * from '~/hooks/pool/useCurrentPrice';

@@ -21,6 +21,24 @@ export const getTickAtPrice = (price: bigint) => {
   return TickMath.getTickAtSqrtRatio(sqrtPriceX96);
 };
 
+export const getNearestValidStrikeTick = (
+  optionType: 'CALL' | 'PUT',
+  optionAssetIsToken0: boolean,
+  tickSpacing: number,
+  currentTick: number,
+  strikeTick?: number,
+) => {
+  strikeTick = roundTickDown(strikeTick ?? currentTick, tickSpacing);
+
+  if (
+    (optionType === 'CALL' && optionAssetIsToken0) ||
+    (optionType === 'PUT' && !optionAssetIsToken0)
+  ) {
+    strikeTick += tickSpacing;
+  }
+  return strikeTick;
+};
+
 export const roundTickDown = (tick: number, spacing: number) => {
   const rem = tick % spacing;
   if (rem >= 0) return tick - rem;
@@ -42,6 +60,51 @@ export const token0ToToken1 = (amount0: bigint, tick: number) => {
 export const token1ToToken0 = (amount1: bigint, tick: number) => {
   const price = getPriceAtTick(tick);
   return (amount1 * PRICE_PRECISION) / price;
+};
+
+export const getAmountsFromLiquidity = (
+  tickLower: number,
+  tickUpper: number,
+  liquidity: bigint,
+  currentTick: number,
+): [bigint, bigint] => {
+  const sqrtRatioX96 = TickMath.getSqrtRatioAtTick(currentTick);
+  const sqrtRatioAX96 = TickMath.getSqrtRatioAtTick(tickLower);
+  const sqrtRatioBX96 = TickMath.getSqrtRatioAtTick(tickUpper);
+  const liquidityJSBI = JSBI.BigInt(liquidity.toString());
+
+  let delta0 = JSBI.BigInt(0);
+  let delta1 = JSBI.BigInt(0);
+
+  if (currentTick < tickLower) {
+    delta0 = SqrtPriceMath.getAmount0Delta(
+      sqrtRatioAX96,
+      sqrtRatioBX96,
+      liquidityJSBI,
+      false,
+    );
+  } else if (currentTick >= tickUpper) {
+    delta1 = SqrtPriceMath.getAmount1Delta(
+      sqrtRatioAX96,
+      sqrtRatioBX96,
+      liquidityJSBI,
+      false,
+    );
+  } else {
+    delta0 = SqrtPriceMath.getAmount0Delta(
+      sqrtRatioX96,
+      sqrtRatioBX96,
+      liquidityJSBI,
+      false,
+    );
+    delta1 = SqrtPriceMath.getAmount1Delta(
+      sqrtRatioAX96,
+      sqrtRatioX96,
+      liquidityJSBI,
+      false,
+    );
+  }
+  return [BigInt(delta0.toString()), BigInt(delta1.toString())];
 };
 
 export const liquiditiesToAmount0 = (

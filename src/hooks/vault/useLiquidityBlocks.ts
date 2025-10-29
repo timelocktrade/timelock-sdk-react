@@ -1,4 +1,4 @@
-import type {Address} from 'viem';
+import {zeroAddress, type Address} from 'viem';
 import {useReadContract} from 'wagmi';
 
 import {useLens} from '../useLens';
@@ -15,8 +15,8 @@ export const useLiquidityBlocks = (vaultAddr?: Address) => {
     address: timelockLens?.address,
     abi: lensAbi,
     functionName: 'getAllBlocks',
-    args: [vaultAddr!],
-    query: {enabled: !!vaultAddr && !!timelockLens},
+    args: [vaultAddr || zeroAddress],
+    query: {enabled: !!vaultAddr},
   });
   return {data: blocks, ...rest};
 };

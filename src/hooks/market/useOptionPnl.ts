@@ -26,7 +26,7 @@ export const useOptionPnl = (option: OptionData) => {
       !positionSizeCurrent ||
       !payoutAssetDecimals
     )
-      return {};
+      return undefined;
 
     const currentSize = optionAssetIsToken0
       ? token0ToToken1(positionSizeCurrent, currentTick)
@@ -45,7 +45,7 @@ export const useOptionPnl = (option: OptionData) => {
   ]);
 
   const unrealizedPayout = useMemo(() => {
-    if (!payoutAssetDecimals || !currentTick || !tickSpacing) return {};
+    if (!payoutAssetDecimals || !currentTick || !tickSpacing) return undefined;
 
     const [amount0, amount1] = liquiditiesToAmounts(
       option.liquiditiesCurrent,

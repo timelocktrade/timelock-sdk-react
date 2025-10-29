@@ -1,6 +1,6 @@
 {
   "name": "timelock-sdk",
-  "version": "0.0.45",
+  "version": "0.0.72",
   "description": "",
   "type": "module",
   "main": "./dist/package.cjs",
@@ -57,15 +57,15 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@graphql-codegen/cli": "^6.0.0",
+    "@graphql-codegen/cli": "^6.0.1",
     "@graphql-codegen/typescript": "^5.0.2",
     "@graphql-codegen/typescript-graphql-request": "^6.3.0",
     "@graphql-codegen/typescript-operations": "^5.0.2",
     "@types/big.js": "^6.2.2",
-    "@types/node": "^24.8.1",
+    "@types/node": "^24.9.1",
     "@types/react": "^19.2.2",
     "gts": "^6.0.2",
-    "tsdown": "^0.15.7",
+    "tsdown": "^0.15.9",
     "typescript": "^5.9.3"
   },
   "dependencies": {},
@@ -77,9 +77,9 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "viem": "^2.38.3",
-    "wagmi": "^2.18.1",
+    "wagmi": "^2.18.2",
     "graphql": "^16.11.0",
-    "graphql-request": "^7.3.0",
+    "graphql-request": "^7.3.1",
     "graphql-tag": "^2.12.6"
   },
   "engines": {
