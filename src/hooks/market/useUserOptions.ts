@@ -1,22 +1,38 @@
 import type {Address} from 'viem';
 import {useQuery} from '@tanstack/react-query';
 import {useTimelockConfig} from '~/providers/TimelockMarketProvider';
+import {EMPTY_ARRAY} from '~/lib/numberUtils';
 
 export type OptionData = ReturnType<typeof useUserOptions>['data'][0];
 
-const useUserOptions = (user?: Address, active = false) => {
+const useUserOptions = (
+  userAddr?: Address,
+  marketAddr?: Address | '*',
+  active = false,
+) => {
   const {graphqlClient} = useTimelockConfig();
 
-  user = user?.toLowerCase() as Address | undefined;
+  userAddr = userAddr?.toLowerCase() as Address | undefined;
+  marketAddr = marketAddr?.toLowerCase() as Address | '*' | undefined;
 
   const {data, ...rest} = useQuery({
-    queryKey: ['userOptions', user?.toLowerCase() || '--', active],
+    queryKey: ['userOptions', userAddr || '--', active],
     queryFn: async () => {
-      if (!graphqlClient || !user) return [];
+      if (!graphqlClient || !userAddr || !marketAddr) return [];
 
-      const data = active
-        ? await graphqlClient.GetActiveUserOptions({user})
-        : await graphqlClient.GetClosedUserOptions({user});
+      const data = await (marketAddr === '*'
+        ? active
+          ? graphqlClient.GetActiveUserOptions({userAddr})
+          : graphqlClient.GetClosedUserOptions({userAddr})
+        : active
+          ? graphqlClient.GetActiveUserOptionsByMarket({
+              userAddr,
+              marketAddr,
+            })
+          : graphqlClient.GetClosedUserOptionsByMarket({
+              userAddr,
+              marketAddr,
+            }));
 
       return data.UserOption.map(option => ({
         ...option,
@@ -37,15 +53,21 @@ const useUserOptions = (user?: Address, active = false) => {
         entryPrice: BigInt(option.entryPrice),
       })).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
     },
-    enabled: !!user && !!graphqlClient,
+    enabled: !!userAddr && !!marketAddr && !!graphqlClient,
   });
-  return {data: data || [], ...rest};
+  return {data: data || EMPTY_ARRAY, ...rest};
 };
 
-export const useActiveUserOptions = (user?: Address) => {
-  return useUserOptions(user, true);
+export const useActiveUserOptions = (
+  userAddr?: Address,
+  marketAddr?: Address | '*',
+) => {
+  return useUserOptions(userAddr, marketAddr, true);
 };
 
-export const useClosedUserOptions = (user?: Address) => {
-  return useUserOptions(user, false);
+export const useClosedUserOptions = (
+  userAddr?: Address,
+  marketAddr?: Address | '*',
+) => {
+  return useUserOptions(userAddr, marketAddr, false);
 };

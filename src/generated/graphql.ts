@@ -52,7 +52,8 @@ export type BorrowEvent = {
   tickUpper: Scalars['Int']['output'];
   timestamp: Scalars['numeric']['output'];
   transactionHash: Scalars['String']['output'];
-  user: Scalars['String']['output'];
+  userAddr: Scalars['String']['output'];
+  vaultAddr: Scalars['String']['output'];
 };
 
 /** Boolean expression to filter rows from the table "BorrowEvent". All fields are combined with a logical 'AND'. */
@@ -67,7 +68,8 @@ export type BorrowEventBoolExp = {
   tickUpper?: InputMaybe<IntComparisonExp>;
   timestamp?: InputMaybe<NumericComparisonExp>;
   transactionHash?: InputMaybe<StringComparisonExp>;
-  user?: InputMaybe<StringComparisonExp>;
+  userAddr?: InputMaybe<StringComparisonExp>;
+  vaultAddr?: InputMaybe<StringComparisonExp>;
 };
 
 /** Ordering options when selecting data from "BorrowEvent". */
@@ -79,7 +81,8 @@ export type BorrowEventOrderBy = {
   tickUpper?: InputMaybe<OrderBy>;
   timestamp?: InputMaybe<OrderBy>;
   transactionHash?: InputMaybe<OrderBy>;
-  user?: InputMaybe<OrderBy>;
+  userAddr?: InputMaybe<OrderBy>;
+  vaultAddr?: InputMaybe<OrderBy>;
 };
 
 /** select columns of table "BorrowEvent" */
@@ -99,7 +102,9 @@ export type BorrowEventSelectColumn =
   /** column name */
   | 'transactionHash'
   /** column name */
-  | 'user';
+  | 'userAddr'
+  /** column name */
+  | 'vaultAddr';
 
 /** Streaming cursor of the table "BorrowEvent" */
 export type BorrowEventStreamCursorInput = {
@@ -118,7 +123,8 @@ export type BorrowEventStreamCursorValueInput = {
   tickUpper?: InputMaybe<Scalars['Int']['input']>;
   timestamp?: InputMaybe<Scalars['numeric']['input']>;
   transactionHash?: InputMaybe<Scalars['String']['input']>;
-  user?: InputMaybe<Scalars['String']['input']>;
+  userAddr?: InputMaybe<Scalars['String']['input']>;
+  vaultAddr?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** columns and relationships of "BurnEvent" */
@@ -131,7 +137,8 @@ export type BurnEvent = {
   tickUpper: Scalars['Int']['output'];
   timestamp: Scalars['numeric']['output'];
   transactionHash: Scalars['String']['output'];
-  user: Scalars['String']['output'];
+  userAddr: Scalars['String']['output'];
+  vaultAddr: Scalars['String']['output'];
 };
 
 /** Boolean expression to filter rows from the table "BurnEvent". All fields are combined with a logical 'AND'. */
@@ -146,7 +153,8 @@ export type BurnEventBoolExp = {
   tickUpper?: InputMaybe<IntComparisonExp>;
   timestamp?: InputMaybe<NumericComparisonExp>;
   transactionHash?: InputMaybe<StringComparisonExp>;
-  user?: InputMaybe<StringComparisonExp>;
+  userAddr?: InputMaybe<StringComparisonExp>;
+  vaultAddr?: InputMaybe<StringComparisonExp>;
 };
 
 /** Ordering options when selecting data from "BurnEvent". */
@@ -158,7 +166,8 @@ export type BurnEventOrderBy = {
   tickUpper?: InputMaybe<OrderBy>;
   timestamp?: InputMaybe<OrderBy>;
   transactionHash?: InputMaybe<OrderBy>;
-  user?: InputMaybe<OrderBy>;
+  userAddr?: InputMaybe<OrderBy>;
+  vaultAddr?: InputMaybe<OrderBy>;
 };
 
 /** select columns of table "BurnEvent" */
@@ -178,7 +187,9 @@ export type BurnEventSelectColumn =
   /** column name */
   | 'transactionHash'
   /** column name */
-  | 'user';
+  | 'userAddr'
+  /** column name */
+  | 'vaultAddr';
 
 /** Streaming cursor of the table "BurnEvent" */
 export type BurnEventStreamCursorInput = {
@@ -197,7 +208,8 @@ export type BurnEventStreamCursorValueInput = {
   tickUpper?: InputMaybe<Scalars['Int']['input']>;
   timestamp?: InputMaybe<Scalars['numeric']['input']>;
   transactionHash?: InputMaybe<Scalars['String']['input']>;
-  user?: InputMaybe<Scalars['String']['input']>;
+  userAddr?: InputMaybe<Scalars['String']['input']>;
+  vaultAddr?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** columns and relationships of "ExerciseOptionEvent" */
@@ -215,29 +227,6 @@ export type ExerciseOptionEvent = {
   transactionHash: Scalars['String']['output'];
 };
 
-/** order by aggregate values of table "ExerciseOptionEvent" */
-export type ExerciseOptionEventAggregateOrderBy = {
-  avg?: InputMaybe<ExerciseOptionEventAvgOrderBy>;
-  count?: InputMaybe<OrderBy>;
-  max?: InputMaybe<ExerciseOptionEventMaxOrderBy>;
-  min?: InputMaybe<ExerciseOptionEventMinOrderBy>;
-  stddev?: InputMaybe<ExerciseOptionEventStddevOrderBy>;
-  stddev_pop?: InputMaybe<ExerciseOptionEventStddevPopOrderBy>;
-  stddev_samp?: InputMaybe<ExerciseOptionEventStddevSampOrderBy>;
-  sum?: InputMaybe<ExerciseOptionEventSumOrderBy>;
-  var_pop?: InputMaybe<ExerciseOptionEventVarPopOrderBy>;
-  var_samp?: InputMaybe<ExerciseOptionEventVarSampOrderBy>;
-  variance?: InputMaybe<ExerciseOptionEventVarianceOrderBy>;
-};
-
-/** order by avg() on columns of table "ExerciseOptionEvent" */
-export type ExerciseOptionEventAvgOrderBy = {
-  blockNumber?: InputMaybe<OrderBy>;
-  currentTick?: InputMaybe<OrderBy>;
-  payout?: InputMaybe<OrderBy>;
-  timestamp?: InputMaybe<OrderBy>;
-};
-
 /** Boolean expression to filter rows from the table "ExerciseOptionEvent". All fields are combined with a logical 'AND'. */
 export type ExerciseOptionEventBoolExp = {
   _and?: InputMaybe<Array<ExerciseOptionEventBoolExp>>;
@@ -252,30 +241,6 @@ export type ExerciseOptionEventBoolExp = {
   payout?: InputMaybe<NumericComparisonExp>;
   timestamp?: InputMaybe<NumericComparisonExp>;
   transactionHash?: InputMaybe<StringComparisonExp>;
-};
-
-/** order by max() on columns of table "ExerciseOptionEvent" */
-export type ExerciseOptionEventMaxOrderBy = {
-  blockNumber?: InputMaybe<OrderBy>;
-  currentTick?: InputMaybe<OrderBy>;
-  id?: InputMaybe<OrderBy>;
-  liquidities?: InputMaybe<OrderBy>;
-  option_id?: InputMaybe<OrderBy>;
-  payout?: InputMaybe<OrderBy>;
-  timestamp?: InputMaybe<OrderBy>;
-  transactionHash?: InputMaybe<OrderBy>;
-};
-
-/** order by min() on columns of table "ExerciseOptionEvent" */
-export type ExerciseOptionEventMinOrderBy = {
-  blockNumber?: InputMaybe<OrderBy>;
-  currentTick?: InputMaybe<OrderBy>;
-  id?: InputMaybe<OrderBy>;
-  liquidities?: InputMaybe<OrderBy>;
-  option_id?: InputMaybe<OrderBy>;
-  payout?: InputMaybe<OrderBy>;
-  timestamp?: InputMaybe<OrderBy>;
-  transactionHash?: InputMaybe<OrderBy>;
 };
 
 /** Ordering options when selecting data from "ExerciseOptionEvent". */
@@ -310,30 +275,6 @@ export type ExerciseOptionEventSelectColumn =
   /** column name */
   | 'transactionHash';
 
-/** order by stddev() on columns of table "ExerciseOptionEvent" */
-export type ExerciseOptionEventStddevOrderBy = {
-  blockNumber?: InputMaybe<OrderBy>;
-  currentTick?: InputMaybe<OrderBy>;
-  payout?: InputMaybe<OrderBy>;
-  timestamp?: InputMaybe<OrderBy>;
-};
-
-/** order by stddev_pop() on columns of table "ExerciseOptionEvent" */
-export type ExerciseOptionEventStddevPopOrderBy = {
-  blockNumber?: InputMaybe<OrderBy>;
-  currentTick?: InputMaybe<OrderBy>;
-  payout?: InputMaybe<OrderBy>;
-  timestamp?: InputMaybe<OrderBy>;
-};
-
-/** order by stddev_samp() on columns of table "ExerciseOptionEvent" */
-export type ExerciseOptionEventStddevSampOrderBy = {
-  blockNumber?: InputMaybe<OrderBy>;
-  currentTick?: InputMaybe<OrderBy>;
-  payout?: InputMaybe<OrderBy>;
-  timestamp?: InputMaybe<OrderBy>;
-};
-
 /** Streaming cursor of the table "ExerciseOptionEvent" */
 export type ExerciseOptionEventStreamCursorInput = {
   /** Stream column input with initial value */
@@ -352,38 +293,6 @@ export type ExerciseOptionEventStreamCursorValueInput = {
   payout?: InputMaybe<Scalars['numeric']['input']>;
   timestamp?: InputMaybe<Scalars['numeric']['input']>;
   transactionHash?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** order by sum() on columns of table "ExerciseOptionEvent" */
-export type ExerciseOptionEventSumOrderBy = {
-  blockNumber?: InputMaybe<OrderBy>;
-  currentTick?: InputMaybe<OrderBy>;
-  payout?: InputMaybe<OrderBy>;
-  timestamp?: InputMaybe<OrderBy>;
-};
-
-/** order by var_pop() on columns of table "ExerciseOptionEvent" */
-export type ExerciseOptionEventVarPopOrderBy = {
-  blockNumber?: InputMaybe<OrderBy>;
-  currentTick?: InputMaybe<OrderBy>;
-  payout?: InputMaybe<OrderBy>;
-  timestamp?: InputMaybe<OrderBy>;
-};
-
-/** order by var_samp() on columns of table "ExerciseOptionEvent" */
-export type ExerciseOptionEventVarSampOrderBy = {
-  blockNumber?: InputMaybe<OrderBy>;
-  currentTick?: InputMaybe<OrderBy>;
-  payout?: InputMaybe<OrderBy>;
-  timestamp?: InputMaybe<OrderBy>;
-};
-
-/** order by variance() on columns of table "ExerciseOptionEvent" */
-export type ExerciseOptionEventVarianceOrderBy = {
-  blockNumber?: InputMaybe<OrderBy>;
-  currentTick?: InputMaybe<OrderBy>;
-  payout?: InputMaybe<OrderBy>;
-  timestamp?: InputMaybe<OrderBy>;
 };
 
 /** columns and relationships of "ExtendOptionEvent" */
@@ -564,7 +473,8 @@ export type MintEvent = {
   tickUpper: Scalars['Int']['output'];
   timestamp: Scalars['numeric']['output'];
   transactionHash: Scalars['String']['output'];
-  user: Scalars['String']['output'];
+  userAddr: Scalars['String']['output'];
+  vaultAddr: Scalars['String']['output'];
 };
 
 /** Boolean expression to filter rows from the table "MintEvent". All fields are combined with a logical 'AND'. */
@@ -579,7 +489,8 @@ export type MintEventBoolExp = {
   tickUpper?: InputMaybe<IntComparisonExp>;
   timestamp?: InputMaybe<NumericComparisonExp>;
   transactionHash?: InputMaybe<StringComparisonExp>;
-  user?: InputMaybe<StringComparisonExp>;
+  userAddr?: InputMaybe<StringComparisonExp>;
+  vaultAddr?: InputMaybe<StringComparisonExp>;
 };
 
 /** Ordering options when selecting data from "MintEvent". */
@@ -591,7 +502,8 @@ export type MintEventOrderBy = {
   tickUpper?: InputMaybe<OrderBy>;
   timestamp?: InputMaybe<OrderBy>;
   transactionHash?: InputMaybe<OrderBy>;
-  user?: InputMaybe<OrderBy>;
+  userAddr?: InputMaybe<OrderBy>;
+  vaultAddr?: InputMaybe<OrderBy>;
 };
 
 /** select columns of table "MintEvent" */
@@ -611,7 +523,9 @@ export type MintEventSelectColumn =
   /** column name */
   | 'transactionHash'
   /** column name */
-  | 'user';
+  | 'userAddr'
+  /** column name */
+  | 'vaultAddr';
 
 /** Streaming cursor of the table "MintEvent" */
 export type MintEventStreamCursorInput = {
@@ -630,7 +544,8 @@ export type MintEventStreamCursorValueInput = {
   tickUpper?: InputMaybe<Scalars['Int']['input']>;
   timestamp?: InputMaybe<Scalars['numeric']['input']>;
   transactionHash?: InputMaybe<Scalars['String']['input']>;
-  user?: InputMaybe<Scalars['String']['input']>;
+  userAddr?: InputMaybe<Scalars['String']['input']>;
+  vaultAddr?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** columns and relationships of "MintOptionEvent" */
@@ -641,7 +556,10 @@ export type MintOptionEvent = {
   expiresAt: Scalars['numeric']['output'];
   id: Scalars['String']['output'];
   liquidities: Array<Scalars['String']['output']>;
+  /** An object relationship */
+  option?: Maybe<UserOption>;
   optionType: Scalars['Int']['output'];
+  option_id: Scalars['String']['output'];
   owner: Scalars['String']['output'];
   premium: Scalars['numeric']['output'];
   protocolFee: Scalars['numeric']['output'];
@@ -660,7 +578,9 @@ export type MintOptionEventBoolExp = {
   expiresAt?: InputMaybe<NumericComparisonExp>;
   id?: InputMaybe<StringComparisonExp>;
   liquidities?: InputMaybe<StringArrayComparisonExp>;
+  option?: InputMaybe<UserOptionBoolExp>;
   optionType?: InputMaybe<IntComparisonExp>;
+  option_id?: InputMaybe<StringComparisonExp>;
   owner?: InputMaybe<StringComparisonExp>;
   premium?: InputMaybe<NumericComparisonExp>;
   protocolFee?: InputMaybe<NumericComparisonExp>;
@@ -676,7 +596,9 @@ export type MintOptionEventOrderBy = {
   expiresAt?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   liquidities?: InputMaybe<OrderBy>;
+  option?: InputMaybe<UserOptionOrderBy>;
   optionType?: InputMaybe<OrderBy>;
+  option_id?: InputMaybe<OrderBy>;
   owner?: InputMaybe<OrderBy>;
   premium?: InputMaybe<OrderBy>;
   protocolFee?: InputMaybe<OrderBy>;
@@ -699,6 +621,8 @@ export type MintOptionEventSelectColumn =
   | 'liquidities'
   /** column name */
   | 'optionType'
+  /** column name */
+  | 'option_id'
   /** column name */
   | 'owner'
   /** column name */
@@ -728,6 +652,7 @@ export type MintOptionEventStreamCursorValueInput = {
   id?: InputMaybe<Scalars['String']['input']>;
   liquidities?: InputMaybe<Array<Scalars['String']['input']>>;
   optionType?: InputMaybe<Scalars['Int']['input']>;
+  option_id?: InputMaybe<Scalars['String']['input']>;
   owner?: InputMaybe<Scalars['String']['input']>;
   premium?: InputMaybe<Scalars['numeric']['input']>;
   protocolFee?: InputMaybe<Scalars['numeric']['input']>;
@@ -746,7 +671,8 @@ export type RepayEvent = {
   tickUpper: Scalars['Int']['output'];
   timestamp: Scalars['numeric']['output'];
   transactionHash: Scalars['String']['output'];
-  user: Scalars['String']['output'];
+  userAddr: Scalars['String']['output'];
+  vaultAddr: Scalars['String']['output'];
 };
 
 /** Boolean expression to filter rows from the table "RepayEvent". All fields are combined with a logical 'AND'. */
@@ -761,7 +687,8 @@ export type RepayEventBoolExp = {
   tickUpper?: InputMaybe<IntComparisonExp>;
   timestamp?: InputMaybe<NumericComparisonExp>;
   transactionHash?: InputMaybe<StringComparisonExp>;
-  user?: InputMaybe<StringComparisonExp>;
+  userAddr?: InputMaybe<StringComparisonExp>;
+  vaultAddr?: InputMaybe<StringComparisonExp>;
 };
 
 /** Ordering options when selecting data from "RepayEvent". */
@@ -773,7 +700,8 @@ export type RepayEventOrderBy = {
   tickUpper?: InputMaybe<OrderBy>;
   timestamp?: InputMaybe<OrderBy>;
   transactionHash?: InputMaybe<OrderBy>;
-  user?: InputMaybe<OrderBy>;
+  userAddr?: InputMaybe<OrderBy>;
+  vaultAddr?: InputMaybe<OrderBy>;
 };
 
 /** select columns of table "RepayEvent" */
@@ -793,7 +721,9 @@ export type RepayEventSelectColumn =
   /** column name */
   | 'transactionHash'
   /** column name */
-  | 'user';
+  | 'userAddr'
+  /** column name */
+  | 'vaultAddr';
 
 /** Streaming cursor of the table "RepayEvent" */
 export type RepayEventStreamCursorInput = {
@@ -812,7 +742,8 @@ export type RepayEventStreamCursorValueInput = {
   tickUpper?: InputMaybe<Scalars['Int']['input']>;
   timestamp?: InputMaybe<Scalars['numeric']['input']>;
   transactionHash?: InputMaybe<Scalars['String']['input']>;
-  user?: InputMaybe<Scalars['String']['input']>;
+  userAddr?: InputMaybe<Scalars['String']['input']>;
+  vaultAddr?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'. */
@@ -1187,7 +1118,9 @@ export type UpdateOperatorPermsEvent = {
   market?: Maybe<TimelockMarket>;
   market_id: Scalars['String']['output'];
   operator: Scalars['String']['output'];
-  owner: Scalars['String']['output'];
+  /** An object relationship */
+  owner?: Maybe<TimelockMarketUser>;
+  owner_id: Scalars['String']['output'];
   spendingApproval: Scalars['numeric']['output'];
   timestamp: Scalars['numeric']['output'];
   transactionHash: Scalars['String']['output'];
@@ -1207,7 +1140,8 @@ export type UpdateOperatorPermsEventBoolExp = {
   market?: InputMaybe<TimelockMarketBoolExp>;
   market_id?: InputMaybe<StringComparisonExp>;
   operator?: InputMaybe<StringComparisonExp>;
-  owner?: InputMaybe<StringComparisonExp>;
+  owner?: InputMaybe<TimelockMarketUserBoolExp>;
+  owner_id?: InputMaybe<StringComparisonExp>;
   spendingApproval?: InputMaybe<NumericComparisonExp>;
   timestamp?: InputMaybe<NumericComparisonExp>;
   transactionHash?: InputMaybe<StringComparisonExp>;
@@ -1224,7 +1158,8 @@ export type UpdateOperatorPermsEventOrderBy = {
   market?: InputMaybe<TimelockMarketOrderBy>;
   market_id?: InputMaybe<OrderBy>;
   operator?: InputMaybe<OrderBy>;
-  owner?: InputMaybe<OrderBy>;
+  owner?: InputMaybe<TimelockMarketUserOrderBy>;
+  owner_id?: InputMaybe<OrderBy>;
   spendingApproval?: InputMaybe<OrderBy>;
   timestamp?: InputMaybe<OrderBy>;
   transactionHash?: InputMaybe<OrderBy>;
@@ -1249,7 +1184,7 @@ export type UpdateOperatorPermsEventSelectColumn =
   /** column name */
   | 'operator'
   /** column name */
-  | 'owner'
+  | 'owner_id'
   /** column name */
   | 'spendingApproval'
   /** column name */
@@ -1275,7 +1210,7 @@ export type UpdateOperatorPermsEventStreamCursorValueInput = {
   id?: InputMaybe<Scalars['String']['input']>;
   market_id?: InputMaybe<Scalars['String']['input']>;
   operator?: InputMaybe<Scalars['String']['input']>;
-  owner?: InputMaybe<Scalars['String']['input']>;
+  owner_id?: InputMaybe<Scalars['String']['input']>;
   spendingApproval?: InputMaybe<Scalars['numeric']['input']>;
   timestamp?: InputMaybe<Scalars['numeric']['input']>;
   transactionHash?: InputMaybe<Scalars['String']['input']>;
@@ -1457,8 +1392,6 @@ export type UserOption = {
   createdAt: Scalars['numeric']['output'];
   entryPrice: Scalars['numeric']['output'];
   entryTick: Scalars['Int']['output'];
-  /** An array relationship */
-  exerciseEvents: Array<ExerciseOptionEvent>;
   expiresAt: Scalars['numeric']['output'];
   fullyExercised: Scalars['Boolean']['output'];
   id: Scalars['String']['output'];
@@ -1467,9 +1400,6 @@ export type UserOption = {
   /** An object relationship */
   market?: Maybe<TimelockMarket>;
   market_id: Scalars['String']['output'];
-  /** An object relationship */
-  mintEvent?: Maybe<MintOptionEvent>;
-  mintEvent_id: Scalars['String']['output'];
   optionId: Scalars['numeric']['output'];
   optionType: Scalars['optiontype']['output'];
   /** An object relationship */
@@ -1483,15 +1413,6 @@ export type UserOption = {
   startTick: Scalars['Int']['output'];
   strikePrice: Scalars['numeric']['output'];
   strikeTick: Scalars['Int']['output'];
-};
-
-/** columns and relationships of "UserOption" */
-export type UserOptionExerciseEventsArgs = {
-  distinct_on?: InputMaybe<Array<ExerciseOptionEventSelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<ExerciseOptionEventOrderBy>>;
-  where?: InputMaybe<ExerciseOptionEventBoolExp>;
 };
 
 /** order by aggregate values of table "UserOption" */
@@ -1534,7 +1455,6 @@ export type UserOptionBoolExp = {
   createdAt?: InputMaybe<NumericComparisonExp>;
   entryPrice?: InputMaybe<NumericComparisonExp>;
   entryTick?: InputMaybe<IntComparisonExp>;
-  exerciseEvents?: InputMaybe<ExerciseOptionEventBoolExp>;
   expiresAt?: InputMaybe<NumericComparisonExp>;
   fullyExercised?: InputMaybe<BooleanComparisonExp>;
   id?: InputMaybe<StringComparisonExp>;
@@ -1542,8 +1462,6 @@ export type UserOptionBoolExp = {
   liquiditiesCurrent?: InputMaybe<StringArrayComparisonExp>;
   market?: InputMaybe<TimelockMarketBoolExp>;
   market_id?: InputMaybe<StringComparisonExp>;
-  mintEvent?: InputMaybe<MintOptionEventBoolExp>;
-  mintEvent_id?: InputMaybe<StringComparisonExp>;
   optionId?: InputMaybe<NumericComparisonExp>;
   optionType?: InputMaybe<OptiontypeComparisonExp>;
   owner?: InputMaybe<TimelockMarketUserBoolExp>;
@@ -1568,7 +1486,6 @@ export type UserOptionMaxOrderBy = {
   liquiditiesAtOpen?: InputMaybe<OrderBy>;
   liquiditiesCurrent?: InputMaybe<OrderBy>;
   market_id?: InputMaybe<OrderBy>;
-  mintEvent_id?: InputMaybe<OrderBy>;
   optionId?: InputMaybe<OrderBy>;
   optionType?: InputMaybe<OrderBy>;
   owner_id?: InputMaybe<OrderBy>;
@@ -1592,7 +1509,6 @@ export type UserOptionMinOrderBy = {
   liquiditiesAtOpen?: InputMaybe<OrderBy>;
   liquiditiesCurrent?: InputMaybe<OrderBy>;
   market_id?: InputMaybe<OrderBy>;
-  mintEvent_id?: InputMaybe<OrderBy>;
   optionId?: InputMaybe<OrderBy>;
   optionType?: InputMaybe<OrderBy>;
   owner_id?: InputMaybe<OrderBy>;
@@ -1611,7 +1527,6 @@ export type UserOptionOrderBy = {
   createdAt?: InputMaybe<OrderBy>;
   entryPrice?: InputMaybe<OrderBy>;
   entryTick?: InputMaybe<OrderBy>;
-  exerciseEvents_aggregate?: InputMaybe<ExerciseOptionEventAggregateOrderBy>;
   expiresAt?: InputMaybe<OrderBy>;
   fullyExercised?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
@@ -1619,8 +1534,6 @@ export type UserOptionOrderBy = {
   liquiditiesCurrent?: InputMaybe<OrderBy>;
   market?: InputMaybe<TimelockMarketOrderBy>;
   market_id?: InputMaybe<OrderBy>;
-  mintEvent?: InputMaybe<MintOptionEventOrderBy>;
-  mintEvent_id?: InputMaybe<OrderBy>;
   optionId?: InputMaybe<OrderBy>;
   optionType?: InputMaybe<OrderBy>;
   owner?: InputMaybe<TimelockMarketUserOrderBy>;
@@ -1655,8 +1568,6 @@ export type UserOptionSelectColumn =
   | 'liquiditiesCurrent'
   /** column name */
   | 'market_id'
-  /** column name */
-  | 'mintEvent_id'
   /** column name */
   | 'optionId'
   /** column name */
@@ -1750,7 +1661,6 @@ export type UserOptionStreamCursorValueInput = {
   liquiditiesAtOpen?: InputMaybe<Array<Scalars['String']['input']>>;
   liquiditiesCurrent?: InputMaybe<Array<Scalars['String']['input']>>;
   market_id?: InputMaybe<Scalars['String']['input']>;
-  mintEvent_id?: InputMaybe<Scalars['String']['input']>;
   optionId?: InputMaybe<Scalars['numeric']['input']>;
   optionType?: InputMaybe<Scalars['optiontype']['input']>;
   owner_id?: InputMaybe<Scalars['String']['input']>;
@@ -2861,76 +2771,66 @@ export type TimestamptzComparisonExp = {
   _nin?: InputMaybe<Array<Scalars['timestamptz']['input']>>;
 };
 
+export type UserOptionFieldsFragment = {
+  __typename: 'UserOption';
+  id: string;
+  optionId: any;
+  optionType: any;
+  strikeTick: number;
+  entryTick: number;
+  startTick: number;
+  strikePrice: any;
+  entryPrice: any;
+  expiresAt: any;
+  createdAt: any;
+  premium: any;
+  protocolFee: any;
+  realizedPayout: any;
+  liquiditiesAtOpen: Array<string>;
+  liquiditiesCurrent: Array<string>;
+  positionSizeAtOpen: any;
+  positionSizeCurrent: any;
+  fullyExercised: boolean;
+  owner?: {__typename: 'TimelockMarketUser'; address: string} | null;
+  market?: {__typename: 'TimelockMarket'; address: string} | null;
+};
+
 export type GetActiveUserOptionsQueryVariables = Exact<{
-  user: Scalars['String']['input'];
+  userAddr: Scalars['String']['input'];
 }>;
 
 export type GetActiveUserOptionsQuery = {
   __typename: 'query_root';
-  UserOption: Array<{
-    __typename: 'UserOption';
-    id: string;
-    optionId: any;
-    optionType: any;
-    strikeTick: number;
-    entryTick: number;
-    startTick: number;
-    strikePrice: any;
-    entryPrice: any;
-    expiresAt: any;
-    createdAt: any;
-    premium: any;
-    protocolFee: any;
-    realizedPayout: any;
-    liquiditiesAtOpen: Array<string>;
-    liquiditiesCurrent: Array<string>;
-    positionSizeAtOpen: any;
-    positionSizeCurrent: any;
-    fullyExercised: boolean;
-    owner?: {__typename: 'TimelockMarketUser'; address: string} | null;
-    market?: {__typename: 'TimelockMarket'; address: string} | null;
-    exerciseEvents: Array<{
-      __typename: 'ExerciseOptionEvent';
-      transactionHash: string;
-    }>;
-    mintEvent?: {__typename: 'MintOptionEvent'; transactionHash: string} | null;
-  }>;
+  UserOption: Array<{__typename: 'UserOption'} & UserOptionFieldsFragment>;
+};
+
+export type GetActiveUserOptionsByMarketQueryVariables = Exact<{
+  userAddr: Scalars['String']['input'];
+  marketAddr: Scalars['String']['input'];
+}>;
+
+export type GetActiveUserOptionsByMarketQuery = {
+  __typename: 'query_root';
+  UserOption: Array<{__typename: 'UserOption'} & UserOptionFieldsFragment>;
 };
 
 export type GetClosedUserOptionsQueryVariables = Exact<{
-  user: Scalars['String']['input'];
+  userAddr: Scalars['String']['input'];
 }>;
 
 export type GetClosedUserOptionsQuery = {
   __typename: 'query_root';
-  UserOption: Array<{
-    __typename: 'UserOption';
-    id: string;
-    optionId: any;
-    optionType: any;
-    strikeTick: number;
-    entryTick: number;
-    startTick: number;
-    strikePrice: any;
-    entryPrice: any;
-    expiresAt: any;
-    createdAt: any;
-    premium: any;
-    protocolFee: any;
-    realizedPayout: any;
-    liquiditiesAtOpen: Array<string>;
-    liquiditiesCurrent: Array<string>;
-    positionSizeAtOpen: any;
-    positionSizeCurrent: any;
-    fullyExercised: boolean;
-    owner?: {__typename: 'TimelockMarketUser'; address: string} | null;
-    market?: {__typename: 'TimelockMarket'; address: string} | null;
-    exerciseEvents: Array<{
-      __typename: 'ExerciseOptionEvent';
-      transactionHash: string;
-    }>;
-    mintEvent?: {__typename: 'MintOptionEvent'; transactionHash: string} | null;
-  }>;
+  UserOption: Array<{__typename: 'UserOption'} & UserOptionFieldsFragment>;
+};
+
+export type GetClosedUserOptionsByMarketQueryVariables = Exact<{
+  userAddr: Scalars['String']['input'];
+  marketAddr: Scalars['String']['input'];
+}>;
+
+export type GetClosedUserOptionsByMarketQuery = {
+  __typename: 'query_root';
+  UserOption: Array<{__typename: 'UserOption'} & UserOptionFieldsFragment>;
 };
 
 export type GetMarketDataQueryVariables = Exact<{
@@ -2979,83 +2879,129 @@ export type GetUserMarketOperatorsQuery = {
   }>;
 };
 
-export const GetActiveUserOptionsDocument = gql`
-  query GetActiveUserOptions($user: String!) {
-    UserOption(
-      where: {owner: {address: {_eq: $user}}, fullyExercised: {_eq: false}}
-      limit: 1000
-    ) {
-      id
-      optionId
-      owner {
-        address
-      }
-      market {
-        address
-      }
-      exerciseEvents {
-        transactionHash
-      }
-      mintEvent {
-        transactionHash
-      }
-      optionType
-      strikeTick
-      entryTick
-      startTick
-      strikePrice
-      entryPrice
-      expiresAt
-      createdAt
-      premium
-      protocolFee
-      realizedPayout
-      liquiditiesAtOpen
-      liquiditiesCurrent
-      positionSizeAtOpen
-      positionSizeCurrent
-      fullyExercised
+export type GetOptionEventsQueryVariables = Exact<{
+  marketAddr: Scalars['String']['input'];
+  optionId: Scalars['numeric']['input'];
+}>;
+
+export type GetOptionEventsQuery = {
+  __typename: 'query_root';
+  MintOptionEvent: Array<{
+    __typename: 'MintOptionEvent';
+    id: string;
+    optionType: number;
+    strikeTick: number;
+    currentTick: number;
+    expiresAt: any;
+    premium: any;
+    protocolFee: any;
+    liquidities: Array<string>;
+    timestamp: any;
+    blockNumber: any;
+    transactionHash: string;
+  }>;
+  ExerciseOptionEvent: Array<{
+    __typename: 'ExerciseOptionEvent';
+    id: string;
+    liquidities: Array<string>;
+    currentTick: number;
+    payout: any;
+    timestamp: any;
+    blockNumber: any;
+    transactionHash: string;
+  }>;
+  ExtendOptionEvent: Array<{
+    __typename: 'ExtendOptionEvent';
+    id: string;
+    premium: any;
+    protocolFee: any;
+    currentTick: number;
+    addedDuration: any;
+    timestamp: any;
+    blockNumber: any;
+    transactionHash: string;
+  }>;
+};
+
+export const UserOptionFieldsFragmentDoc = gql`
+  fragment UserOptionFields on UserOption {
+    id
+    optionId
+    owner {
+      address
     }
+    market {
+      address
+    }
+    optionType
+    strikeTick
+    entryTick
+    startTick
+    strikePrice
+    entryPrice
+    expiresAt
+    createdAt
+    premium
+    protocolFee
+    realizedPayout
+    liquiditiesAtOpen
+    liquiditiesCurrent
+    positionSizeAtOpen
+    positionSizeCurrent
+    fullyExercised
   }
 `;
-export const GetClosedUserOptionsDocument = gql`
-  query GetClosedUserOptions($user: String!) {
+export const GetActiveUserOptionsDocument = gql`
+  query GetActiveUserOptions($userAddr: String!) {
     UserOption(
-      where: {owner: {address: {_eq: $user}}, fullyExercised: {_eq: true}}
+      where: {owner: {address: {_eq: $userAddr}}, fullyExercised: {_eq: false}}
       limit: 1000
     ) {
-      id
-      optionId
-      owner {
-        address
-      }
-      market {
-        address
-      }
-      exerciseEvents {
-        transactionHash
-      }
-      mintEvent {
-        transactionHash
-      }
-      optionType
-      strikeTick
-      entryTick
-      startTick
-      strikePrice
-      entryPrice
-      expiresAt
-      createdAt
-      premium
-      protocolFee
-      realizedPayout
-      liquiditiesAtOpen
-      liquiditiesCurrent
-      positionSizeAtOpen
-      positionSizeCurrent
-      fullyExercised
+      ...UserOptionFields
     }
   }
+  ${UserOptionFieldsFragmentDoc}
+`;
+export const GetActiveUserOptionsByMarketDocument = gql`
+  query GetActiveUserOptionsByMarket($userAddr: String!, $marketAddr: String!) {
+    UserOption(
+      where: {
+        owner: {address: {_eq: $userAddr}}
+        fullyExercised: {_eq: false}
+        market: {address: {_eq: $marketAddr}}
+      }
+      limit: 1000
+    ) {
+      ...UserOptionFields
+    }
+  }
+  ${UserOptionFieldsFragmentDoc}
+`;
+export const GetClosedUserOptionsDocument = gql`
+  query GetClosedUserOptions($userAddr: String!) {
+    UserOption(
+      where: {owner: {address: {_eq: $userAddr}}, fullyExercised: {_eq: true}}
+      limit: 1000
+    ) {
+      ...UserOptionFields
+    }
+  }
+  ${UserOptionFieldsFragmentDoc}
+`;
+export const GetClosedUserOptionsByMarketDocument = gql`
+  query GetClosedUserOptionsByMarket($userAddr: String!, $marketAddr: String!) {
+    UserOption(
+      where: {
+        owner: {address: {_eq: $userAddr}}
+        fullyExercised: {_eq: true}
+        market: {address: {_eq: $marketAddr}}
+      }
+      limit: 1000
+    ) {
+      ...UserOptionFields
+    }
+  }
+  ${UserOptionFieldsFragmentDoc}
 `;
 export const GetMarketDataDocument = gql`
   query GetMarketData($marketAddr: String!) {
@@ -3100,6 +3046,66 @@ export const GetUserMarketOperatorsDocument = gql`
     }
   }
 `;
+export const GetOptionEventsDocument = gql`
+  query GetOptionEvents($marketAddr: String!, $optionId: numeric!) {
+    MintOptionEvent(
+      where: {
+        option: {
+          optionId: {_eq: $optionId}
+          market: {address: {_eq: $marketAddr}}
+        }
+      }
+      limit: 1000
+    ) {
+      id
+      optionType
+      strikeTick
+      currentTick
+      expiresAt
+      premium
+      protocolFee
+      liquidities
+      timestamp
+      blockNumber
+      transactionHash
+    }
+    ExerciseOptionEvent(
+      where: {
+        option: {
+          market: {address: {_eq: $marketAddr}}
+          optionId: {_eq: $optionId}
+        }
+      }
+      limit: 1000
+    ) {
+      id
+      liquidities
+      currentTick
+      payout
+      timestamp
+      blockNumber
+      transactionHash
+    }
+    ExtendOptionEvent(
+      where: {
+        option: {
+          market: {address: {_eq: $marketAddr}}
+          optionId: {_eq: $optionId}
+        }
+      }
+      limit: 1000
+    ) {
+      id
+      premium
+      protocolFee
+      currentTick
+      addedDuration
+      timestamp
+      blockNumber
+      transactionHash
+    }
+  }
+`;
 
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
@@ -3138,6 +3144,24 @@ export function getSdk(
         variables,
       );
     },
+    GetActiveUserOptionsByMarket(
+      variables: GetActiveUserOptionsByMarketQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+      signal?: RequestInit['signal'],
+    ): Promise<GetActiveUserOptionsByMarketQuery> {
+      return withWrapper(
+        wrappedRequestHeaders =>
+          client.request<GetActiveUserOptionsByMarketQuery>({
+            document: GetActiveUserOptionsByMarketDocument,
+            variables,
+            requestHeaders: {...requestHeaders, ...wrappedRequestHeaders},
+            signal,
+          }),
+        'GetActiveUserOptionsByMarket',
+        'query',
+        variables,
+      );
+    },
     GetClosedUserOptions(
       variables: GetClosedUserOptionsQueryVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
@@ -3152,6 +3176,24 @@ export function getSdk(
             signal,
           }),
         'GetClosedUserOptions',
+        'query',
+        variables,
+      );
+    },
+    GetClosedUserOptionsByMarket(
+      variables: GetClosedUserOptionsByMarketQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+      signal?: RequestInit['signal'],
+    ): Promise<GetClosedUserOptionsByMarketQuery> {
+      return withWrapper(
+        wrappedRequestHeaders =>
+          client.request<GetClosedUserOptionsByMarketQuery>({
+            document: GetClosedUserOptionsByMarketDocument,
+            variables,
+            requestHeaders: {...requestHeaders, ...wrappedRequestHeaders},
+            signal,
+          }),
+        'GetClosedUserOptionsByMarket',
         'query',
         variables,
       );
@@ -3188,6 +3230,24 @@ export function getSdk(
             signal,
           }),
         'GetUserMarketOperators',
+        'query',
+        variables,
+      );
+    },
+    GetOptionEvents(
+      variables: GetOptionEventsQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+      signal?: RequestInit['signal'],
+    ): Promise<GetOptionEventsQuery> {
+      return withWrapper(
+        wrappedRequestHeaders =>
+          client.request<GetOptionEventsQuery>({
+            document: GetOptionEventsDocument,
+            variables,
+            requestHeaders: {...requestHeaders, ...wrappedRequestHeaders},
+            signal,
+          }),
+        'GetOptionEvents',
         'query',
         variables,
       );

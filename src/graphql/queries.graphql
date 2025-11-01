@@ -1,76 +1,71 @@
-query GetActiveUserOptions($user: String!) {
+fragment UserOptionFields on UserOption {
+  id
+  optionId
+  owner {
+    address
+  }
+  market {
+    address
+  }
+  optionType
+  strikeTick
+  entryTick
+  startTick
+  strikePrice
+  entryPrice
+  expiresAt
+  createdAt
+  premium
+  protocolFee
+  realizedPayout
+  liquiditiesAtOpen
+  liquiditiesCurrent
+  positionSizeAtOpen
+  positionSizeCurrent
+  fullyExercised
+}
+
+query GetActiveUserOptions($userAddr: String!) {
   UserOption(
-    where: {owner: {address: {_eq: $user}}, fullyExercised: {_eq: false}}
+    where: {owner: {address: {_eq: $userAddr}}, fullyExercised: {_eq: false}}
     limit: 1000
   ) {
-    id
-    optionId
-    owner {
-      address
-    }
-    market {
-      address
-    }
-    exerciseEvents {
-      transactionHash
-    }
-    mintEvent {
-      transactionHash
-    }
-    optionType
-    strikeTick
-    entryTick
-    startTick
-    strikePrice
-    entryPrice
-    expiresAt
-    createdAt
-    premium
-    protocolFee
-    realizedPayout
-    liquiditiesAtOpen
-    liquiditiesCurrent
-    positionSizeAtOpen
-    positionSizeCurrent
-    fullyExercised
+    ...UserOptionFields
   }
 }
 
-query GetClosedUserOptions($user: String!) {
+query GetActiveUserOptionsByMarket($userAddr: String!, $marketAddr: String!) {
   UserOption(
-    where: {owner: {address: {_eq: $user}}, fullyExercised: {_eq: true}}
+    where: {
+      owner: {address: {_eq: $userAddr}}
+      fullyExercised: {_eq: false}
+      market: {address: {_eq: $marketAddr}}
+    }
     limit: 1000
   ) {
-    id
-    optionId
-    owner {
-      address
+    ...UserOptionFields
+  }
+}
+
+query GetClosedUserOptions($userAddr: String!) {
+  UserOption(
+    where: {owner: {address: {_eq: $userAddr}}, fullyExercised: {_eq: true}}
+    limit: 1000
+  ) {
+    ...UserOptionFields
+  }
+}
+
+query GetClosedUserOptionsByMarket($userAddr: String!, $marketAddr: String!) {
+  UserOption(
+    where: {
+      owner: {address: {_eq: $userAddr}}
+      fullyExercised: {_eq: true}
+      market: {address: {_eq: $marketAddr}}
     }
-    market {
-      address
-    }
-    exerciseEvents {
-      transactionHash
-    }
-    mintEvent {
-      transactionHash
-    }
-    optionType
-    strikeTick
-    entryTick
-    startTick
-    strikePrice
-    entryPrice
-    expiresAt
-    createdAt
-    premium
-    protocolFee
-    realizedPayout
-    liquiditiesAtOpen
-    liquiditiesCurrent
-    positionSizeAtOpen
-    positionSizeCurrent
-    fullyExercised
+    limit: 1000
+  ) {
+    ...UserOptionFields
   }
 }
 
@@ -112,5 +107,64 @@ query GetUserMarketOperators($userAddr: String!, $marketAddr: String!) {
     canTransfer
     canMint
     spendingApproval
+  }
+}
+
+query GetOptionEvents($marketAddr: String!, $optionId: numeric!) {
+  MintOptionEvent(
+    where: {
+      option: {
+        optionId: {_eq: $optionId}
+        market: {address: {_eq: $marketAddr}}
+      }
+    }
+    limit: 1000
+  ) {
+    id
+    optionType
+    strikeTick
+    currentTick
+    expiresAt
+    premium
+    protocolFee
+    liquidities
+    timestamp
+    blockNumber
+    transactionHash
+  }
+  ExerciseOptionEvent(
+    where: {
+      option: {
+        market: {address: {_eq: $marketAddr}}
+        optionId: {_eq: $optionId}
+      }
+    }
+    limit: 1000
+  ) {
+    id
+    liquidities
+    currentTick
+    payout
+    timestamp
+    blockNumber
+    transactionHash
+  }
+  ExtendOptionEvent(
+    where: {
+      option: {
+        market: {address: {_eq: $marketAddr}}
+        optionId: {_eq: $optionId}
+      }
+    }
+    limit: 1000
+  ) {
+    id
+    premium
+    protocolFee
+    currentTick
+    addedDuration
+    timestamp
+    blockNumber
+    transactionHash
   }
 }

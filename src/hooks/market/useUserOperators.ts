@@ -2,6 +2,7 @@ import type {Address} from 'viem';
 import {useQuery} from '@tanstack/react-query';
 
 import {useTimelockConfig} from '~/providers/TimelockMarketProvider';
+import {EMPTY_ARRAY} from '~/lib/numberUtils';
 
 export const useUserOperators = (userAddr?: Address, marketAddr?: Address) => {
   const {graphqlClient} = useTimelockConfig();
@@ -28,5 +29,5 @@ export const useUserOperators = (userAddr?: Address, marketAddr?: Address) => {
     enabled: !!userAddr && !!marketAddr && !!graphqlClient,
   });
 
-  return {...rest, data: data || []};
+  return {...rest, data: data || EMPTY_ARRAY};
 };

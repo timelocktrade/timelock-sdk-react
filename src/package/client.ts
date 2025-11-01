@@ -13,6 +13,7 @@ export * from '~/hooks/market/useUserOptions';
 export * from '~/hooks/market/useExtendOption';
 export * from '~/hooks/market/useUserOperators';
 export * from '~/hooks/market/useSetOperatorPerms';
+export * from '~/hooks/market/useOptionTimeline';
 
 // Pool Hooks
 export * from '~/hooks/pool/useCurrentPrice';
@@ -30,3 +31,4 @@ export * from '~/hooks/vault/useVaultTVL';
 
 // General Hooks
 export * from '~/hooks/useLens';
+export * from '~/hooks/useApproval';

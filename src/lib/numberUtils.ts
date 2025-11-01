@@ -1,5 +1,7 @@
 import Big from 'big.js';
 
+export const EMPTY_ARRAY: never[] = [];
+
 export type Amount = {
   scaled: bigint;
   unscaled: Big;
