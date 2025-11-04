@@ -4,33 +4,36 @@ import React, {createContext, useContext, useMemo, type ReactNode} from 'react';
 import {useChainId} from 'wagmi';
 import {GraphQLClient} from 'graphql-request';
 
+import {getSdk} from '~/generated/graphql';
 import {
   type TimelockMarketData,
   timelockLenses,
   uniswapMathLenses,
 } from '~/lib/contracts';
-import {getSdk} from '~/generated/graphql';
 
-type TimelockMarketContextValue = {
+type TimelockContextValue = {
   marketData: Partial<TimelockMarketData>;
   lensAddr?: Address;
   uniswapMathLensAddr?: Address;
   envioGraphqlUrl?: string;
   graphqlClient?: ReturnType<typeof getSdk>;
+  perpsOperatorUrl?: string;
 };
 
-const TimelockMarketContext = createContext<
-  TimelockMarketContextValue | undefined
->(undefined);
+const TimelockContext = createContext<TimelockContextValue | undefined>(
+  undefined,
+);
 
-export const TimelockMarketProvider = ({
+export const TimelockProvider = ({
   children,
   marketData,
   envioGraphqlUrl,
+  perpsOperatorUrl,
 }: {
   children: ReactNode;
   marketData?: Partial<TimelockMarketData>;
   envioGraphqlUrl?: string;
+  perpsOperatorUrl?: string;
 }) => {
   const chainId = useChainId();
 
@@ -51,33 +54,39 @@ export const TimelockMarketProvider = ({
       uniswapMathLensAddr,
       envioGraphqlUrl,
       graphqlClient,
+      perpsOperatorUrl,
     }),
-    [marketData, lensAddr, uniswapMathLensAddr, envioGraphqlUrl, graphqlClient],
+    [
+      marketData,
+      lensAddr,
+      uniswapMathLensAddr,
+      envioGraphqlUrl,
+      graphqlClient,
+      perpsOperatorUrl,
+    ],
   );
 
   return (
-    <TimelockMarketContext.Provider value={contextValue}>
+    <TimelockContext.Provider value={contextValue}>
       {children}
-    </TimelockMarketContext.Provider>
+    </TimelockContext.Provider>
   );
 };
 
 export const useCurrentMarket = () => {
-  const context = useContext(TimelockMarketContext);
+  const context = useContext(TimelockContext);
 
   if (context === undefined) {
-    throw new Error(
-      'useCurrentMarket must be used within a TimelockMarketProvider',
-    );
+    throw new Error('useCurrentMarket must be used within a TimelockProvider');
   }
   return context.marketData;
 };
 
 export const useTimelockConfig = () => {
-  const context = useContext(TimelockMarketContext);
+  const context = useContext(TimelockContext);
 
   if (context === undefined) {
-    throw new Error('useConfig must be used within a TimelockMarketProvider');
+    throw new Error('useConfig must be used within a TimelockProvider');
   }
   return context;
 };

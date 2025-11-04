@@ -1,7 +1,7 @@
 import {useQuery, type NonUndefinedGuard} from '@tanstack/react-query';
 import type {Address} from 'viem';
 
-import {useTimelockConfig} from '~/providers/TimelockMarketProvider';
+import {useTimelockConfig} from '~/providers/TimelockProvider';
 import {useLens} from '../useLens';
 
 export const useMarketData = (marketAddr?: Address) => {
