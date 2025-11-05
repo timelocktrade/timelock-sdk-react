@@ -10,7 +10,7 @@ import {usePoolData} from '~/hooks/pool/usePoolData';
 
 import {optionsMarketAbi} from '~/abis/optionsMarket';
 
-const swapper = '0xc396aa907F8De0c32460050B8Adbf047186C504d';
+const swapper = '0x2c79DD9797C35A3D966C2716739542a282BB5540';
 
 export const useExerciseOption = (marketAddr?: Address) => {
   const {vault, pool} = useMarketData(marketAddr);
