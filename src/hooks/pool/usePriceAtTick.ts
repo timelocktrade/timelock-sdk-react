@@ -9,7 +9,7 @@ export const usePriceAtTick = (tick?: number, poolAddr?: Address) => {
   const {token0Decimals, token1Decimals} = usePoolData(poolAddr);
 
   const priceBigInt = useMemo(
-    () => (tick ? getPriceAtTick(tick) : undefined),
+    () => (tick !== undefined ? getPriceAtTick(tick) : undefined),
     [tick],
   );
   const price = useMemo(
