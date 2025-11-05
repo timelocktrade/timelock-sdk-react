@@ -24,15 +24,15 @@ export const getPayoutAtTick = (
     tick,
     tickSpacing,
   );
-  const positionSize = optionAssetIsToken0
+  const totalAmount = optionAssetIsToken0
     ? borrowedAmount1 + token0ToToken1(borrowedAmount0, tick)
     : borrowedAmount0 + token1ToToken0(borrowedAmount1, tick);
 
-  const repaySize = optionAssetIsToken0
+  const repayAmount = optionAssetIsToken0
     ? repayAmount1 + token0ToToken1(repayAmount0, tick)
     : repayAmount0 + token1ToToken0(repayAmount1, tick);
 
-  const delta = positionSize - repaySize;
+  const delta = totalAmount - repayAmount;
   const payout = delta < 0n ? 0n : delta;
 
   return payout;

@@ -155,7 +155,6 @@ export const optionsMarketAbi = [
           {name: 'owner', type: 'address', internalType: 'address'},
           {name: 'optionType', type: 'uint8', internalType: 'uint8'},
           {name: 'strikeTick', type: 'int24', internalType: 'int24'},
-          {name: 'entryTick', type: 'int24', internalType: 'int24'},
           {name: 'expiresAt', type: 'uint32', internalType: 'uint32'},
         ],
       },
@@ -701,7 +700,6 @@ export const optionsMarketAbi = [
   },
   {type: 'error', name: 'NotAuthorized', inputs: []},
   {type: 'error', name: 'NotEnoughPayout', inputs: []},
-  {type: 'error', name: 'OperatorBlacklisted', inputs: []},
   {type: 'error', name: 'OptionExpired', inputs: []},
   {type: 'error', name: 'OptionNotFound', inputs: []},
   {

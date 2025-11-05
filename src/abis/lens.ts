@@ -98,14 +98,8 @@ export const lensAbi = [
           {name: 'optionType', type: 'uint8', internalType: 'uint8'},
           {name: 'startTick', type: 'int24', internalType: 'int24'},
           {name: 'strikeTick', type: 'int24', internalType: 'int24'},
-          {name: 'entryTick', type: 'int24', internalType: 'int24'},
           {
             name: 'strikePrice',
-            type: 'uint256',
-            internalType: 'uint256',
-          },
-          {
-            name: 'entryPrice',
             type: 'uint256',
             internalType: 'uint256',
           },
@@ -327,14 +321,8 @@ export const lensAbi = [
           {name: 'optionType', type: 'uint8', internalType: 'uint8'},
           {name: 'startTick', type: 'int24', internalType: 'int24'},
           {name: 'strikeTick', type: 'int24', internalType: 'int24'},
-          {name: 'entryTick', type: 'int24', internalType: 'int24'},
           {
             name: 'strikePrice',
-            type: 'uint256',
-            internalType: 'uint256',
-          },
-          {
-            name: 'entryPrice',
             type: 'uint256',
             internalType: 'uint256',
           },
@@ -409,14 +397,8 @@ export const lensAbi = [
           {name: 'optionType', type: 'uint8', internalType: 'uint8'},
           {name: 'startTick', type: 'int24', internalType: 'int24'},
           {name: 'strikeTick', type: 'int24', internalType: 'int24'},
-          {name: 'entryTick', type: 'int24', internalType: 'int24'},
           {
             name: 'strikePrice',
-            type: 'uint256',
-            internalType: 'uint256',
-          },
-          {
-            name: 'entryPrice',
             type: 'uint256',
             internalType: 'uint256',
           },
@@ -558,14 +540,8 @@ export const lensAbi = [
           {name: 'optionType', type: 'uint8', internalType: 'uint8'},
           {name: 'startTick', type: 'int24', internalType: 'int24'},
           {name: 'strikeTick', type: 'int24', internalType: 'int24'},
-          {name: 'entryTick', type: 'int24', internalType: 'int24'},
           {
             name: 'strikePrice',
-            type: 'uint256',
-            internalType: 'uint256',
-          },
-          {
-            name: 'entryPrice',
             type: 'uint256',
             internalType: 'uint256',
           },
