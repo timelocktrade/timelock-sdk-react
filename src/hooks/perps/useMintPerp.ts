@@ -1,16 +1,16 @@
 import {type Address, maxUint256} from 'viem';
 import {useAccount, useClient} from 'wagmi';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {getNearestValidStrikeTick, getTimelockMarket} from 'timelock-sdk';
-import {
-  useCurrentTick,
-  useMarketData,
-  usePoolData,
-  useSetOperatorPerms,
-  useUserOperators,
-  useApproval,
-} from 'timelock-sdk/client';
+
 import {usePerpsOperator} from './usePerpsOperator';
+import {useApproval} from '~/hooks/useApproval';
+import {useUserOperators} from '~/hooks/operators/useUserOperators';
+import {useSetOperatorPerms} from '~/hooks/operators/useSetOperatorPerms';
+import {useMarketData} from '~/hooks/options/useMarketData';
+import {usePoolData} from '~/hooks/pool/usePoolData';
+import {useCurrentTick} from '~/hooks/pool/useCurrentTick';
+import {getTimelockMarket} from '~/lib/contracts';
+import {getNearestValidStrikeTick} from '~/lib/liquidityUtils';
 
 export const useMintPerp = (marketAddr?: Address) => {
   const queryClient = useQueryClient();
