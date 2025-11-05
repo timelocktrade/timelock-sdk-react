@@ -13,6 +13,11 @@ export * from '~/hooks/options/useUserOptions';
 export * from '~/hooks/options/useExtendOption';
 export * from '~/hooks/options/useOptionTimeline';
 
+// Perps Hooks
+export * from '~/hooks/perps/useMintPerp';
+export * from '~/hooks/perps/useClosePerp';
+export * from '~/hooks/perps/usePerpsOperator';
+
 // Operators Hooks
 export * from '~/hooks/operators/useUserOperators';
 export * from '~/hooks/operators/useSetOperatorPerms';
