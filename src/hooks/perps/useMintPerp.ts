@@ -59,7 +59,7 @@ export const useMintPerp = (marketAddr?: Address) => {
         operator: operatorAddr,
         canMint: true,
         canExtend: true,
-        canExercise: userPerms?.canExercise || false,
+        canExercise: true,
         canTransfer: userPerms?.canTransfer || false,
         spendingApproval: maxUint256,
       });
