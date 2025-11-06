@@ -7,7 +7,7 @@ import {wrapAmount} from '~/lib/numberUtils';
 import {getPayoutAtTick} from '~/lib/optionUtils';
 
 export const useOptionPnl = (option: OptionData) => {
-  const {marketAddr, optionType, entryTick, positionSizeCurrent} = option;
+  const {marketAddr, optionType, strikeTick, positionSizeCurrent} = option;
 
   const {pool, optionAssetIsToken0, payoutAssetDecimals, tickSpacing} =
     useMarketData(marketAddr);
@@ -21,20 +21,20 @@ export const useOptionPnl = (option: OptionData) => {
     )
       return undefined;
 
-    const entrySize = optionAssetIsToken0
-      ? token0ToToken1(positionSizeCurrent, entryTick)
-      : token1ToToken0(positionSizeCurrent, entryTick);
+    const strikeSize = optionAssetIsToken0
+      ? token0ToToken1(positionSizeCurrent, strikeTick)
+      : token1ToToken0(positionSizeCurrent, strikeTick);
 
     const currentSize = optionAssetIsToken0
       ? token0ToToken1(positionSizeCurrent, currentTick)
       : token1ToToken0(positionSizeCurrent, currentTick);
 
-    const delta = currentSize - entrySize;
+    const delta = currentSize - strikeSize;
     const pnl = optionType === 'CALL' ? delta : -delta;
 
     return wrapAmount(pnl, payoutAssetDecimals);
   }, [
-    entryTick,
+    strikeTick,
     optionType,
     optionAssetIsToken0,
     currentTick,
