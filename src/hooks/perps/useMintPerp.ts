@@ -32,7 +32,11 @@ export const useMintPerp = (marketAddr?: Address) => {
       )
     : undefined;
 
-  const hasEnoughPerms = userPerms && userPerms.canMint && userPerms.canExtend;
+  const hasEnoughPerms =
+    userPerms &&
+    userPerms.canMint &&
+    userPerms.canExtend &&
+    userPerms.canExercise;
 
   const mintPerp = async (data: {
     optionType: 'CALL' | 'PUT';
