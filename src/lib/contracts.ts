@@ -52,7 +52,7 @@ export const getTimelockLens = (client: Client | PublicClient) =>
   });
 
 export const timelockLenses: Record<number, Address> = {
-  [monadTestnet.id]: '0x5084561b9065C658390D955b1681a54d71B6154b',
+  [monadTestnet.id]: '0x1409b2318d9e691f1eB037F00cB4E9528BAdC463',
 };
 export const uniswapMathLenses: Record<number, Address> = {
   [monadTestnet.id]: '0x4C8375D1F6D5F452e92e211C1D3E7a44F78dFc95',
