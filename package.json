@@ -1,6 +1,6 @@
 {
   "name": "timelock-sdk",
-  "version": "0.0.90",
+  "version": "0.0.110",
   "description": "",
   "type": "module",
   "main": "./dist/package.cjs",
@@ -68,8 +68,8 @@
     "tsdown": "^0.15.12",
     "typescript": "^5.9.3"
   },
-  "dependencies": {},
   "peerDependencies": {
+    "zod": "^4.1.12",
     "@uniswap/v3-sdk": "^3.26.0",
     "jsbi": "^4.3.2",
     "big.js": "^7.0.1",

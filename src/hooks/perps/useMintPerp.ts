@@ -17,7 +17,11 @@ export const useMintPerp = (marketAddr?: Address) => {
   const client = useClient();
   const {address} = useAccount();
 
-  const {operator, address: operatorAddr} = usePerpsOperator();
+  const {
+    operator,
+    address: operatorAddr,
+    signMessage: {mutateAsync: signMessage},
+  } = usePerpsOperator();
   const {askForApproval} = useApproval();
 
   const {data: operators} = useUserOperators(address, marketAddr);
@@ -58,6 +62,8 @@ export const useMintPerp = (marketAddr?: Address) => {
     if (optionAssetIsToken0 === undefined || !payoutAsset) {
       throw new Error('Market data not found');
     }
+    if (!operator.auth) await signMessage();
+
     if (!hasEnoughPerms) {
       await setOperatorPerms({
         operator: operatorAddr,
@@ -89,15 +95,18 @@ export const useMintPerp = (marketAddr?: Address) => {
 
     await operator.mintPerp({
       marketAddr: marketAddr,
-      userAddr: address,
       amount: amount,
       optionType: optionType,
       duration: duration,
       strikeTick: validStrikeTick,
     });
     void queryClient.invalidateQueries({
-      queryKey: ['userOptions', address.toLowerCase()],
+      queryKey: ['userOptions', address?.toLowerCase(), true],
     });
+    void queryClient.invalidateQueries({
+      queryKey: ['userOptions', address?.toLowerCase(), false],
+    });
+    void queryClient.invalidateQueries({queryKey: ['readContract']});
   };
   return useMutation({mutationFn: mintPerp});
 };

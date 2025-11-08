@@ -1,8 +1,7 @@
-import type {Address} from 'viem';
+import type {Address, Hex} from 'viem';
 
 export type MintPerpBody = {
   marketAddr: Address;
-  userAddr: Address;
   optionType: 'CALL' | 'PUT';
   amount: bigint;
   duration: number;
@@ -10,21 +9,21 @@ export type MintPerpBody = {
 };
 
 export type ExercisePerpBody = {
-  userAddr: Address;
   marketAddr: Address;
   optionId: bigint;
   liquidities: bigint[];
 };
 
 export class PerpsOperator {
-  private baseUrl: string;
+  #baseUrl: string;
+  auth?: {message: string; signature: Hex};
 
   constructor(baseUrl: string) {
-    this.baseUrl = baseUrl;
+    this.#baseUrl = baseUrl;
   }
 
-  async #request<T>(path: string, body?: unknown) {
-    const url = new URL(path, this.baseUrl);
+  #request = async <T>(path: string, body?: unknown) => {
+    const url = new URL(path, this.#baseUrl);
     const res = await fetch(url, {
       method: body ? 'POST' : 'GET',
       headers: {
@@ -46,22 +45,42 @@ export class PerpsOperator {
     } catch (error) {
       throw new Error(`${res.status} ${res.statusText}: ${resText}`);
     }
-  }
+  };
 
-  async getOperatorAddr(): Promise<Address> {
+  getOperatorAddr = async (): Promise<Address> => {
     const {address} = await this.#request<{address: Address}>(
       'api/operator/address',
     );
     return address;
-  }
+  };
 
-  async getUserPerps(
+  genAuthMessage = async (userAddr: Address): Promise<string> => {
+    const {message} = await this.#request<{message: string}>('api/auth/gen', {
+      userAddr,
+    });
+    return message;
+  };
+
+  validateAuthMessage = async (message: string, signature: Hex) => {
+    const {address, createdAt, validUntil} = await this.#request<{
+      address: Address;
+      createdAt: number;
+      validUntil: number;
+    }>('api/auth/validate', {message, signature});
+    return {address, createdAt, validUntil};
+  };
+
+  setAuth = (message: string, signature: Hex) => {
+    this.auth = {message, signature};
+  };
+
+  getUserPerps = async (
     userAddr: Address,
     marketAddr?: Address,
     type?: 'active' | 'closed',
     offset = 0,
     limit = 1000,
-  ) {
+  ) => {
     const params = new URLSearchParams({
       offset: offset.toString(),
       limit: limit.toString(),
@@ -84,18 +103,31 @@ export class PerpsOperator {
     >(url);
 
     return data.map(p => ({...p, optionId: BigInt(p.optionId)}));
-  }
+  };
 
-  async mintPerp(body: MintPerpBody) {
+  mintPerp = async (body: MintPerpBody) => {
+    if (!this.auth) {
+      throw new Error(
+        'Authentication required. Call setAuth() with authMessage and signature before exercising perps.',
+      );
+    }
     const {txHash, optionId} = await this.#request<{
       txHash: string;
       optionId: string;
-    }>('api/positions/mint', {...body, amount: body.amount.toString()});
-
+    }>('api/positions/mint', {
+      ...body,
+      amount: body.amount.toString(),
+      auth: this.auth,
+    });
     return {txHash, optionId: BigInt(optionId)};
-  }
+  };
 
-  async exercisePerp(body: ExercisePerpBody) {
+  exercisePerp = async (body: ExercisePerpBody) => {
+    if (!this.auth) {
+      throw new Error(
+        'Authentication required. Call setAuth() with authMessage and signature before exercising perps.',
+      );
+    }
     const {txHash, optionId} = await this.#request<{
       txHash: string;
       optionId: string;
@@ -103,7 +135,8 @@ export class PerpsOperator {
       ...body,
       optionId: body.optionId.toString(),
       liquidities: body.liquidities.map(l => l.toString()),
+      auth: this.auth,
     });
     return {txHash, optionId: BigInt(optionId)};
-  }
+  };
 }
