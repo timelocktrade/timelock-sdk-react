@@ -17,6 +17,7 @@ export * from '~/hooks/options/useOptionTimeline';
 export * from '~/hooks/perps/useMintPerp';
 export * from '~/hooks/perps/useClosePerp';
 export * from '~/hooks/perps/usePerpsOperator';
+export * from '~/hooks/perps/useUserPerps';
 
 // Operators Hooks
 export * from '~/hooks/operators/useOperatorPerms';
