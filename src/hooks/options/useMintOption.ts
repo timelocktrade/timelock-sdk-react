@@ -85,8 +85,12 @@ export const useMintOption = (marketAddr?: Address) => {
     await waitForTransactionReceipt(client, {hash});
 
     void queryClient.invalidateQueries({
-      queryKey: ['userOptions', address.toLowerCase()],
+      queryKey: ['userOptions', address?.toLowerCase(), true],
     });
+    void queryClient.invalidateQueries({
+      queryKey: ['userOptions', address?.toLowerCase(), false],
+    });
+    void queryClient.invalidateQueries({queryKey: ['readContract']});
     return hash;
   };
   return useMutation({mutationFn: mintOption});
