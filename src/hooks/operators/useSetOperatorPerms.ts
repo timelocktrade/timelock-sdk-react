@@ -52,6 +52,7 @@ export const useSetOperatorPerms = (marketAddr?: Address) => {
         marketAddr.toLowerCase(),
       ],
     });
+    void queryClient.invalidateQueries({queryKey: ['readContract']});
     return hash;
   };
   return useMutation({mutationFn: setOperatorPerms});

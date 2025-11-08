@@ -19,6 +19,7 @@ export * from '~/hooks/perps/useClosePerp';
 export * from '~/hooks/perps/usePerpsOperator';
 
 // Operators Hooks
+export * from '~/hooks/operators/useOperatorPerms';
 export * from '~/hooks/operators/useUserOperators';
 export * from '~/hooks/operators/useSetOperatorPerms';
 
