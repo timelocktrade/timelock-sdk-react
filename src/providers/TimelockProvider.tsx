@@ -10,6 +10,7 @@ import {
   timelockLenses,
   uniswapMathLenses,
 } from '~/lib/contracts';
+import {PerpsOperator} from '~/lib/perpsOperator';
 
 type TimelockContextValue = {
   marketData: Partial<TimelockMarketData>;
@@ -17,6 +18,7 @@ type TimelockContextValue = {
   uniswapMathLensAddr?: Address;
   envioGraphqlUrl?: string;
   graphqlClient?: ReturnType<typeof getSdk>;
+  perpsOperator?: PerpsOperator;
   perpsOperatorUrl?: string;
 };
 
@@ -47,12 +49,20 @@ export const TimelockProvider = ({
     return undefined;
   }, [envioGraphqlUrl]);
 
+  const perpsOperator = useMemo(() => {
+    if (perpsOperatorUrl) {
+      return new PerpsOperator(perpsOperatorUrl);
+    }
+    return undefined;
+  }, [perpsOperatorUrl]);
+
   const contextValue = useMemo(
     () => ({
       marketData: marketData || {},
       lensAddr,
       uniswapMathLensAddr,
       envioGraphqlUrl,
+      perpsOperator,
       graphqlClient,
       perpsOperatorUrl,
     }),
@@ -61,6 +71,7 @@ export const TimelockProvider = ({
       lensAddr,
       uniswapMathLensAddr,
       envioGraphqlUrl,
+      perpsOperator,
       graphqlClient,
       perpsOperatorUrl,
     ],

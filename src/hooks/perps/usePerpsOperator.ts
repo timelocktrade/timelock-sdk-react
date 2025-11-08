@@ -1,9 +1,8 @@
 import type {Address, Hex} from 'viem';
-import {useEffect, useMemo} from 'react';
+import {useEffect} from 'react';
 import {useAccount, useSignMessage} from 'wagmi';
 import {z} from 'zod';
 import {useMutation, useQuery} from '@tanstack/react-query';
-import {PerpsOperator} from '~/lib/perpsOperator';
 import {useTimelockConfig} from '~/providers/TimelockProvider';
 
 const ZHex = z
@@ -42,13 +41,8 @@ const clearSignature = (userAddr: Address) => {
 
 export const usePerpsOperator = () => {
   const {address: userAddr} = useAccount();
-  const {perpsOperatorUrl} = useTimelockConfig();
+  const {perpsOperatorUrl, perpsOperator: operator} = useTimelockConfig();
   const {signMessageAsync} = useSignMessage();
-
-  const operator = useMemo(
-    () => (perpsOperatorUrl ? new PerpsOperator(perpsOperatorUrl) : undefined),
-    [perpsOperatorUrl],
-  );
 
   const {data: address} = useQuery({
     queryKey: ['perpsOperatorAddr', perpsOperatorUrl || '--'],
