@@ -1,12 +1,21 @@
 import type {Address} from 'viem';
-import {useReadContract} from 'wagmi';
+import {useMemo} from 'react';
+import {useBalance, useReadContract} from 'wagmi';
 import {optionsMarketAbi} from '~/abis/optionsMarket';
+import {useMarketData} from '../options/useMarketData';
 
 export const useOperatorPerms = (
   marketAddr?: Address,
   userAddr?: Address,
   operatorAddr?: Address,
 ) => {
+  const {payoutAsset} = useMarketData(marketAddr);
+
+  const {data: payoutAssetBalance} = useBalance({
+    address: userAddr,
+    token: payoutAsset,
+  });
+
   const {data, ...rest} = useReadContract({
     abi: optionsMarketAbi,
     address: marketAddr,
@@ -14,15 +23,33 @@ export const useOperatorPerms = (
     args: [userAddr!, operatorAddr!],
     query: {enabled: !!userAddr && !!operatorAddr},
   });
-  const d = data
-    ? {
-        canExtend: data[0],
-        canExercise: data[1],
-        canTransfer: data[2],
-        canMint: data[3],
-        spendingApproval: data[4],
-      }
-    : undefined;
+  const [canExtend, canExercise, canTransfer, canMint, spendingApproval] =
+    data || [];
 
+  const min = (a: bigint, b: bigint) => (a < b ? a : b);
+
+  const effectiveApproval =
+    spendingApproval && payoutAssetBalance
+      ? min(spendingApproval, payoutAssetBalance.value)
+      : 0n;
+
+  const d = useMemo(
+    () => ({
+      canExtend,
+      canExercise,
+      canTransfer,
+      canMint,
+      spendingApproval,
+      effectiveApproval,
+    }),
+    [
+      canExtend,
+      canExercise,
+      canTransfer,
+      canMint,
+      spendingApproval,
+      effectiveApproval,
+    ],
+  );
   return {data: d, ...rest};
 };
