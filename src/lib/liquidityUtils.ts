@@ -4,6 +4,13 @@ import JSBI from 'jsbi';
 
 export const PRICE_PRECISION = BigInt(1e18);
 
+export const getPriceSqrtPriceX96 = (sqrtPriceX96: bigint) => {
+  const priceX192 = sqrtPriceX96 * sqrtPriceX96;
+  const price = (priceX192 * PRICE_PRECISION) / BigInt(2 ** 192);
+
+  return price;
+};
+
 export const getPriceAtTick = (tick: number) => {
   const sqrtRatioX96 = BigInt(TickMath.getSqrtRatioAtTick(tick).toString());
 

@@ -15,6 +15,7 @@ export const useCurrentTick = (poolAddr?: Address) => {
   });
 
   return useMemo(() => {
+    const sqrtPriceX96 = data?.[0];
     const exact = data?.[1];
 
     const rounded =
@@ -22,6 +23,6 @@ export const useCurrentTick = (poolAddr?: Address) => {
         ? Math.floor(exact / tickSpacing) * tickSpacing
         : undefined;
 
-    return {exact, rounded};
+    return {exact, rounded, sqrtPriceX96};
   }, [data, tickSpacing]);
 };

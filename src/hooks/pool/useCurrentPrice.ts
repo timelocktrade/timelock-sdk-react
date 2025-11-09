@@ -1,14 +1,14 @@
 import {useMemo} from 'react';
 import type {Address} from 'viem';
-import {usePriceAtTick} from './usePriceAtTick';
+import {usePriceSqrtPriceX96} from './usePriceAtTick';
 import {useCurrentTick} from './useCurrentTick';
 
 export const useCurrentPrice = (poolAddr?: Address) => {
-  const currentTick = useCurrentTick(poolAddr);
-  const currentPrice = usePriceAtTick(currentTick.exact, poolAddr);
+  const {sqrtPriceX96, exact, rounded} = useCurrentTick(poolAddr);
+  const currentPrice = usePriceSqrtPriceX96(sqrtPriceX96, poolAddr);
 
   return useMemo(
-    () => ({currentPrice, currentTick}),
-    [currentPrice, currentTick],
+    () => ({currentPrice, sqrtPriceX96, currentTick: {exact, rounded}}),
+    [currentPrice, exact, rounded],
   );
 };
