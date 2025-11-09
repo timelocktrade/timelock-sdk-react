@@ -1,4 +1,4 @@
-import {type Address, maxUint256} from 'viem';
+import type {Address} from 'viem';
 import {useAccount, useClient} from 'wagmi';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 
@@ -64,16 +64,6 @@ export const useMintPerp = (marketAddr?: Address) => {
     }
     if (!operator.auth) await signMessage();
 
-    if (!hasEnoughPerms) {
-      await setOperatorPerms({
-        operator: operatorAddr,
-        canMint: true,
-        canExtend: true,
-        canExercise: true,
-        canTransfer: userPerms?.canTransfer || false,
-        spendingApproval: maxUint256,
-      });
-    }
     const market = getTimelockMarket(marketAddr, client);
 
     const validStrikeTick = getNearestValidStrikeTick(
@@ -91,6 +81,17 @@ export const useMintPerp = (marketAddr?: Address) => {
       0,
     ]);
     const maxPremium = ((premium + protocolFee) * 11n) / 10n;
+
+    if (!hasEnoughPerms) {
+      await setOperatorPerms({
+        operator: operatorAddr,
+        canMint: true,
+        canExtend: true,
+        canExercise: true,
+        canTransfer: userPerms?.canTransfer || false,
+        spendingApproval: maxPremium,
+      });
+    }
     await askForApproval(payoutAsset, marketAddr, maxPremium);
 
     await operator.mintPerp({
