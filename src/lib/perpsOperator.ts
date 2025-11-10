@@ -112,7 +112,7 @@ export class PerpsOperator {
       );
     }
     const {txHash, optionId} = await this.#request<{
-      txHash: string;
+      txHash: Hex;
       optionId: string;
     }>('api/positions/mint', {
       ...body,
@@ -129,7 +129,7 @@ export class PerpsOperator {
       );
     }
     const {txHash, optionId} = await this.#request<{
-      txHash: string;
+      txHash: Hex;
       optionId: string;
     }>('api/positions/exercise', {
       ...body,

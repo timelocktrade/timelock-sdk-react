@@ -8,9 +8,10 @@ import {useMarketData} from './useMarketData';
 import {useLens} from '~/hooks/useLens';
 import {usePoolData} from '~/hooks/pool/usePoolData';
 
+import {sleep} from '~/lib/utils';
 import {optionsMarketAbi} from '~/abis/optionsMarket';
 
-const swapper = '0x2c79DD9797C35A3D966C2716739542a282BB5540';
+const swapper = '0x877309663591ad974bE2c0C7fB453844c8D613D8';
 
 export const useExerciseOption = (marketAddr?: Address) => {
   const {vault, pool} = useMarketData(marketAddr);
@@ -54,13 +55,11 @@ export const useExerciseOption = (marketAddr?: Address) => {
     });
     await waitForTransactionReceipt(client, {hash});
 
-    void queryClient.invalidateQueries({
-      queryKey: ['userOptions', address?.toLowerCase(), true],
-    });
-    void queryClient.invalidateQueries({
-      queryKey: ['userOptions', address?.toLowerCase(), false],
-    });
+    await sleep(200);
+    void queryClient.invalidateQueries({queryKey: ['userOptions']});
+    void queryClient.invalidateQueries({queryKey: ['userOptions']});
     void queryClient.invalidateQueries({queryKey: ['readContract']});
+
     return hash;
   };
   return useMutation({mutationFn: exerciseOption});

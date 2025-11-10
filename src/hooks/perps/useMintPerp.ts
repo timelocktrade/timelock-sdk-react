@@ -11,6 +11,7 @@ import {usePoolData} from '~/hooks/pool/usePoolData';
 import {useCurrentTick} from '~/hooks/pool/useCurrentTick';
 import {getTimelockMarket} from '~/lib/contracts';
 import {getNearestValidStrikeTick} from '~/lib/liquidityUtils';
+import {sleep} from '~/lib/utils';
 
 export const useMintPerp = (marketAddr?: Address) => {
   const queryClient = useQueryClient();
@@ -101,12 +102,10 @@ export const useMintPerp = (marketAddr?: Address) => {
       duration: duration,
       strikeTick: validStrikeTick,
     });
-    void queryClient.invalidateQueries({
-      queryKey: ['userOptions', address?.toLowerCase(), true],
-    });
-    void queryClient.invalidateQueries({
-      queryKey: ['userOptions', address?.toLowerCase(), false],
-    });
+
+    await sleep(200);
+    void queryClient.invalidateQueries({queryKey: ['userOptions']});
+    void queryClient.invalidateQueries({queryKey: ['userOptions']});
     void queryClient.invalidateQueries({queryKey: ['readContract']});
   };
   return useMutation({mutationFn: mintPerp});

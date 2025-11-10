@@ -1,12 +1,10 @@
-import {useAccount} from 'wagmi';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
-import type {ExercisePerpBody} from '~/lib/perpsOperator';
 import {usePerpsOperator} from './usePerpsOperator';
+import type {ExercisePerpBody} from '~/lib/perpsOperator';
+import {sleep} from '~/lib/utils';
 
 export const useClosePerp = () => {
   const queryClient = useQueryClient();
-  const {address} = useAccount();
-
   const {
     operator,
     signMessage: {mutateAsync: signMessage},
@@ -18,12 +16,9 @@ export const useClosePerp = () => {
       if (!operator.auth) await signMessage();
       await operator.exercisePerp(body);
 
-      void queryClient.invalidateQueries({
-        queryKey: ['userOptions', address?.toLowerCase(), true],
-      });
-      void queryClient.invalidateQueries({
-        queryKey: ['userOptions', address?.toLowerCase(), false],
-      });
+      await sleep(200);
+      void queryClient.invalidateQueries({queryKey: ['userOptions']});
+      void queryClient.invalidateQueries({queryKey: ['userOptions']});
       void queryClient.invalidateQueries({queryKey: ['readContract']});
     },
   });

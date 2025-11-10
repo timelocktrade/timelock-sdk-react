@@ -7,6 +7,7 @@ import type {OptionData} from './useUserOptions';
 import {useMarketData} from './useMarketData';
 import {useApproval} from '~/hooks/useApproval';
 import {getTimelockMarket} from '~/lib/contracts';
+import {sleep} from '~/lib/utils';
 import {optionsMarketAbi} from '~/abis/optionsMarket';
 
 export const useExtendOption = (marketAddr?: Address) => {
@@ -55,9 +56,11 @@ export const useExtendOption = (marketAddr?: Address) => {
     });
     await waitForTransactionReceipt(client, {hash});
 
-    void queryClient.invalidateQueries({
-      queryKey: ['userOptions', address.toLowerCase()],
-    });
+    await sleep(200);
+    void queryClient.invalidateQueries({queryKey: ['userOptions']});
+    void queryClient.invalidateQueries({queryKey: ['userOptions']});
+    void queryClient.invalidateQueries({queryKey: ['readContract']});
+
     return hash;
   };
   return useMutation({mutationFn: extendOption});
