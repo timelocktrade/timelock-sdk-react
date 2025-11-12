@@ -9,9 +9,8 @@ import {useLens} from '~/hooks/useLens';
 import {usePoolData} from '~/hooks/pool/usePoolData';
 
 import {sleep} from '~/lib/utils';
+import {swappers} from '~/lib/contracts';
 import {optionsMarketAbi} from '~/abis/optionsMarket';
-
-const swapper = '0x877309663591ad974bE2c0C7fB453844c8D613D8';
 
 export const useExerciseOption = (marketAddr?: Address) => {
   const {vault, pool} = useMarketData(marketAddr);
@@ -35,6 +34,9 @@ export const useExerciseOption = (marketAddr?: Address) => {
     if (!timelockLens) throw new Error('Timelock lens not available');
     if (!vault) throw new Error('Vault not available');
     if (!fee) throw new Error('Pool data not available');
+
+    const swapper = swappers[client.chain.id];
+    if (!swapper) throw new Error('Swapper not available');
 
     const refTick = await timelockLens.read.getRefTick([
       vault,

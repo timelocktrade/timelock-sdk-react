@@ -51,8 +51,11 @@ export const getTimelockLens = (client: Client | PublicClient) =>
     client,
   });
 
+export const swappers: Record<number, Address> = {
+  [monadTestnet.id]: '0x877309663591ad974bE2c0C7fB453844c8D613D8',
+};
 export const timelockLenses: Record<number, Address> = {
-  [monadTestnet.id]: '0x1409b2318d9e691f1eB037F00cB4E9528BAdC463',
+  [monadTestnet.id]: '0x21Cb4b64FFF3c595772E8523cFf6DD264468132d',
 };
 export const uniswapMathLenses: Record<number, Address> = {
   [monadTestnet.id]: '0x4C8375D1F6D5F452e92e211C1D3E7a44F78dFc95',
