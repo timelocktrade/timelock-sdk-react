@@ -1,33 +1,38 @@
 import {useMemo} from 'react';
 import type {OptionData} from './useUserOptions';
 import {useMarketData} from './useMarketData';
-import {useCurrentTick} from '~/hooks/pool/useCurrentTick';
-import {token0ToToken1, token1ToToken0} from '~/lib/liquidityUtils';
+import {
+  token0ToToken1,
+  token0ToToken1AtTick,
+  token1ToToken0,
+  token1ToToken0AtTick,
+} from '~/lib/liquidityUtils';
 import {wrapAmount} from '~/lib/numberUtils';
-import {getPayoutAtTick} from '~/lib/optionUtils';
+import {getPayoutAtPrice} from '~/lib/optionUtils';
+import {useCurrentPrice} from '../pool/useCurrentPrice';
 
 export const useOptionPnl = (option: OptionData) => {
   const {marketAddr, optionType, strikeTick, positionSizeCurrent} = option;
 
   const {pool, optionAssetIsToken0, payoutAssetDecimals, tickSpacing} =
     useMarketData(marketAddr);
-  const {exact: currentTick} = useCurrentTick(pool);
+  const {currentPrice} = useCurrentPrice(pool);
 
   const displayPnl = useMemo(() => {
     if (
       optionAssetIsToken0 === undefined ||
-      currentTick === undefined ||
+      currentPrice === undefined ||
       !payoutAssetDecimals
     )
       return undefined;
 
     const strikeSize = optionAssetIsToken0
-      ? token0ToToken1(positionSizeCurrent, strikeTick)
-      : token1ToToken0(positionSizeCurrent, strikeTick);
+      ? token0ToToken1AtTick(positionSizeCurrent, strikeTick)
+      : token1ToToken0AtTick(positionSizeCurrent, strikeTick);
 
     const currentSize = optionAssetIsToken0
-      ? token0ToToken1(positionSizeCurrent, currentTick)
-      : token1ToToken0(positionSizeCurrent, currentTick);
+      ? token0ToToken1(positionSizeCurrent, currentPrice.scaled)
+      : token1ToToken0(positionSizeCurrent, currentPrice.scaled);
 
     const delta = currentSize - strikeSize;
     const pnl = optionType === 'CALL' ? delta : -delta;
@@ -37,7 +42,7 @@ export const useOptionPnl = (option: OptionData) => {
     strikeTick,
     optionType,
     optionAssetIsToken0,
-    currentTick,
+    currentPrice,
     positionSizeCurrent,
     payoutAssetDecimals,
   ]);
@@ -45,22 +50,22 @@ export const useOptionPnl = (option: OptionData) => {
   const unrealizedPayout = useMemo(() => {
     if (
       !payoutAssetDecimals ||
-      !currentTick ||
+      !currentPrice ||
       !tickSpacing ||
       optionAssetIsToken0 === undefined
     )
       return undefined;
 
-    const payout = getPayoutAtTick(
+    const payout = getPayoutAtPrice(
       option,
       option.liquiditiesCurrent,
-      currentTick,
+      currentPrice.scaled,
       tickSpacing,
       optionAssetIsToken0,
     );
     return wrapAmount(payout, payoutAssetDecimals);
   }, [
-    currentTick,
+    currentPrice,
     tickSpacing,
     optionType,
     payoutAssetDecimals,
