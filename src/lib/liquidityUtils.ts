@@ -4,11 +4,20 @@ import JSBI from 'jsbi';
 
 export const PRICE_PRECISION = BigInt(1e18);
 
-export const getPriceSqrtPriceX96 = (sqrtPriceX96: bigint) => {
+export const getPriceAtSqrtPriceX96 = (sqrtPriceX96: bigint) => {
   const priceX192 = sqrtPriceX96 * sqrtPriceX96;
   const price = (priceX192 * PRICE_PRECISION) / BigInt(2 ** 192);
 
   return price;
+};
+
+export const getSqrtPriceX96AtPrice = (price: bigint) => {
+  const priceX192 = (price * BigInt(2 ** 192)) / PRICE_PRECISION;
+
+  const sqrtPriceX96 = JSBI.BigInt(
+    new Big(priceX192.toString()).sqrt().toFixed(0),
+  );
+  return sqrtPriceX96;
 };
 
 export const getPriceAtTick = (tick: number) => {
@@ -59,12 +68,18 @@ export const roundTickUp = (tick: number, spacing: number) => {
   return tick - rem;
 };
 
-export const token0ToToken1 = (amount0: bigint, tick: number) => {
+export const token0ToToken1 = (amount0: bigint, price: bigint) => {
+  return (amount0 * price) / PRICE_PRECISION;
+};
+export const token1ToToken0 = (amount1: bigint, price: bigint) => {
+  return (amount1 * PRICE_PRECISION) / price;
+};
+
+export const token0ToToken1AtTick = (amount0: bigint, tick: number) => {
   const price = getPriceAtTick(tick);
   return (amount0 * price) / PRICE_PRECISION;
 };
-
-export const token1ToToken0 = (amount1: bigint, tick: number) => {
+export const token1ToToken0AtTick = (amount1: bigint, tick: number) => {
   const price = getPriceAtTick(tick);
   return (amount1 * PRICE_PRECISION) / price;
 };
@@ -175,13 +190,13 @@ export const liquiditiesToAmount1 = (
 export const liquiditiesToAmounts = (
   liquidities: bigint[],
   startTick: number,
-  currentTick: number,
+  price: bigint,
   tickSpacing: number,
 ) => {
   let amount0 = 0n;
   let amount1 = 0n;
 
-  const sqrtRatioX96 = TickMath.getSqrtRatioAtTick(currentTick);
+  const sqrtRatioX96 = getSqrtPriceX96AtPrice(price);
 
   for (let i = 0; i < liquidities.length; i++) {
     const liquidity = liquidities[i];
@@ -194,7 +209,7 @@ export const liquiditiesToAmounts = (
     const sqrtRatioBX96 = TickMath.getSqrtRatioAtTick(tickUpper);
     const liquidityJSBI = JSBI.BigInt(liquidity.toString());
 
-    if (currentTick < tickLower) {
+    if (JSBI.lessThanOrEqual(sqrtRatioX96, sqrtRatioAX96)) {
       const delta0 = SqrtPriceMath.getAmount0Delta(
         sqrtRatioAX96,
         sqrtRatioBX96,
@@ -202,28 +217,28 @@ export const liquiditiesToAmounts = (
         false,
       );
       amount0 += BigInt(delta0.toString());
-    } else if (currentTick >= tickUpper) {
-      const delta1 = SqrtPriceMath.getAmount1Delta(
-        sqrtRatioAX96,
+    } else if (JSBI.lessThan(sqrtRatioX96, sqrtRatioBX96)) {
+      const delta0 = SqrtPriceMath.getAmount0Delta(
+        sqrtRatioX96,
         sqrtRatioBX96,
         liquidityJSBI,
         false,
       );
+      const delta1 = SqrtPriceMath.getAmount1Delta(
+        sqrtRatioAX96,
+        sqrtRatioX96,
+        liquidityJSBI,
+        false,
+      );
+      amount0 += BigInt(delta0.toString());
       amount1 += BigInt(delta1.toString());
     } else {
-      const delta0 = SqrtPriceMath.getAmount0Delta(
-        sqrtRatioX96,
+      const delta1 = SqrtPriceMath.getAmount1Delta(
+        sqrtRatioAX96,
         sqrtRatioBX96,
         liquidityJSBI,
         false,
       );
-      const delta1 = SqrtPriceMath.getAmount1Delta(
-        sqrtRatioAX96,
-        sqrtRatioX96,
-        liquidityJSBI,
-        false,
-      );
-      amount0 += BigInt(delta0.toString());
       amount1 += BigInt(delta1.toString());
     }
   }
