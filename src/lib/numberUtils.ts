@@ -95,16 +95,21 @@ export const scalePrice = (
 };
 
 export const formatAmount = (value?: Big | number | string) => {
-  if (value === undefined) return '-';
-  // return value < 1 ? value.toPrecision(2) : value.toFixed(2);
+  if (!value) return '-';
+  value = new Big(value);
+
+  if (value.gte(1e8)) return formatVagueAmount(value, 2);
   return formatCondensed(Big(value).toFixed(100));
 };
 
-export const formatVagueAmount = (value: number | bigint) => {
+export const formatVagueAmount = (
+  value: Big | number | bigint | string,
+  fractionDigits = 2,
+) => {
   value = Number(value);
   if (value === 0) return '0';
 
-  const formatted = value.toExponential(2);
+  const formatted = value.toExponential(fractionDigits);
   return formatted.replace(/\.?0+e/, 'e').replace(/e\+/, 'e');
 };
 
