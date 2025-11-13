@@ -104,32 +104,7 @@ export const lensAbi = [
             internalType: 'uint256',
           },
           {
-            name: 'optionAssetBorrowed',
-            type: 'uint256',
-            internalType: 'uint256',
-          },
-          {
-            name: 'payoutAssetBorrowed',
-            type: 'uint256',
-            internalType: 'uint256',
-          },
-          {
-            name: 'optionAssetToRepay',
-            type: 'uint256',
-            internalType: 'uint256',
-          },
-          {
-            name: 'payoutAssetToRepay',
-            type: 'uint256',
-            internalType: 'uint256',
-          },
-          {
             name: 'positionSize',
-            type: 'uint256',
-            internalType: 'uint256',
-          },
-          {
-            name: 'netOptionAssetToRepay',
             type: 'uint256',
             internalType: 'uint256',
           },
@@ -327,32 +302,7 @@ export const lensAbi = [
             internalType: 'uint256',
           },
           {
-            name: 'optionAssetBorrowed',
-            type: 'uint256',
-            internalType: 'uint256',
-          },
-          {
-            name: 'payoutAssetBorrowed',
-            type: 'uint256',
-            internalType: 'uint256',
-          },
-          {
-            name: 'optionAssetToRepay',
-            type: 'uint256',
-            internalType: 'uint256',
-          },
-          {
-            name: 'payoutAssetToRepay',
-            type: 'uint256',
-            internalType: 'uint256',
-          },
-          {
             name: 'positionSize',
-            type: 'uint256',
-            internalType: 'uint256',
-          },
-          {
-            name: 'netOptionAssetToRepay',
             type: 'uint256',
             internalType: 'uint256',
           },
@@ -403,32 +353,7 @@ export const lensAbi = [
             internalType: 'uint256',
           },
           {
-            name: 'optionAssetBorrowed',
-            type: 'uint256',
-            internalType: 'uint256',
-          },
-          {
-            name: 'payoutAssetBorrowed',
-            type: 'uint256',
-            internalType: 'uint256',
-          },
-          {
-            name: 'optionAssetToRepay',
-            type: 'uint256',
-            internalType: 'uint256',
-          },
-          {
-            name: 'payoutAssetToRepay',
-            type: 'uint256',
-            internalType: 'uint256',
-          },
-          {
             name: 'positionSize',
-            type: 'uint256',
-            internalType: 'uint256',
-          },
-          {
-            name: 'netOptionAssetToRepay',
             type: 'uint256',
             internalType: 'uint256',
           },
@@ -514,6 +439,24 @@ export const lensAbi = [
   },
   {
     type: 'function',
+    name: 'getTokenData',
+    inputs: [{name: 'token', type: 'address', internalType: 'address'}],
+    outputs: [
+      {
+        name: 'tokenData',
+        type: 'tuple',
+        internalType: 'struct TimelockLens.TokenData',
+        components: [
+          {name: 'decimals', type: 'uint8', internalType: 'uint8'},
+          {name: 'symbol', type: 'string', internalType: 'string'},
+          {name: 'name', type: 'string', internalType: 'string'},
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     name: 'getUserOptions',
     inputs: [
       {
@@ -546,32 +489,7 @@ export const lensAbi = [
             internalType: 'uint256',
           },
           {
-            name: 'optionAssetBorrowed',
-            type: 'uint256',
-            internalType: 'uint256',
-          },
-          {
-            name: 'payoutAssetBorrowed',
-            type: 'uint256',
-            internalType: 'uint256',
-          },
-          {
-            name: 'optionAssetToRepay',
-            type: 'uint256',
-            internalType: 'uint256',
-          },
-          {
-            name: 'payoutAssetToRepay',
-            type: 'uint256',
-            internalType: 'uint256',
-          },
-          {
             name: 'positionSize',
-            type: 'uint256',
-            internalType: 'uint256',
-          },
-          {
-            name: 'netOptionAssetToRepay',
             type: 'uint256',
             internalType: 'uint256',
           },

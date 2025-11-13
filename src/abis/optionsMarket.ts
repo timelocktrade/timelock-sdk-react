@@ -164,6 +164,21 @@ export const optionsMarketAbi = [
   },
   {
     type: 'function',
+    name: 'getPositionSize',
+    inputs: [
+      {name: 'optionType', type: 'uint8', internalType: 'uint8'},
+      {name: 'strikeTick', type: 'int24', internalType: 'int24'},
+      {
+        name: 'liquidities',
+        type: 'uint128[]',
+        internalType: 'uint128[]',
+      },
+    ],
+    outputs: [{name: '', type: 'uint256', internalType: 'uint256'}],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     name: 'guardian',
     inputs: [],
     outputs: [
@@ -172,43 +187,6 @@ export const optionsMarketAbi = [
         type: 'address',
         internalType: 'contract TimelockGuardian',
       },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'liquiditiesToAmounts',
-    inputs: [
-      {name: 'startTick', type: 'int24', internalType: 'int24'},
-      {
-        name: 'liquiditys',
-        type: 'uint128[]',
-        internalType: 'uint128[]',
-      },
-      {name: 'optionType', type: 'uint8', internalType: 'uint8'},
-    ],
-    outputs: [
-      {
-        name: 'optionAssetToRepay',
-        type: 'uint256',
-        internalType: 'uint256',
-      },
-      {
-        name: 'payoutAssetToRepay',
-        type: 'uint256',
-        internalType: 'uint256',
-      },
-      {
-        name: 'optionAssetBorrowed',
-        type: 'uint256',
-        internalType: 'uint256',
-      },
-      {
-        name: 'payoutAssetBorrowed',
-        type: 'uint256',
-        internalType: 'uint256',
-      },
-      {name: 'currentTick', type: 'int24', internalType: 'int24'},
     ],
     stateMutability: 'view',
   },
@@ -480,10 +458,10 @@ export const optionsMarketAbi = [
         internalType: 'uint128[]',
       },
       {
-        name: 'currentTick',
-        type: 'int24',
+        name: 'currentPrice',
+        type: 'uint256',
         indexed: false,
-        internalType: 'int24',
+        internalType: 'uint256',
       },
       {
         name: 'payout',
@@ -517,10 +495,10 @@ export const optionsMarketAbi = [
         internalType: 'uint256',
       },
       {
-        name: 'currentTick',
-        type: 'int24',
+        name: 'currentPrice',
+        type: 'uint256',
         indexed: false,
-        internalType: 'int24',
+        internalType: 'uint256',
       },
       {
         name: 'addedDuration',
@@ -560,10 +538,10 @@ export const optionsMarketAbi = [
         internalType: 'int24',
       },
       {
-        name: 'currentTick',
-        type: 'int24',
+        name: 'currentPrice',
+        type: 'uint256',
         indexed: false,
-        internalType: 'int24',
+        internalType: 'uint256',
       },
       {
         name: 'expiresAt',

@@ -3,7 +3,10 @@ import {useQuery} from '@tanstack/react-query';
 import {useTimelockConfig} from '~/providers/TimelockProvider';
 import {EMPTY_ARRAY} from '~/lib/numberUtils';
 
-export type OptionTimelineData = ReturnType<typeof useOptionTimeline>['data'];
+export type OptionEvent = ReturnType<typeof useOptionTimeline>['data'][number];
+export type MintOptionEvent = Extract<OptionEvent, {type: 'mint'}>;
+export type ExerciseOptionEvent = Extract<OptionEvent, {type: 'exercise'}>;
+export type ExtendEvent = Extract<OptionEvent, {type: 'extend'}>;
 
 export const useOptionTimeline = (marketAddr?: Address, optionId?: bigint) => {
   const {graphqlClient} = useTimelockConfig();
@@ -28,20 +31,20 @@ export const useOptionTimeline = (marketAddr?: Address, optionId?: bigint) => {
         id: event.id,
         optionType: event.optionType as 0 | 1,
         strikeTick: event.strikeTick,
-        currentTick: event.currentTick,
-        expiresAt: new Date(Number(event.expiresAt) * 1000),
+        price: BigInt(event.price),
         premium: BigInt(event.premium),
         protocolFee: BigInt(event.protocolFee),
         liquidities: event.liquidities.map(l => BigInt(l)),
         timestamp: new Date(Number(event.timestamp) * 1000),
+        expiresAt: new Date(Number(event.expiresAt) * 1000),
         blockNumber: BigInt(event.blockNumber),
         transactionHash: event.transactionHash,
       }));
       const exerciseEvents = result.ExerciseOptionEvent.map(event => ({
         id: event.id,
-        liquidities: event.liquidities.map(l => BigInt(l)),
-        currentTick: event.currentTick,
         payout: BigInt(event.payout),
+        price: BigInt(event.price),
+        liquidities: event.liquidities.map(l => BigInt(l)),
         timestamp: new Date(Number(event.timestamp) * 1000),
         blockNumber: BigInt(event.blockNumber),
         transactionHash: event.transactionHash,
@@ -50,7 +53,7 @@ export const useOptionTimeline = (marketAddr?: Address, optionId?: bigint) => {
         id: event.id,
         premium: BigInt(event.premium),
         protocolFee: BigInt(event.protocolFee),
-        currentTick: event.currentTick,
+        price: BigInt(event.price),
         addedDuration: BigInt(event.addedDuration),
         timestamp: new Date(Number(event.timestamp) * 1000),
         blockNumber: BigInt(event.blockNumber),

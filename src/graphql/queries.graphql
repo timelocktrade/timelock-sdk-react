@@ -9,7 +9,6 @@ fragment UserOptionFields on UserOption {
   }
   optionType
   strikeTick
-  entryTick
   startTick
   strikePrice
   entryPrice
@@ -123,7 +122,7 @@ query GetOptionEvents($marketAddr: String!, $optionId: numeric!) {
     id
     optionType
     strikeTick
-    currentTick
+    price
     expiresAt
     premium
     protocolFee
@@ -143,7 +142,7 @@ query GetOptionEvents($marketAddr: String!, $optionId: numeric!) {
   ) {
     id
     liquidities
-    currentTick
+    price
     payout
     timestamp
     blockNumber
@@ -161,7 +160,7 @@ query GetOptionEvents($marketAddr: String!, $optionId: numeric!) {
     id
     premium
     protocolFee
-    currentTick
+    price
     addedDuration
     timestamp
     blockNumber

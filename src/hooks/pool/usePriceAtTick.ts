@@ -2,7 +2,7 @@ import type {Address} from 'viem';
 import {useMemo} from 'react';
 import {usePoolData} from './usePoolData';
 
-import {getPriceAtTick, getPriceSqrtPriceX96} from '~/lib/liquidityUtils';
+import {getPriceAtTick, getPriceAtSqrtPriceX96} from '~/lib/liquidityUtils';
 import {wrapPrice} from '~/lib/numberUtils';
 
 export const usePriceAtTick = (tick?: number, poolAddr?: Address) => {
@@ -31,7 +31,7 @@ export const usePriceSqrtPriceX96 = (
   const priceBigInt = useMemo(
     () =>
       sqrtPriceX96 !== undefined
-        ? getPriceSqrtPriceX96(sqrtPriceX96)
+        ? getPriceAtSqrtPriceX96(sqrtPriceX96)
         : undefined,
     [sqrtPriceX96],
   );

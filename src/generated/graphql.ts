@@ -216,13 +216,13 @@ export type BurnEventStreamCursorValueInput = {
 export type ExerciseOptionEvent = {
   __typename: 'ExerciseOptionEvent';
   blockNumber: Scalars['numeric']['output'];
-  currentTick: Scalars['Int']['output'];
   id: Scalars['String']['output'];
   liquidities: Array<Scalars['String']['output']>;
   /** An object relationship */
   option?: Maybe<UserOption>;
   option_id: Scalars['String']['output'];
   payout: Scalars['numeric']['output'];
+  price: Scalars['numeric']['output'];
   timestamp: Scalars['numeric']['output'];
   transactionHash: Scalars['String']['output'];
 };
@@ -233,12 +233,12 @@ export type ExerciseOptionEventBoolExp = {
   _not?: InputMaybe<ExerciseOptionEventBoolExp>;
   _or?: InputMaybe<Array<ExerciseOptionEventBoolExp>>;
   blockNumber?: InputMaybe<NumericComparisonExp>;
-  currentTick?: InputMaybe<IntComparisonExp>;
   id?: InputMaybe<StringComparisonExp>;
   liquidities?: InputMaybe<StringArrayComparisonExp>;
   option?: InputMaybe<UserOptionBoolExp>;
   option_id?: InputMaybe<StringComparisonExp>;
   payout?: InputMaybe<NumericComparisonExp>;
+  price?: InputMaybe<NumericComparisonExp>;
   timestamp?: InputMaybe<NumericComparisonExp>;
   transactionHash?: InputMaybe<StringComparisonExp>;
 };
@@ -246,12 +246,12 @@ export type ExerciseOptionEventBoolExp = {
 /** Ordering options when selecting data from "ExerciseOptionEvent". */
 export type ExerciseOptionEventOrderBy = {
   blockNumber?: InputMaybe<OrderBy>;
-  currentTick?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   liquidities?: InputMaybe<OrderBy>;
   option?: InputMaybe<UserOptionOrderBy>;
   option_id?: InputMaybe<OrderBy>;
   payout?: InputMaybe<OrderBy>;
+  price?: InputMaybe<OrderBy>;
   timestamp?: InputMaybe<OrderBy>;
   transactionHash?: InputMaybe<OrderBy>;
 };
@@ -261,8 +261,6 @@ export type ExerciseOptionEventSelectColumn =
   /** column name */
   | 'blockNumber'
   /** column name */
-  | 'currentTick'
-  /** column name */
   | 'id'
   /** column name */
   | 'liquidities'
@@ -270,6 +268,8 @@ export type ExerciseOptionEventSelectColumn =
   | 'option_id'
   /** column name */
   | 'payout'
+  /** column name */
+  | 'price'
   /** column name */
   | 'timestamp'
   /** column name */
@@ -286,11 +286,11 @@ export type ExerciseOptionEventStreamCursorInput = {
 /** Initial value of the column from where the streaming should start */
 export type ExerciseOptionEventStreamCursorValueInput = {
   blockNumber?: InputMaybe<Scalars['numeric']['input']>;
-  currentTick?: InputMaybe<Scalars['Int']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
   liquidities?: InputMaybe<Array<Scalars['String']['input']>>;
   option_id?: InputMaybe<Scalars['String']['input']>;
   payout?: InputMaybe<Scalars['numeric']['input']>;
+  price?: InputMaybe<Scalars['numeric']['input']>;
   timestamp?: InputMaybe<Scalars['numeric']['input']>;
   transactionHash?: InputMaybe<Scalars['String']['input']>;
 };
@@ -300,12 +300,12 @@ export type ExtendOptionEvent = {
   __typename: 'ExtendOptionEvent';
   addedDuration: Scalars['numeric']['output'];
   blockNumber: Scalars['numeric']['output'];
-  currentTick: Scalars['Int']['output'];
   id: Scalars['String']['output'];
   /** An object relationship */
   option?: Maybe<UserOption>;
   option_id: Scalars['String']['output'];
   premium: Scalars['numeric']['output'];
+  price: Scalars['numeric']['output'];
   protocolFee: Scalars['numeric']['output'];
   timestamp: Scalars['numeric']['output'];
   transactionHash: Scalars['String']['output'];
@@ -318,11 +318,11 @@ export type ExtendOptionEventBoolExp = {
   _or?: InputMaybe<Array<ExtendOptionEventBoolExp>>;
   addedDuration?: InputMaybe<NumericComparisonExp>;
   blockNumber?: InputMaybe<NumericComparisonExp>;
-  currentTick?: InputMaybe<IntComparisonExp>;
   id?: InputMaybe<StringComparisonExp>;
   option?: InputMaybe<UserOptionBoolExp>;
   option_id?: InputMaybe<StringComparisonExp>;
   premium?: InputMaybe<NumericComparisonExp>;
+  price?: InputMaybe<NumericComparisonExp>;
   protocolFee?: InputMaybe<NumericComparisonExp>;
   timestamp?: InputMaybe<NumericComparisonExp>;
   transactionHash?: InputMaybe<StringComparisonExp>;
@@ -332,11 +332,11 @@ export type ExtendOptionEventBoolExp = {
 export type ExtendOptionEventOrderBy = {
   addedDuration?: InputMaybe<OrderBy>;
   blockNumber?: InputMaybe<OrderBy>;
-  currentTick?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   option?: InputMaybe<UserOptionOrderBy>;
   option_id?: InputMaybe<OrderBy>;
   premium?: InputMaybe<OrderBy>;
+  price?: InputMaybe<OrderBy>;
   protocolFee?: InputMaybe<OrderBy>;
   timestamp?: InputMaybe<OrderBy>;
   transactionHash?: InputMaybe<OrderBy>;
@@ -349,13 +349,13 @@ export type ExtendOptionEventSelectColumn =
   /** column name */
   | 'blockNumber'
   /** column name */
-  | 'currentTick'
-  /** column name */
   | 'id'
   /** column name */
   | 'option_id'
   /** column name */
   | 'premium'
+  /** column name */
+  | 'price'
   /** column name */
   | 'protocolFee'
   /** column name */
@@ -375,10 +375,10 @@ export type ExtendOptionEventStreamCursorInput = {
 export type ExtendOptionEventStreamCursorValueInput = {
   addedDuration?: InputMaybe<Scalars['numeric']['input']>;
   blockNumber?: InputMaybe<Scalars['numeric']['input']>;
-  currentTick?: InputMaybe<Scalars['Int']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
   option_id?: InputMaybe<Scalars['String']['input']>;
   premium?: InputMaybe<Scalars['numeric']['input']>;
+  price?: InputMaybe<Scalars['numeric']['input']>;
   protocolFee?: InputMaybe<Scalars['numeric']['input']>;
   timestamp?: InputMaybe<Scalars['numeric']['input']>;
   transactionHash?: InputMaybe<Scalars['String']['input']>;
@@ -552,7 +552,6 @@ export type MintEventStreamCursorValueInput = {
 export type MintOptionEvent = {
   __typename: 'MintOptionEvent';
   blockNumber: Scalars['numeric']['output'];
-  currentTick: Scalars['Int']['output'];
   expiresAt: Scalars['numeric']['output'];
   id: Scalars['String']['output'];
   liquidities: Array<Scalars['String']['output']>;
@@ -562,6 +561,7 @@ export type MintOptionEvent = {
   option_id: Scalars['String']['output'];
   owner: Scalars['String']['output'];
   premium: Scalars['numeric']['output'];
+  price: Scalars['numeric']['output'];
   protocolFee: Scalars['numeric']['output'];
   strikeTick: Scalars['Int']['output'];
   timestamp: Scalars['numeric']['output'];
@@ -574,7 +574,6 @@ export type MintOptionEventBoolExp = {
   _not?: InputMaybe<MintOptionEventBoolExp>;
   _or?: InputMaybe<Array<MintOptionEventBoolExp>>;
   blockNumber?: InputMaybe<NumericComparisonExp>;
-  currentTick?: InputMaybe<IntComparisonExp>;
   expiresAt?: InputMaybe<NumericComparisonExp>;
   id?: InputMaybe<StringComparisonExp>;
   liquidities?: InputMaybe<StringArrayComparisonExp>;
@@ -583,6 +582,7 @@ export type MintOptionEventBoolExp = {
   option_id?: InputMaybe<StringComparisonExp>;
   owner?: InputMaybe<StringComparisonExp>;
   premium?: InputMaybe<NumericComparisonExp>;
+  price?: InputMaybe<NumericComparisonExp>;
   protocolFee?: InputMaybe<NumericComparisonExp>;
   strikeTick?: InputMaybe<IntComparisonExp>;
   timestamp?: InputMaybe<NumericComparisonExp>;
@@ -592,7 +592,6 @@ export type MintOptionEventBoolExp = {
 /** Ordering options when selecting data from "MintOptionEvent". */
 export type MintOptionEventOrderBy = {
   blockNumber?: InputMaybe<OrderBy>;
-  currentTick?: InputMaybe<OrderBy>;
   expiresAt?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   liquidities?: InputMaybe<OrderBy>;
@@ -601,6 +600,7 @@ export type MintOptionEventOrderBy = {
   option_id?: InputMaybe<OrderBy>;
   owner?: InputMaybe<OrderBy>;
   premium?: InputMaybe<OrderBy>;
+  price?: InputMaybe<OrderBy>;
   protocolFee?: InputMaybe<OrderBy>;
   strikeTick?: InputMaybe<OrderBy>;
   timestamp?: InputMaybe<OrderBy>;
@@ -611,8 +611,6 @@ export type MintOptionEventOrderBy = {
 export type MintOptionEventSelectColumn =
   /** column name */
   | 'blockNumber'
-  /** column name */
-  | 'currentTick'
   /** column name */
   | 'expiresAt'
   /** column name */
@@ -627,6 +625,8 @@ export type MintOptionEventSelectColumn =
   | 'owner'
   /** column name */
   | 'premium'
+  /** column name */
+  | 'price'
   /** column name */
   | 'protocolFee'
   /** column name */
@@ -647,7 +647,6 @@ export type MintOptionEventStreamCursorInput = {
 /** Initial value of the column from where the streaming should start */
 export type MintOptionEventStreamCursorValueInput = {
   blockNumber?: InputMaybe<Scalars['numeric']['input']>;
-  currentTick?: InputMaybe<Scalars['Int']['input']>;
   expiresAt?: InputMaybe<Scalars['numeric']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
   liquidities?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -655,6 +654,7 @@ export type MintOptionEventStreamCursorValueInput = {
   option_id?: InputMaybe<Scalars['String']['input']>;
   owner?: InputMaybe<Scalars['String']['input']>;
   premium?: InputMaybe<Scalars['numeric']['input']>;
+  price?: InputMaybe<Scalars['numeric']['input']>;
   protocolFee?: InputMaybe<Scalars['numeric']['input']>;
   strikeTick?: InputMaybe<Scalars['Int']['input']>;
   timestamp?: InputMaybe<Scalars['numeric']['input']>;
@@ -1391,7 +1391,6 @@ export type UserOption = {
   __typename: 'UserOption';
   createdAt: Scalars['numeric']['output'];
   entryPrice: Scalars['numeric']['output'];
-  entryTick: Scalars['Int']['output'];
   expiresAt: Scalars['numeric']['output'];
   fullyExercised: Scalars['Boolean']['output'];
   id: Scalars['String']['output'];
@@ -1434,7 +1433,6 @@ export type UserOptionAggregateOrderBy = {
 export type UserOptionAvgOrderBy = {
   createdAt?: InputMaybe<OrderBy>;
   entryPrice?: InputMaybe<OrderBy>;
-  entryTick?: InputMaybe<OrderBy>;
   expiresAt?: InputMaybe<OrderBy>;
   optionId?: InputMaybe<OrderBy>;
   positionSizeAtOpen?: InputMaybe<OrderBy>;
@@ -1454,7 +1452,6 @@ export type UserOptionBoolExp = {
   _or?: InputMaybe<Array<UserOptionBoolExp>>;
   createdAt?: InputMaybe<NumericComparisonExp>;
   entryPrice?: InputMaybe<NumericComparisonExp>;
-  entryTick?: InputMaybe<IntComparisonExp>;
   expiresAt?: InputMaybe<NumericComparisonExp>;
   fullyExercised?: InputMaybe<BooleanComparisonExp>;
   id?: InputMaybe<StringComparisonExp>;
@@ -1480,7 +1477,6 @@ export type UserOptionBoolExp = {
 export type UserOptionMaxOrderBy = {
   createdAt?: InputMaybe<OrderBy>;
   entryPrice?: InputMaybe<OrderBy>;
-  entryTick?: InputMaybe<OrderBy>;
   expiresAt?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   liquiditiesAtOpen?: InputMaybe<OrderBy>;
@@ -1503,7 +1499,6 @@ export type UserOptionMaxOrderBy = {
 export type UserOptionMinOrderBy = {
   createdAt?: InputMaybe<OrderBy>;
   entryPrice?: InputMaybe<OrderBy>;
-  entryTick?: InputMaybe<OrderBy>;
   expiresAt?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   liquiditiesAtOpen?: InputMaybe<OrderBy>;
@@ -1526,7 +1521,6 @@ export type UserOptionMinOrderBy = {
 export type UserOptionOrderBy = {
   createdAt?: InputMaybe<OrderBy>;
   entryPrice?: InputMaybe<OrderBy>;
-  entryTick?: InputMaybe<OrderBy>;
   expiresAt?: InputMaybe<OrderBy>;
   fullyExercised?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
@@ -1554,8 +1548,6 @@ export type UserOptionSelectColumn =
   | 'createdAt'
   /** column name */
   | 'entryPrice'
-  /** column name */
-  | 'entryTick'
   /** column name */
   | 'expiresAt'
   /** column name */
@@ -1595,7 +1587,6 @@ export type UserOptionSelectColumn =
 export type UserOptionStddevOrderBy = {
   createdAt?: InputMaybe<OrderBy>;
   entryPrice?: InputMaybe<OrderBy>;
-  entryTick?: InputMaybe<OrderBy>;
   expiresAt?: InputMaybe<OrderBy>;
   optionId?: InputMaybe<OrderBy>;
   positionSizeAtOpen?: InputMaybe<OrderBy>;
@@ -1612,7 +1603,6 @@ export type UserOptionStddevOrderBy = {
 export type UserOptionStddevPopOrderBy = {
   createdAt?: InputMaybe<OrderBy>;
   entryPrice?: InputMaybe<OrderBy>;
-  entryTick?: InputMaybe<OrderBy>;
   expiresAt?: InputMaybe<OrderBy>;
   optionId?: InputMaybe<OrderBy>;
   positionSizeAtOpen?: InputMaybe<OrderBy>;
@@ -1629,7 +1619,6 @@ export type UserOptionStddevPopOrderBy = {
 export type UserOptionStddevSampOrderBy = {
   createdAt?: InputMaybe<OrderBy>;
   entryPrice?: InputMaybe<OrderBy>;
-  entryTick?: InputMaybe<OrderBy>;
   expiresAt?: InputMaybe<OrderBy>;
   optionId?: InputMaybe<OrderBy>;
   positionSizeAtOpen?: InputMaybe<OrderBy>;
@@ -1654,7 +1643,6 @@ export type UserOptionStreamCursorInput = {
 export type UserOptionStreamCursorValueInput = {
   createdAt?: InputMaybe<Scalars['numeric']['input']>;
   entryPrice?: InputMaybe<Scalars['numeric']['input']>;
-  entryTick?: InputMaybe<Scalars['Int']['input']>;
   expiresAt?: InputMaybe<Scalars['numeric']['input']>;
   fullyExercised?: InputMaybe<Scalars['Boolean']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
@@ -1678,7 +1666,6 @@ export type UserOptionStreamCursorValueInput = {
 export type UserOptionSumOrderBy = {
   createdAt?: InputMaybe<OrderBy>;
   entryPrice?: InputMaybe<OrderBy>;
-  entryTick?: InputMaybe<OrderBy>;
   expiresAt?: InputMaybe<OrderBy>;
   optionId?: InputMaybe<OrderBy>;
   positionSizeAtOpen?: InputMaybe<OrderBy>;
@@ -1695,7 +1682,6 @@ export type UserOptionSumOrderBy = {
 export type UserOptionVarPopOrderBy = {
   createdAt?: InputMaybe<OrderBy>;
   entryPrice?: InputMaybe<OrderBy>;
-  entryTick?: InputMaybe<OrderBy>;
   expiresAt?: InputMaybe<OrderBy>;
   optionId?: InputMaybe<OrderBy>;
   positionSizeAtOpen?: InputMaybe<OrderBy>;
@@ -1712,7 +1698,6 @@ export type UserOptionVarPopOrderBy = {
 export type UserOptionVarSampOrderBy = {
   createdAt?: InputMaybe<OrderBy>;
   entryPrice?: InputMaybe<OrderBy>;
-  entryTick?: InputMaybe<OrderBy>;
   expiresAt?: InputMaybe<OrderBy>;
   optionId?: InputMaybe<OrderBy>;
   positionSizeAtOpen?: InputMaybe<OrderBy>;
@@ -1729,7 +1714,6 @@ export type UserOptionVarSampOrderBy = {
 export type UserOptionVarianceOrderBy = {
   createdAt?: InputMaybe<OrderBy>;
   entryPrice?: InputMaybe<OrderBy>;
-  entryTick?: InputMaybe<OrderBy>;
   expiresAt?: InputMaybe<OrderBy>;
   optionId?: InputMaybe<OrderBy>;
   positionSizeAtOpen?: InputMaybe<OrderBy>;
@@ -2777,7 +2761,6 @@ export type UserOptionFieldsFragment = {
   optionId: any;
   optionType: any;
   strikeTick: number;
-  entryTick: number;
   startTick: number;
   strikePrice: any;
   entryPrice: any;
@@ -2891,7 +2874,7 @@ export type GetOptionEventsQuery = {
     id: string;
     optionType: number;
     strikeTick: number;
-    currentTick: number;
+    price: any;
     expiresAt: any;
     premium: any;
     protocolFee: any;
@@ -2904,7 +2887,7 @@ export type GetOptionEventsQuery = {
     __typename: 'ExerciseOptionEvent';
     id: string;
     liquidities: Array<string>;
-    currentTick: number;
+    price: any;
     payout: any;
     timestamp: any;
     blockNumber: any;
@@ -2915,7 +2898,7 @@ export type GetOptionEventsQuery = {
     id: string;
     premium: any;
     protocolFee: any;
-    currentTick: number;
+    price: any;
     addedDuration: any;
     timestamp: any;
     blockNumber: any;
@@ -2935,7 +2918,6 @@ export const UserOptionFieldsFragmentDoc = gql`
     }
     optionType
     strikeTick
-    entryTick
     startTick
     strikePrice
     entryPrice
@@ -3060,7 +3042,7 @@ export const GetOptionEventsDocument = gql`
       id
       optionType
       strikeTick
-      currentTick
+      price
       expiresAt
       premium
       protocolFee
@@ -3080,7 +3062,7 @@ export const GetOptionEventsDocument = gql`
     ) {
       id
       liquidities
-      currentTick
+      price
       payout
       timestamp
       blockNumber
@@ -3098,7 +3080,7 @@ export const GetOptionEventsDocument = gql`
       id
       premium
       protocolFee
-      currentTick
+      price
       addedDuration
       timestamp
       blockNumber
