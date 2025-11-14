@@ -45,13 +45,7 @@ export const useSetOperatorPerms = (marketAddr?: Address) => {
     });
     await waitForTransactionReceipt(client, {hash});
 
-    void queryClient.invalidateQueries({
-      queryKey: [
-        'userOperators',
-        address.toLowerCase(),
-        marketAddr.toLowerCase(),
-      ],
-    });
+    void queryClient.invalidateQueries({queryKey: ['userOperators']});
     void queryClient.invalidateQueries({queryKey: ['readContract']});
     return hash;
   };

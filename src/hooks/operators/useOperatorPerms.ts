@@ -21,7 +21,10 @@ export const useOperatorPerms = (
     address: marketAddr,
     functionName: 'operatorPerms',
     args: [userAddr!, operatorAddr!],
-    query: {enabled: !!userAddr && !!operatorAddr},
+    query: {
+      enabled: !!userAddr && !!operatorAddr,
+      refetchInterval: 5000,
+    },
   });
   const [canExtend, canExercise, canTransfer, canMint, spendingApproval] =
     data || [];
