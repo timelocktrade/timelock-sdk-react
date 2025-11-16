@@ -1,3 +1,5 @@
+import type {Address} from 'viem';
+
 export interface PriceData {
   currentPrice: number;
   percentChange: number;
@@ -65,7 +67,8 @@ const fillGaps = (
 };
 
 export const getPriceHistory = async (
-  poolAddress: string,
+  pool: Address,
+  token: 0 | 1,
   resolution: PriceResolution,
   start: Date,
   end: Date,
@@ -83,10 +86,10 @@ export const getPriceHistory = async (
   const limit = Math.min(Math.ceil(diffSeconds / seconds), 1000);
 
   const url =
-    `https://api.geckoterminal.com/api/v2/networks/${network}/pools/${poolAddress}/ohlcv/${timeframe}` +
+    `https://api.geckoterminal.com/api/v2/networks/${network}/pools/${pool}/ohlcv/${timeframe}` +
     `?aggregate=${aggregate}` +
     `&limit=${limit}` +
-    '&token=quote' +
+    `&token=${token === 0 ? 'base' : 'quote'}` +
     '&currency=usd' +
     `&before_timestamp=${endSecs}`;
 
