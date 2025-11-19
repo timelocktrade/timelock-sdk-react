@@ -67,15 +67,15 @@ export const useBurnLiquidity = (vaultAddr?: Address) => {
         positions[0].liquidity,
       );
     } else {
-      const refTicks = await timelockLens.read.batchGetRefTick([
+      const refTick = await timelockLens.read.getRefTick([
         vaultAddr,
-        positions.map(position => position.tickLower),
+        Math.min(...positions.map(p => p.tickLower)),
       ]);
-      const multicallData = positions.map((p, i) =>
+      const multicallData = positions.map(p =>
         encodeFunctionData({
           abi: singleOwnerVaultAbi,
           functionName: 'burn',
-          args: [p.tickLower, p.tickUpper, p.liquidity, refTicks[i]],
+          args: [p.tickLower, p.tickUpper, p.liquidity, refTick],
         }),
       );
       const hash = await writeContractAsync({
