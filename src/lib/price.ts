@@ -3,7 +3,7 @@ import type {Address} from 'viem';
 export interface PriceData {
   currentPrice: number;
   percentChange: number;
-  poolAddress: string;
+  poolAddr: string;
   timestamp: number;
 }
 
@@ -120,37 +120,58 @@ export const getPriceHistory = async (
 };
 
 export const getCurrentPrice = async (
-  poolAddress: string,
+  poolAddr: Address,
+  tokenAddr: Address,
 ): Promise<PriceData> => {
   const network = 'monad-testnet';
-  const geckoUrl = `https://api.geckoterminal.com/api/v2/networks/${network}/pools/${poolAddress.toLowerCase()}`;
+  const geckoUrl = `https://api.geckoterminal.com/api/v2/networks/${network}/pools/${poolAddr.toLowerCase()}`;
 
   const response = await fetch(geckoUrl, {
     method: 'GET',
-    headers: {
-      Accept: 'application/json',
-      'User-Agent': 'TimelockTrade/1.0',
-    },
+    headers: {Accept: 'application/json', 'User-Agent': 'TimelockTrade/1.0'},
     cache: 'no-store', // Keep no-store for real-time data
   });
-
   if (!response.ok) {
-    throw new Error(`Failed to fetch price data for pool ${poolAddress}`);
+    throw new Error(`Failed to fetch price data for pool ${poolAddr}`);
   }
   const data = (await response.json()) as {
     data: {
       attributes: {
-        quote_token_price_usd: string;
+        base_token_price_quote_token: string;
+        quote_token_price_base_token: string;
         price_change_percentage: {h24: string};
+      };
+      relationships: {
+        base_token: {data: {id: string; type: string}};
+        quote_token: {data: {id: string; type: string}};
       };
     };
   };
   const pool = data.data.attributes;
+  const relationships = data.data.relationships;
+
+  const baseTokenAddr = relationships.base_token.data.id
+    .split('_')[1]
+    .toLowerCase();
+  const quoteTokenAddr = relationships.quote_token.data.id
+    .split('_')[1]
+    .toLowerCase();
+
+  const isBaseToken = tokenAddr.toLowerCase() === baseTokenAddr.toLowerCase();
+  const isQuoteToken = tokenAddr.toLowerCase() === quoteTokenAddr.toLowerCase();
+
+  if (!isBaseToken && !isQuoteToken) {
+    throw new Error(`Token ${tokenAddr} is not part of pool ${poolAddr}`);
+  }
+  const price = isBaseToken
+    ? pool.base_token_price_quote_token
+    : pool.quote_token_price_base_token;
+  const priceChange = pool.price_change_percentage?.h24;
 
   return {
-    currentPrice: parseFloat(pool.quote_token_price_usd || '0'),
-    percentChange: parseFloat(pool.price_change_percentage?.h24 || '0'),
-    poolAddress: poolAddress,
+    currentPrice: parseFloat(price || '0'),
+    percentChange: parseFloat(priceChange || '0'),
+    poolAddr: poolAddr,
     timestamp: Date.now(),
   };
 };
