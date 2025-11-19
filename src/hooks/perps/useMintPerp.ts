@@ -29,7 +29,7 @@ export const useMintPerp = (marketAddr?: Address) => {
   const {mutateAsync: setOperatorPerms} = useSetOperatorPerms(marketAddr);
   const {pool, optionAssetIsToken0, payoutAsset} = useMarketData(marketAddr);
   const {tickSpacing} = usePoolData(pool);
-  const {exact: currentTick} = useCurrentTick(pool);
+  const {refetch: refetchCurrentTick} = useCurrentTick(pool);
 
   const userPerms = operatorAddr
     ? operators.find(
@@ -57,7 +57,7 @@ export const useMintPerp = (marketAddr?: Address) => {
     if (!operator || !operatorAddr) {
       throw new Error('Operator address not found');
     }
-    if (!tickSpacing || currentTick === undefined) {
+    if (!tickSpacing) {
       throw new Error('Pool data not found');
     }
     if (optionAssetIsToken0 === undefined || !payoutAsset) {
@@ -67,6 +67,11 @@ export const useMintPerp = (marketAddr?: Address) => {
 
     const market = getTimelockMarket(marketAddr, client);
 
+    const {data: {exact: currentTick} = {}} = await refetchCurrentTick();
+
+    if (currentTick === undefined) {
+      throw new Error('Could not fetch current tick');
+    }
     const validStrikeTick = getNearestValidStrikeTick(
       optionType,
       optionAssetIsToken0,
