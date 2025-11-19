@@ -19,7 +19,7 @@ export const useMintOption = (marketAddr?: Address) => {
     useMarketData(marketAddr);
 
   const {tickSpacing} = usePoolData(pool);
-  const {exact: currentTick} = useCurrentTick(pool);
+  const {refetch: refetchCurrentTick} = useCurrentTick(pool);
 
   const queryClient = useQueryClient();
   const client = useClient();
@@ -43,12 +43,15 @@ export const useMintOption = (marketAddr?: Address) => {
     if (!client || !address) throw new Error('Wallet not connected');
     if (!marketAddr) throw new Error('Market address not available');
     if (!timelockLens) throw new Error('Timelock lens not available');
+    if (!tickSpacing) throw new Error('Pool data not available');
 
     if (!vault || !payoutAsset || optionAssetIsToken0 === undefined) {
       throw new Error('Market data not available');
     }
-    if (currentTick === undefined || !tickSpacing) {
-      throw new Error('Pool data not available');
+    const {data: {exact: currentTick} = {}} = await refetchCurrentTick();
+
+    if (currentTick === undefined) {
+      throw new Error('Could not fetch current tick');
     }
     strikeTick = getNearestValidStrikeTick(
       optionType,

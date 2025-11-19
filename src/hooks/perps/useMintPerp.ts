@@ -53,12 +53,10 @@ export const useMintPerp = (marketAddr?: Address) => {
 
     if (!client || !address) throw new Error('Wallet not connected');
     if (!marketAddr) throw new Error('Market address not found');
+    if (!tickSpacing) throw new Error('Pool data not found');
 
     if (!operator || !operatorAddr) {
       throw new Error('Operator address not found');
-    }
-    if (!tickSpacing) {
-      throw new Error('Pool data not found');
     }
     if (optionAssetIsToken0 === undefined || !payoutAsset) {
       throw new Error('Market data not found');
