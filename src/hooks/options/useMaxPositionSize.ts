@@ -10,34 +10,20 @@ import {lensAbi} from '~/abis/lens';
 
 export const useMaxPositionSize = (
   marketAddr: Address | undefined,
-  strikeTick?: number,
   maxBorrowableRange = 100,
 ) => {
   const {timelockLens} = useLens();
   const {optionAssetDecimals} = useMarketData(marketAddr);
 
-  const {data: data0, refetch: refetch0} = useReadContract({
+  const {data, ...rest} = useReadContract({
     address: timelockLens?.address,
     abi: lensAbi,
-    functionName: 'getMaxPositionSizeAtCurrentTick',
+    functionName: 'getMaxATMSizes',
     args: [marketAddr!, maxBorrowableRange],
     query: {enabled: !!marketAddr && !!timelockLens},
     // @ts-ignore
     gas: 100_000_000n,
   });
-
-  const {data: data1, refetch: refetch1} = useReadContract({
-    address: timelockLens?.address,
-    abi: lensAbi,
-    functionName: 'getMaxPositionSize',
-    args: [marketAddr!, strikeTick!, maxBorrowableRange],
-    query: {
-      enabled: !!marketAddr && !!timelockLens && strikeTick !== undefined,
-    },
-    // @ts-ignore
-    gas: 100_000_000n,
-  });
-  const data = strikeTick !== undefined ? data1 : data0;
 
   const {maxCallSize, maxPutSize} = useMemo(
     () =>
@@ -49,10 +35,5 @@ export const useMaxPositionSize = (
         : {},
     [data, optionAssetDecimals],
   );
-
-  const refetch = () => {
-    void refetch0();
-    void refetch1();
-  };
-  return {maxCallSize, maxPutSize, refetch};
+  return {maxCallSize, maxPutSize, ...rest};
 };

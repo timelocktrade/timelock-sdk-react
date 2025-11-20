@@ -4,8 +4,8 @@ import {useMutation, useQueryClient} from '@tanstack/react-query';
 
 import {usePerpsOperator} from './usePerpsOperator';
 import {useApproval} from '~/hooks/useApproval';
-import {useUserOperators} from '~/hooks/operators/useUserOperators';
-import {useSetOperatorPerms} from '~/hooks/operators/useSetOperatorPerms';
+// import {useUserOperators} from '~/hooks/operators/useUserOperators';
+// import {useSetOperatorPerms} from '~/hooks/operators/useSetOperatorPerms';
 import {useMarketData} from '~/hooks/options/useMarketData';
 import {usePoolData} from '~/hooks/pool/usePoolData';
 import {useCurrentTick} from '~/hooks/pool/useCurrentTick';
@@ -25,23 +25,23 @@ export const useMintPerp = (marketAddr?: Address) => {
   } = usePerpsOperator();
   const {askForApproval} = useApproval();
 
-  const {data: operators} = useUserOperators(address, marketAddr);
-  const {mutateAsync: setOperatorPerms} = useSetOperatorPerms(marketAddr);
+  // const {data: operators} = useUserOperators(address, marketAddr);
+  // const {mutateAsync: setOperatorPerms} = useSetOperatorPerms(marketAddr);
   const {pool, optionAssetIsToken0, payoutAsset} = useMarketData(marketAddr);
   const {tickSpacing} = usePoolData(pool);
   const {refetch: refetchCurrentTick} = useCurrentTick(pool);
 
-  const userPerms = operatorAddr
-    ? operators.find(
-        o => o.operatorAddr.toLowerCase() === operatorAddr.toLowerCase(),
-      )
-    : undefined;
+  // const userPerms = operatorAddr
+  //   ? operators.find(
+  //       o => o.operatorAddr.toLowerCase() === operatorAddr.toLowerCase(),
+  //     )
+  //   : undefined;
 
-  const hasEnoughPerms =
-    userPerms &&
-    userPerms.canMint &&
-    userPerms.canExtend &&
-    userPerms.canExercise;
+  // const hasEnoughPerms =
+  //   userPerms &&
+  //   userPerms.canMint &&
+  //   userPerms.canExtend &&
+  //   userPerms.canExercise;
 
   const mintPerp = async (data: {
     optionType: 'CALL' | 'PUT';
@@ -86,16 +86,16 @@ export const useMintPerp = (marketAddr?: Address) => {
     ]);
     const maxPremium = ((premium + protocolFee) * 11n) / 10n;
 
-    if (!hasEnoughPerms) {
-      await setOperatorPerms({
-        operator: operatorAddr,
-        canMint: true,
-        canExtend: true,
-        canExercise: true,
-        canTransfer: userPerms?.canTransfer || false,
-        spendingApproval: maxPremium,
-      });
-    }
+    // if (!hasEnoughPerms) {
+    //   await setOperatorPerms({
+    //     operator: operatorAddr,
+    //     canMint: true,
+    //     canExtend: true,
+    //     canExercise: true,
+    //     canTransfer: userPerms?.canTransfer || false,
+    //     spendingApproval: maxPremium,
+    //   });
+    // }
     await askForApproval(payoutAsset, marketAddr, maxPremium);
 
     await operator.mintPerp({

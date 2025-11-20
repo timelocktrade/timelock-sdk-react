@@ -55,7 +55,7 @@ export const swappers: Record<number, Address> = {
   [monadTestnet.id]: '0x877309663591ad974bE2c0C7fB453844c8D613D8',
 };
 export const timelockLenses: Record<number, Address> = {
-  [monadTestnet.id]: '0x21Cb4b64FFF3c595772E8523cFf6DD264468132d',
+  [monadTestnet.id]: '0xB637ED73B07e7fB656CD286d53b7957a64788C03',
 };
 export const uniswapMathLenses: Record<number, Address> = {
   [monadTestnet.id]: '0x4C8375D1F6D5F452e92e211C1D3E7a44F78dFc95',

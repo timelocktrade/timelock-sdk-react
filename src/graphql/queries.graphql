@@ -72,8 +72,6 @@ query GetMarketData($marketAddr: String!) {
   TimelockMarket(where: {address: {_eq: $marketAddr}}, limit: 1) {
     id
     address
-    optionsCount
-    tradersCount
     vault
     pool
     tickSpacing
@@ -86,6 +84,16 @@ query GetMarketData($marketAddr: String!) {
     payoutAssetSymbol
     optionAssetName
     payoutAssetName
+  }
+}
+
+query GetMarketVolume($marketAddr: String!) {
+  TimelockMarket(where: {address: {_eq: $marketAddr}}, limit: 1) {
+    id
+    address
+    optionsCount
+    tradersCount
+    volume
   }
 }
 

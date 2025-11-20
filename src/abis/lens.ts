@@ -229,19 +229,14 @@ export const lensAbi = [
   },
   {
     type: 'function',
-    name: 'getMaxPositionSize',
+    name: 'getMaxATMSizes',
     inputs: [
       {
         name: 'market',
         type: 'address',
         internalType: 'contract TimelockOptionsMarket',
       },
-      {name: 'strikeTick', type: 'int24', internalType: 'int24'},
-      {
-        name: 'maxBorrowableRange',
-        type: 'int24',
-        internalType: 'int24',
-      },
+      {name: 'maxRange', type: 'int24', internalType: 'int24'},
     ],
     outputs: [
       {name: 'maxCallSize', type: 'uint256', internalType: 'uint256'},
@@ -251,23 +246,32 @@ export const lensAbi = [
   },
   {
     type: 'function',
-    name: 'getMaxPositionSizeAtCurrentTick',
+    name: 'getMaxBorrowable0',
     inputs: [
       {
-        name: 'market',
+        name: 'vault',
         type: 'address',
-        internalType: 'contract TimelockOptionsMarket',
+        internalType: 'contract TimelockSingleOwnerVault',
       },
+      {name: 'strikeTick', type: 'int24', internalType: 'int24'},
+      {name: 'maxRange', type: 'int24', internalType: 'int24'},
+    ],
+    outputs: [{name: 'borrowable0', type: 'uint256', internalType: 'uint256'}],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getMaxBorrowable1',
+    inputs: [
       {
-        name: 'maxBorrowableRange',
-        type: 'int24',
-        internalType: 'int24',
+        name: 'vault',
+        type: 'address',
+        internalType: 'contract TimelockSingleOwnerVault',
       },
+      {name: 'strikeTick', type: 'int24', internalType: 'int24'},
+      {name: 'maxRange', type: 'int24', internalType: 'int24'},
     ],
-    outputs: [
-      {name: 'maxCallSize', type: 'uint256', internalType: 'uint256'},
-      {name: 'maxPutSize', type: 'uint256', internalType: 'uint256'},
-    ],
+    outputs: [{name: 'borrowable1', type: 'uint256', internalType: 'uint256'}],
     stateMutability: 'view',
   },
   {
