@@ -16,12 +16,11 @@ export const useMarketData = (marketAddr?: Address) => {
       });
       return {
         ...result.TimelockMarket[0],
+        address: result.TimelockMarket[0].address as Address,
         pool: result.TimelockMarket[0].pool as Address,
         vault: result.TimelockMarket[0].vault as Address,
         optionAsset: result.TimelockMarket[0].optionAsset as Address,
         payoutAsset: result.TimelockMarket[0].payoutAsset as Address,
-        optionsCount: BigInt(result.TimelockMarket[0].optionsCount),
-        tradersCount: BigInt(result.TimelockMarket[0].tradersCount),
       };
     },
     enabled: !!marketAddr && !!graphqlClient,

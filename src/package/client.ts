@@ -5,6 +5,7 @@ export * from '~/providers/TimelockProvider';
 // Options Hooks
 export * from '~/hooks/options/useExerciseOption';
 export * from '~/hooks/options/useMarketData';
+export * from '~/hooks/options/useMarketVolume';
 export * from '~/hooks/options/useMaxPositionSize';
 export * from '~/hooks/options/useMintOption';
 export * from '~/hooks/options/useOptionPnl';

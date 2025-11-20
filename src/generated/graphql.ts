@@ -819,6 +819,7 @@ export type TimelockMarket = {
   traders: Array<TimelockMarketUser>;
   tradersCount: Scalars['numeric']['output'];
   vault: Scalars['String']['output'];
+  volume: Scalars['numeric']['output'];
 };
 
 /** columns and relationships of "TimelockMarket" */
@@ -1018,6 +1019,7 @@ export type TimelockMarketBoolExp = {
   traders?: InputMaybe<TimelockMarketUserBoolExp>;
   tradersCount?: InputMaybe<NumericComparisonExp>;
   vault?: InputMaybe<StringComparisonExp>;
+  volume?: InputMaybe<NumericComparisonExp>;
 };
 
 /** Ordering options when selecting data from "TimelockMarket". */
@@ -1040,6 +1042,7 @@ export type TimelockMarketOrderBy = {
   tradersCount?: InputMaybe<OrderBy>;
   traders_aggregate?: InputMaybe<TimelockMarketUserAggregateOrderBy>;
   vault?: InputMaybe<OrderBy>;
+  volume?: InputMaybe<OrderBy>;
 };
 
 /** select columns of table "TimelockMarket" */
@@ -1075,7 +1078,9 @@ export type TimelockMarketSelectColumn =
   /** column name */
   | 'tradersCount'
   /** column name */
-  | 'vault';
+  | 'vault'
+  /** column name */
+  | 'volume';
 
 /** Streaming cursor of the table "TimelockMarket" */
 export type TimelockMarketStreamCursorInput = {
@@ -1103,6 +1108,7 @@ export type TimelockMarketStreamCursorValueInput = {
   tickSpacing?: InputMaybe<Scalars['Int']['input']>;
   tradersCount?: InputMaybe<Scalars['numeric']['input']>;
   vault?: InputMaybe<Scalars['String']['input']>;
+  volume?: InputMaybe<Scalars['numeric']['input']>;
 };
 
 /** columns and relationships of "UpdateOperatorPermsEvent" */
@@ -2826,8 +2832,6 @@ export type GetMarketDataQuery = {
     __typename: 'TimelockMarket';
     id: string;
     address: string;
-    optionsCount: any;
-    tradersCount: any;
     vault: string;
     pool: string;
     tickSpacing: number;
@@ -2840,6 +2844,22 @@ export type GetMarketDataQuery = {
     payoutAssetSymbol: string;
     optionAssetName: string;
     payoutAssetName: string;
+  }>;
+};
+
+export type GetMarketVolumeQueryVariables = Exact<{
+  marketAddr: Scalars['String']['input'];
+}>;
+
+export type GetMarketVolumeQuery = {
+  __typename: 'query_root';
+  TimelockMarket: Array<{
+    __typename: 'TimelockMarket';
+    id: string;
+    address: string;
+    optionsCount: any;
+    tradersCount: any;
+    volume: any;
   }>;
 };
 
@@ -2990,8 +3010,6 @@ export const GetMarketDataDocument = gql`
     TimelockMarket(where: {address: {_eq: $marketAddr}}, limit: 1) {
       id
       address
-      optionsCount
-      tradersCount
       vault
       pool
       tickSpacing
@@ -3004,6 +3022,17 @@ export const GetMarketDataDocument = gql`
       payoutAssetSymbol
       optionAssetName
       payoutAssetName
+    }
+  }
+`;
+export const GetMarketVolumeDocument = gql`
+  query GetMarketVolume($marketAddr: String!) {
+    TimelockMarket(where: {address: {_eq: $marketAddr}}, limit: 1) {
+      id
+      address
+      optionsCount
+      tradersCount
+      volume
     }
   }
 `;
@@ -3194,6 +3223,24 @@ export function getSdk(
             signal,
           }),
         'GetMarketData',
+        'query',
+        variables,
+      );
+    },
+    GetMarketVolume(
+      variables: GetMarketVolumeQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+      signal?: RequestInit['signal'],
+    ): Promise<GetMarketVolumeQuery> {
+      return withWrapper(
+        wrappedRequestHeaders =>
+          client.request<GetMarketVolumeQuery>({
+            document: GetMarketVolumeDocument,
+            variables,
+            requestHeaders: {...requestHeaders, ...wrappedRequestHeaders},
+            signal,
+          }),
+        'GetMarketVolume',
         'query',
         variables,
       );
