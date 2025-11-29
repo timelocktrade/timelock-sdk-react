@@ -73,7 +73,6 @@ query GetMarketData($marketAddr: String!) {
     id
     address
     vault
-    pool
     tickSpacing
     optionAssetIsToken0
     optionAsset
@@ -84,6 +83,13 @@ query GetMarketData($marketAddr: String!) {
     payoutAssetSymbol
     optionAssetName
     payoutAssetName
+
+    poolManager
+    currency0
+    currency1
+    fee
+    hooks
+    tickSpacing
   }
 }
 

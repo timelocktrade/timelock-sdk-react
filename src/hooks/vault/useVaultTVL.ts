@@ -9,10 +9,11 @@ import {wrapAmount} from '~/lib/numberUtils';
 import {lensAbi} from '~/abis/lens';
 import {useMemo} from 'react';
 
-export const useVaultTVL = (vaultAddr?: Address) => {
+export const useVaultTVL = (vaultAddr: Address | undefined) => {
   const {timelockLens} = useLens();
-  const {pool} = useVaultData(vaultAddr);
-  const {token0Decimals, token1Decimals} = usePoolData(pool);
+
+  const {poolManager, poolKey} = useVaultData(vaultAddr);
+  const {token0Decimals, token1Decimals} = usePoolData(poolManager, poolKey);
 
   const {data, refetch} = useReadContract({
     address: timelockLens?.address,
@@ -25,21 +26,21 @@ export const useVaultTVL = (vaultAddr?: Address) => {
   return useMemo(() => {
     if (!token0Decimals || !token1Decimals || !data) return {};
 
-    const totalAmount0 = wrapAmount(data[0], token0Decimals);
-    const totalAmount1 = wrapAmount(data[1], token1Decimals);
-    const borrowedAmount0 = wrapAmount(data[2], token0Decimals);
-    const borrowedAmount1 = wrapAmount(data[3], token1Decimals);
-    const tvl0 = wrapAmount(data[4], token0Decimals);
-    const tvl1 = wrapAmount(data[5], token1Decimals);
+    const total0 = wrapAmount(data[0], token0Decimals);
+    const total1 = wrapAmount(data[1], token1Decimals);
+    const borrowed0 = wrapAmount(data[2], token0Decimals);
+    const borrowed1 = wrapAmount(data[3], token1Decimals);
+    const tvlAs0 = wrapAmount(data[4], token0Decimals);
+    const tvlAs1 = wrapAmount(data[5], token1Decimals);
     const blocksCount = data[6];
 
     return {
-      tvl0,
-      tvl1,
-      totalAmount0,
-      totalAmount1,
-      borrowedAmount0,
-      borrowedAmount1,
+      tvlAs0,
+      tvlAs1,
+      total0,
+      total1,
+      borrowed0,
+      borrowed1,
       blocksCount,
       refetch,
     };

@@ -1,12 +1,12 @@
+import type {NonUndefinedGuard} from '@tanstack/react-query';
 import type {Address} from 'viem';
 import {useClient, useReadContract} from 'wagmi';
 import {useLens} from '~/hooks/useLens';
 import {lensAbi} from '~/abis/lens';
 
 export type TokenData = ReturnType<typeof useTokenData>;
-type NonUndefined<T> = T extends undefined ? never : T;
 
-export const useTokenData = (tokenAddr?: Address) => {
+export const useTokenData = (tokenAddr: Address | undefined) => {
   const {timelockLens} = useLens();
   const client = useClient();
 
@@ -17,5 +17,5 @@ export const useTokenData = (tokenAddr?: Address) => {
     args: tokenAddr ? [tokenAddr] : undefined,
     query: {enabled: !!tokenAddr && !!client},
   });
-  return (data || {}) as Partial<NonUndefined<typeof data>>;
+  return (data || {}) as Partial<NonUndefinedGuard<typeof data>>;
 };

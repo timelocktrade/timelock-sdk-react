@@ -1,18 +1,22 @@
 import type {Address} from 'viem';
-import {useQuery} from '@tanstack/react-query';
+import {useQuery, type NonUndefinedGuard} from '@tanstack/react-query';
 import {useTimelockConfig} from '~/providers/TimelockProvider';
-import {EMPTY_ARRAY} from '~/lib/numberUtils';
 
-export type OptionEvent = ReturnType<typeof useOptionTimeline>['data'][number];
+export type OptionEvent = NonUndefinedGuard<
+  ReturnType<typeof useOptionTimeline>['data']
+>[number];
 export type MintOptionEvent = Extract<OptionEvent, {type: 'mint'}>;
 export type ExerciseOptionEvent = Extract<OptionEvent, {type: 'exercise'}>;
 export type ExtendEvent = Extract<OptionEvent, {type: 'extend'}>;
 
-export const useOptionTimeline = (marketAddr?: Address, optionId?: bigint) => {
+export const useOptionTimeline = (
+  marketAddr: Address | undefined,
+  optionId: bigint | undefined,
+) => {
   const {graphqlClient} = useTimelockConfig();
   marketAddr = marketAddr?.toLowerCase() as Address | undefined;
 
-  const {data, ...rest} = useQuery({
+  return useQuery({
     queryKey: [
       'optionTimeline',
       marketAddr || '--',
@@ -79,5 +83,4 @@ export const useOptionTimeline = (marketAddr?: Address, optionId?: bigint) => {
     },
     enabled: !!marketAddr && optionId !== undefined && !!graphqlClient,
   });
-  return {data: data || EMPTY_ARRAY, ...rest};
 };

@@ -1,6 +1,6 @@
 import type {Address, Hex} from 'viem';
 import {useEffect} from 'react';
-import {useAccount, useSignMessage} from 'wagmi';
+import {useConnection, useSignMessage} from 'wagmi';
 import {z} from 'zod';
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {useTimelockConfig} from '~/providers/TimelockProvider';
@@ -40,7 +40,7 @@ const clearSignature = (userAddr: Address) => {
 };
 
 export const usePerpsOperator = () => {
-  const {address: userAddr} = useAccount();
+  const {address: userAddr} = useConnection();
   const {perpsOperatorUrl, perpsOperator: operator} = useTimelockConfig();
   const {signMessageAsync} = useSignMessage();
 

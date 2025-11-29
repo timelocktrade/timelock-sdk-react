@@ -1,8 +1,9 @@
 import type {Address} from 'viem';
 import {useMemo} from 'react';
-import {useBalance, useReadContract} from 'wagmi';
+import {useReadContract} from 'wagmi';
+import {useMarketData} from '~/hooks/market/useMarketData';
+import {useTokenBalance} from '~/hooks/tokens/useTokenBalance';
 import {optionsMarketAbi} from '~/abis/optionsMarket';
-import {useMarketData} from '../options/useMarketData';
 
 export const useOperatorPerms = (
   marketAddr?: Address,
@@ -10,11 +11,7 @@ export const useOperatorPerms = (
   operatorAddr?: Address,
 ) => {
   const {payoutAsset} = useMarketData(marketAddr);
-
-  const {data: payoutAssetBalance} = useBalance({
-    address: userAddr,
-    token: payoutAsset,
-  });
+  const {data: payoutAssetBalance} = useTokenBalance(payoutAsset, userAddr);
 
   const {data, ...rest} = useReadContract({
     abi: optionsMarketAbi,
@@ -33,7 +30,7 @@ export const useOperatorPerms = (
 
   const effectiveApproval =
     spendingApproval && payoutAssetBalance
-      ? min(spendingApproval, payoutAssetBalance.value)
+      ? min(spendingApproval, payoutAssetBalance.scaled)
       : 0n;
 
   const d = useMemo(

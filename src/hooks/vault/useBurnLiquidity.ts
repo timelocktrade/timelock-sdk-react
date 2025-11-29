@@ -14,11 +14,11 @@ interface BurnPosition {
   liquidity: bigint;
 }
 
-export const useBurnLiquidity = (vaultAddr?: Address) => {
+export const useBurnLiquidity = (vaultAddr: Address | undefined) => {
   const client = useClient();
   const {timelockLens} = useLens();
-  const {pool} = useVaultData(vaultAddr);
-  const currentTick = useCurrentTick(pool);
+  const {poolManager, poolKey} = useVaultData(vaultAddr);
+  const {data: {currentTick} = {}} = useCurrentTick(poolManager, poolKey);
 
   const {writeContractAsync, data: hash, isPending, error} = useWriteContract();
 
@@ -51,7 +51,7 @@ export const useBurnLiquidity = (vaultAddr?: Address) => {
   const burnMultiple = async (positions: BurnPosition[]) => {
     if (!client) throw new Error('Wallet not connected');
 
-    if (!currentTick.exact) {
+    if (!currentTick) {
       throw new Error('Current tick not available');
     }
     if (positions.length === 0) {

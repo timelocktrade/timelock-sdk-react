@@ -1,14 +1,14 @@
 import type {Address} from 'viem';
 import {waitForTransactionReceipt} from 'viem/actions';
-import {useWriteContract, useClient, useAccount} from 'wagmi';
+import {useWriteContract, useClient, useConnection} from 'wagmi';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 
 import {optionsMarketAbi} from '~/abis/optionsMarket';
 
-export const useSetOperatorPerms = (marketAddr?: Address) => {
+export const useSetOperatorPerms = (marketAddr: Address | undefined) => {
   const queryClient = useQueryClient();
   const client = useClient();
-  const {address} = useAccount();
+  const {address} = useConnection();
 
   const {writeContractAsync} = useWriteContract();
 

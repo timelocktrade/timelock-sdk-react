@@ -1,26 +1,27 @@
 import {encodeAbiParameters, type Address} from 'viem';
 import {waitForTransactionReceipt} from 'viem/actions';
-import {useWriteContract, useClient, useAccount} from 'wagmi';
+import {useWriteContract, useClient, useConnection} from 'wagmi';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 
 import type {OptionData} from './useUserOptions';
-import {useMarketData} from './useMarketData';
+import {useMarketData} from '~/hooks/market/useMarketData';
+import {useCurrentPrice} from '~/hooks/pool/useCurrentPrice';
 import {useLens} from '~/hooks/useLens';
-import {usePoolData} from '~/hooks/pool/usePoolData';
 
 import {sleep} from '~/lib/utils';
 import {swappers} from '~/lib/contracts';
 import {optionsMarketAbi} from '~/abis/optionsMarket';
 
-export const useExerciseOption = (marketAddr?: Address) => {
-  const {vault, pool} = useMarketData(marketAddr);
-  const {fee} = usePoolData(pool);
+export const useExerciseOption = (marketAddr: Address | undefined) => {
+  const {vault, poolManager, poolKey} = useMarketData(marketAddr);
   const {timelockLens} = useLens();
 
   const queryClient = useQueryClient();
   const client = useClient();
-  const {address} = useAccount();
+  const {address} = useConnection();
   const {writeContractAsync} = useWriteContract();
+
+  const {sqrtPriceX96} = useCurrentPrice(poolManager, poolKey);
 
   const exerciseOption = async ({
     option,
@@ -33,10 +34,14 @@ export const useExerciseOption = (marketAddr?: Address) => {
     if (!marketAddr) throw new Error('Market address not available');
     if (!timelockLens) throw new Error('Timelock lens not available');
     if (!vault) throw new Error('Vault not available');
-    if (!fee) throw new Error('Pool data not available');
+    if (!poolKey) throw new Error('Pool data not available');
+    if (!sqrtPriceX96) throw new Error('Current price not available');
 
     const swapper = swappers[client.chain.id];
     if (!swapper) throw new Error('Swapper not available');
+
+    const minSqrtPrice = (sqrtPriceX96 * 9n) / 10n;
+    const maxSqrtPrice = (sqrtPriceX96 * 11n) / 10n;
 
     const refTick = await timelockLens.read.getRefTick([
       vault,
@@ -51,7 +56,23 @@ export const useExerciseOption = (marketAddr?: Address) => {
         liquidities,
         0n,
         swapper,
-        encodeAbiParameters([{type: 'uint24'}], [fee]),
+        encodeAbiParameters(
+          [
+            {
+              type: 'tuple',
+              components: [
+                {type: 'address', name: 'currency0'},
+                {type: 'address', name: 'currency1'},
+                {type: 'uint24', name: 'fee'},
+                {type: 'int24', name: 'tickSpacing'},
+                {type: 'address', name: 'hooks'},
+              ],
+            },
+            {type: 'uint160'},
+            {type: 'uint160'},
+          ],
+          [poolKey, minSqrtPrice, maxSqrtPrice],
+        ),
         refTick,
       ],
     });

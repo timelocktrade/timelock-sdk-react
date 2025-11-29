@@ -1,47 +1,38 @@
 import type {Address} from 'viem';
-import {useAccount, useClient} from 'wagmi';
+import {useConnection, useClient} from 'wagmi';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 
 import {usePerpsOperator} from './usePerpsOperator';
-import {useApproval} from '~/hooks/useApproval';
-// import {useUserOperators} from '~/hooks/operators/useUserOperators';
-// import {useSetOperatorPerms} from '~/hooks/operators/useSetOperatorPerms';
-import {useMarketData} from '~/hooks/options/useMarketData';
+import {useApproval} from '~/hooks/tokens/useApproval';
+import {useUserOperators} from '~/hooks/operators/useUserOperators';
+import {useSetOperatorPerms} from '~/hooks/operators/useSetOperatorPerms';
+import {useMarketData} from '~/hooks/market/useMarketData';
 import {usePoolData} from '~/hooks/pool/usePoolData';
 import {useCurrentTick} from '~/hooks/pool/useCurrentTick';
 import {getTimelockMarket} from '~/lib/contracts';
 import {getNearestValidStrikeTick} from '~/lib/liquidityUtils';
 import {sleep} from '~/lib/utils';
 
-export const useMintPerp = (marketAddr?: Address) => {
+export const useMintPerp = (marketAddr: Address | undefined) => {
   const queryClient = useQueryClient();
   const client = useClient();
-  const {address} = useAccount();
+  const {address} = useConnection();
 
   const {
     operator,
     address: operatorAddr,
     signMessage: {mutateAsync: signMessage},
   } = usePerpsOperator();
+
+  const {poolManager, poolKey, optionAssetIsToken0, payoutAsset} =
+    useMarketData(marketAddr);
+  const {tickSpacing} = usePoolData(poolManager, poolKey);
+
   const {askForApproval} = useApproval();
+  const {mutateAsync: setOperatorPerms} = useSetOperatorPerms(marketAddr);
 
-  // const {data: operators} = useUserOperators(address, marketAddr);
-  // const {mutateAsync: setOperatorPerms} = useSetOperatorPerms(marketAddr);
-  const {pool, optionAssetIsToken0, payoutAsset} = useMarketData(marketAddr);
-  const {tickSpacing} = usePoolData(pool);
-  const {refetch: refetchCurrentTick} = useCurrentTick(pool);
-
-  // const userPerms = operatorAddr
-  //   ? operators.find(
-  //       o => o.operatorAddr.toLowerCase() === operatorAddr.toLowerCase(),
-  //     )
-  //   : undefined;
-
-  // const hasEnoughPerms =
-  //   userPerms &&
-  //   userPerms.canMint &&
-  //   userPerms.canExtend &&
-  //   userPerms.canExercise;
+  const {refetch: refetchOperators} = useUserOperators(address, marketAddr);
+  const {refetch: refetchCurrentTick} = useCurrentTick(poolManager, poolKey);
 
   const mintPerp = async (data: {
     optionType: 'CALL' | 'PUT';
@@ -65,11 +56,24 @@ export const useMintPerp = (marketAddr?: Address) => {
 
     const market = getTimelockMarket(marketAddr, client);
 
-    const {data: {exact: currentTick} = {}} = await refetchCurrentTick();
+    const {data: {currentTick} = {}} = await refetchCurrentTick();
 
     if (currentTick === undefined) {
       throw new Error('Could not fetch current tick');
     }
+    const {data: operators = []} = await refetchOperators();
+
+    const userPerms = operatorAddr
+      ? operators.find(
+          o => o.operatorAddr.toLowerCase() === operatorAddr.toLowerCase(),
+        )
+      : undefined;
+
+    const hasEnoughPerms =
+      userPerms &&
+      userPerms.canMint &&
+      userPerms.canExtend &&
+      userPerms.canExercise;
     const validStrikeTick = getNearestValidStrikeTick(
       optionType,
       optionAssetIsToken0,
@@ -86,16 +90,16 @@ export const useMintPerp = (marketAddr?: Address) => {
     ]);
     const maxPremium = ((premium + protocolFee) * 11n) / 10n;
 
-    // if (!hasEnoughPerms) {
-    //   await setOperatorPerms({
-    //     operator: operatorAddr,
-    //     canMint: true,
-    //     canExtend: true,
-    //     canExercise: true,
-    //     canTransfer: userPerms?.canTransfer || false,
-    //     spendingApproval: maxPremium,
-    //   });
-    // }
+    if (!hasEnoughPerms) {
+      await setOperatorPerms({
+        operator: operatorAddr,
+        canMint: true,
+        canExtend: true,
+        canExercise: true,
+        canTransfer: userPerms?.canTransfer || false,
+        spendingApproval: maxPremium,
+      });
+    }
     await askForApproval(payoutAsset, marketAddr, maxPremium);
 
     await operator.mintPerp({

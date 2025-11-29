@@ -6,8 +6,8 @@ import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {useVaultData} from './useVaultData';
 import {useCurrentTick} from '~/hooks/pool/useCurrentTick';
 import {usePoolData} from '~/hooks/pool/usePoolData';
+import {useApproval} from '~/hooks/tokens/useApproval';
 import {useLens} from '~/hooks/useLens';
-import {useApproval} from '~/hooks/useApproval';
 
 import {getAmountsFromLiquidity} from '~/lib/liquidityUtils';
 import {singleOwnerVaultAbi} from '~/abis/singleOwnerVault';
@@ -45,14 +45,14 @@ interface MintPositionParams {
   liquidity: bigint;
 }
 
-export const useMintLiquidity = (vaultAddr?: Address) => {
+export const useMintLiquidity = (vaultAddr: Address | undefined) => {
   const queryClient = useQueryClient();
   const client = useClient();
-  const {pool} = useVaultData(vaultAddr);
+  const {poolManager, poolKey} = useVaultData(vaultAddr);
   const {timelockLens} = useLens();
 
-  const {exact: currentTick} = useCurrentTick(pool);
-  const {token0, token1} = usePoolData(pool);
+  const {data: {currentTick} = {}} = useCurrentTick(poolManager, poolKey);
+  const {token0, token1} = usePoolData(poolManager, poolKey);
 
   const {askForApproval} = useApproval();
   const {writeContractAsync} = useWriteContract();

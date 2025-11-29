@@ -1,6 +1,8 @@
 import {useMemo} from 'react';
 import type {OptionData} from './useUserOptions';
-import {useMarketData} from './useMarketData';
+import {useMarketData} from '~/hooks/market/useMarketData';
+import {useCurrentPrice} from '~/hooks/pool/useCurrentPrice';
+import {usePoolData} from '~/hooks/pool/usePoolData';
 import {
   token0ToToken1,
   token0ToToken1AtTick,
@@ -9,14 +11,15 @@ import {
 } from '~/lib/liquidityUtils';
 import {wrapAmount} from '~/lib/numberUtils';
 import {getPayoutAtPrice} from '~/lib/optionUtils';
-import {useCurrentPrice} from '../pool/useCurrentPrice';
 
 export const useOptionPnl = (option: OptionData) => {
   const {marketAddr, optionType, strikeTick, positionSizeCurrent} = option;
 
-  const {pool, optionAssetIsToken0, payoutAssetDecimals, tickSpacing} =
+  const {poolManager, poolKey, optionAssetIsToken0, payoutAssetDecimals} =
     useMarketData(marketAddr);
-  const {currentPrice} = useCurrentPrice(pool);
+  const {tickSpacing} = usePoolData(poolManager, poolKey);
+
+  const {currentPrice} = useCurrentPrice(poolManager, poolKey);
 
   const displayPnl = useMemo(() => {
     if (

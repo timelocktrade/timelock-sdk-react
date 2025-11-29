@@ -1,12 +1,12 @@
-import {useQuery, type NonUndefinedGuard} from '@tanstack/react-query';
 import type {Address} from 'viem';
+import {useQuery} from '@tanstack/react-query';
 
 import {useTimelockConfig} from '~/providers/TimelockProvider';
 
-export const useMarketVolume = (marketAddr?: Address) => {
+export const useMarketVolume = (marketAddr: Address | undefined) => {
   const {graphqlClient} = useTimelockConfig();
 
-  const {data} = useQuery({
+  return useQuery({
     queryKey: ['marketVolume', marketAddr?.toLowerCase() || '--'],
     queryFn: async () => {
       const result = await graphqlClient!.GetMarketVolume({
@@ -22,5 +22,4 @@ export const useMarketVolume = (marketAddr?: Address) => {
     },
     enabled: !!marketAddr && !!graphqlClient,
   });
-  return (data || {}) as Partial<NonUndefinedGuard<typeof data>>;
 };

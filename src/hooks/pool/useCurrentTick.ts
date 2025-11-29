@@ -1,35 +1,25 @@
 import type {Address} from 'viem';
 import {useReadContract} from 'wagmi';
-import {usePoolData} from './usePoolData';
-import {uniswapV3PoolAbi} from '~/abis/uniswapV3Pool';
+import type {PoolKey} from './usePoolData';
+import {useLens} from '~/hooks/useLens';
+import {statelessStateViewAbi} from '~/abis/statelessStateView';
 
-export const useCurrentTick = (poolAddr?: Address) => {
-  const {tickSpacing} = usePoolData(poolAddr);
+export const useCurrentTick = (poolManager?: Address, poolKey?: PoolKey) => {
+  const {stateView} = useLens();
 
-  const {data, ...rest} = useReadContract({
-    address: poolAddr,
-    abi: uniswapV3PoolAbi,
-    functionName: 'slot0',
-    args: [],
+  return useReadContract({
+    address: stateView?.address,
+    abi: statelessStateViewAbi,
+    functionName: 'getSlot0',
+    args: poolManager && poolKey ? [poolManager, poolKey] : undefined,
     query: {
+      enabled: !!poolManager && !!poolKey,
       refetchInterval: 3000,
-      select: raw => {
-        const sqrtPriceX96 = raw?.[0];
-        const exact = raw?.[1];
-
-        const rounded =
-          exact !== undefined && tickSpacing
-            ? Math.floor(exact / tickSpacing) * tickSpacing
-            : undefined;
-
-        return {exact, rounded, sqrtPriceX96};
+      select: (raw: readonly [bigint, number, number, number]) => {
+        const sqrtPriceX96 = raw[0];
+        const currentTick = raw[1];
+        return {currentTick, sqrtPriceX96};
       },
     },
   });
-  return {
-    exact: data?.exact,
-    rounded: data?.rounded,
-    sqrtPriceX96: data?.sqrtPriceX96,
-    ...rest,
-  };
 };

@@ -1,21 +1,21 @@
 import {maxUint256, type Address} from 'viem';
 import {waitForTransactionReceipt} from 'viem/actions';
-import {useWriteContract, useClient, useAccount} from 'wagmi';
+import {useWriteContract, useClient, useConnection} from 'wagmi';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 
 import type {OptionData} from './useUserOptions';
-import {useMarketData} from './useMarketData';
-import {useApproval} from '~/hooks/useApproval';
+import {useMarketData} from '~/hooks/market/useMarketData';
+import {useApproval} from '~/hooks/tokens/useApproval';
 import {getTimelockMarket} from '~/lib/contracts';
 import {sleep} from '~/lib/utils';
 import {optionsMarketAbi} from '~/abis/optionsMarket';
 
-export const useExtendOption = (marketAddr?: Address) => {
+export const useExtendOption = (marketAddr: Address | undefined) => {
   const {payoutAsset} = useMarketData(marketAddr);
 
   const queryClient = useQueryClient();
   const client = useClient();
-  const {address} = useAccount();
+  const {address} = useConnection();
 
   const {askForApproval} = useApproval();
   const {writeContractAsync} = useWriteContract();

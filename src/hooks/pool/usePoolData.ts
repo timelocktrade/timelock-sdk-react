@@ -1,21 +1,38 @@
+import type {NonUndefinedGuard} from '@tanstack/react-query';
 import type {Address} from 'viem';
-import {useClient, useReadContract} from 'wagmi';
-import {useLens} from '../useLens';
+import {useMemo} from 'react';
+import {useReadContract} from 'wagmi';
+import {useLens} from '~/hooks/useLens';
 import {lensAbi} from '~/abis/lens';
 
-export type UniswapPoolData = ReturnType<typeof usePoolData>;
-type NonUndefined<T> = T extends undefined ? never : T;
+export type PoolKey = {
+  currency0: Address;
+  currency1: Address;
+  fee: number;
+  tickSpacing: number;
+  hooks: Address;
+};
 
-export const usePoolData = (poolAddr?: Address) => {
+export type UniswapPoolData = ReturnType<typeof usePoolData>;
+
+export const usePoolData = (poolManager?: Address, poolKey?: PoolKey) => {
   const {timelockLens} = useLens();
-  const client = useClient();
 
   const {data} = useReadContract({
     address: timelockLens?.address,
     abi: lensAbi,
     functionName: 'getPoolData',
-    args: poolAddr ? [poolAddr] : undefined,
-    query: {enabled: !!poolAddr && !!client},
+    args: poolManager && poolKey ? [poolManager, poolKey] : undefined,
+    query: {enabled: !!poolManager && !!poolKey},
   });
-  return (data || {}) as Partial<NonUndefined<typeof data>>;
+  const _default = useMemo(
+    () => ({
+      token0: poolKey?.currency0,
+      token1: poolKey?.currency1,
+      tickSpacing: poolKey?.tickSpacing,
+      fee: poolKey?.fee,
+    }),
+    [poolKey],
+  );
+  return (data || _default) as Partial<NonUndefinedGuard<typeof data>>;
 };

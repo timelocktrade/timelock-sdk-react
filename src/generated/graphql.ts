@@ -800,6 +800,10 @@ export type StringComparisonExp = {
 export type TimelockMarket = {
   __typename: 'TimelockMarket';
   address: Scalars['String']['output'];
+  currency0: Scalars['String']['output'];
+  currency1: Scalars['String']['output'];
+  fee: Scalars['Int']['output'];
+  hooks: Scalars['String']['output'];
   id: Scalars['String']['output'];
   optionAsset: Scalars['String']['output'];
   optionAssetDecimals: Scalars['Int']['output'];
@@ -813,7 +817,7 @@ export type TimelockMarket = {
   payoutAssetDecimals: Scalars['Int']['output'];
   payoutAssetName: Scalars['String']['output'];
   payoutAssetSymbol: Scalars['String']['output'];
-  pool: Scalars['String']['output'];
+  poolManager: Scalars['String']['output'];
   tickSpacing: Scalars['Int']['output'];
   /** An array relationship */
   traders: Array<TimelockMarketUser>;
@@ -1002,6 +1006,10 @@ export type TimelockMarketBoolExp = {
   _not?: InputMaybe<TimelockMarketBoolExp>;
   _or?: InputMaybe<Array<TimelockMarketBoolExp>>;
   address?: InputMaybe<StringComparisonExp>;
+  currency0?: InputMaybe<StringComparisonExp>;
+  currency1?: InputMaybe<StringComparisonExp>;
+  fee?: InputMaybe<IntComparisonExp>;
+  hooks?: InputMaybe<StringComparisonExp>;
   id?: InputMaybe<StringComparisonExp>;
   optionAsset?: InputMaybe<StringComparisonExp>;
   optionAssetDecimals?: InputMaybe<IntComparisonExp>;
@@ -1014,7 +1022,7 @@ export type TimelockMarketBoolExp = {
   payoutAssetDecimals?: InputMaybe<IntComparisonExp>;
   payoutAssetName?: InputMaybe<StringComparisonExp>;
   payoutAssetSymbol?: InputMaybe<StringComparisonExp>;
-  pool?: InputMaybe<StringComparisonExp>;
+  poolManager?: InputMaybe<StringComparisonExp>;
   tickSpacing?: InputMaybe<IntComparisonExp>;
   traders?: InputMaybe<TimelockMarketUserBoolExp>;
   tradersCount?: InputMaybe<NumericComparisonExp>;
@@ -1025,6 +1033,10 @@ export type TimelockMarketBoolExp = {
 /** Ordering options when selecting data from "TimelockMarket". */
 export type TimelockMarketOrderBy = {
   address?: InputMaybe<OrderBy>;
+  currency0?: InputMaybe<OrderBy>;
+  currency1?: InputMaybe<OrderBy>;
+  fee?: InputMaybe<OrderBy>;
+  hooks?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   optionAsset?: InputMaybe<OrderBy>;
   optionAssetDecimals?: InputMaybe<OrderBy>;
@@ -1037,7 +1049,7 @@ export type TimelockMarketOrderBy = {
   payoutAssetDecimals?: InputMaybe<OrderBy>;
   payoutAssetName?: InputMaybe<OrderBy>;
   payoutAssetSymbol?: InputMaybe<OrderBy>;
-  pool?: InputMaybe<OrderBy>;
+  poolManager?: InputMaybe<OrderBy>;
   tickSpacing?: InputMaybe<OrderBy>;
   tradersCount?: InputMaybe<OrderBy>;
   traders_aggregate?: InputMaybe<TimelockMarketUserAggregateOrderBy>;
@@ -1049,6 +1061,14 @@ export type TimelockMarketOrderBy = {
 export type TimelockMarketSelectColumn =
   /** column name */
   | 'address'
+  /** column name */
+  | 'currency0'
+  /** column name */
+  | 'currency1'
+  /** column name */
+  | 'fee'
+  /** column name */
+  | 'hooks'
   /** column name */
   | 'id'
   /** column name */
@@ -1072,7 +1092,7 @@ export type TimelockMarketSelectColumn =
   /** column name */
   | 'payoutAssetSymbol'
   /** column name */
-  | 'pool'
+  | 'poolManager'
   /** column name */
   | 'tickSpacing'
   /** column name */
@@ -1093,6 +1113,10 @@ export type TimelockMarketStreamCursorInput = {
 /** Initial value of the column from where the streaming should start */
 export type TimelockMarketStreamCursorValueInput = {
   address?: InputMaybe<Scalars['String']['input']>;
+  currency0?: InputMaybe<Scalars['String']['input']>;
+  currency1?: InputMaybe<Scalars['String']['input']>;
+  fee?: InputMaybe<Scalars['Int']['input']>;
+  hooks?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
   optionAsset?: InputMaybe<Scalars['String']['input']>;
   optionAssetDecimals?: InputMaybe<Scalars['Int']['input']>;
@@ -1104,7 +1128,7 @@ export type TimelockMarketStreamCursorValueInput = {
   payoutAssetDecimals?: InputMaybe<Scalars['Int']['input']>;
   payoutAssetName?: InputMaybe<Scalars['String']['input']>;
   payoutAssetSymbol?: InputMaybe<Scalars['String']['input']>;
-  pool?: InputMaybe<Scalars['String']['input']>;
+  poolManager?: InputMaybe<Scalars['String']['input']>;
   tickSpacing?: InputMaybe<Scalars['Int']['input']>;
   tradersCount?: InputMaybe<Scalars['numeric']['input']>;
   vault?: InputMaybe<Scalars['String']['input']>;
@@ -2833,7 +2857,6 @@ export type GetMarketDataQuery = {
     id: string;
     address: string;
     vault: string;
-    pool: string;
     tickSpacing: number;
     optionAssetIsToken0: boolean;
     optionAsset: string;
@@ -2844,6 +2867,11 @@ export type GetMarketDataQuery = {
     payoutAssetSymbol: string;
     optionAssetName: string;
     payoutAssetName: string;
+    poolManager: string;
+    currency0: string;
+    currency1: string;
+    fee: number;
+    hooks: string;
   }>;
 };
 
@@ -3011,7 +3039,6 @@ export const GetMarketDataDocument = gql`
       id
       address
       vault
-      pool
       tickSpacing
       optionAssetIsToken0
       optionAsset
@@ -3022,6 +3049,12 @@ export const GetMarketDataDocument = gql`
       payoutAssetSymbol
       optionAssetName
       payoutAssetName
+      poolManager
+      currency0
+      currency1
+      fee
+      hooks
+      tickSpacing
     }
   }
 `;

@@ -1,6 +1,7 @@
 import {SqrtPriceMath, TickMath} from '@uniswap/v3-sdk';
 import Big from 'big.js';
 import JSBI from 'jsbi';
+import type {Amount} from './numberUtils';
 
 export const PRICE_PRECISION = BigInt(1e18);
 
@@ -44,7 +45,7 @@ export const getNearestValidStrikeTick = (
   currentTick: number,
   strikeTick?: number,
 ) => {
-  strikeTick = roundTickDown(strikeTick ?? currentTick, tickSpacing);
+  strikeTick = roundTick(strikeTick ?? currentTick, tickSpacing);
 
   if (
     (optionType === 'CALL' && optionAssetIsToken0) ||
@@ -55,23 +56,18 @@ export const getNearestValidStrikeTick = (
   return strikeTick;
 };
 
-export const roundTickDown = (tick: number, spacing: number) => {
+export const roundTick = (tick: number, spacing: number) => {
   const rem = tick % spacing;
   if (rem >= 0) return tick - rem;
   return tick - rem - spacing;
 };
 
-export const roundTickUp = (tick: number, spacing: number) => {
-  const rem = tick % spacing;
-  if (rem === 0) return tick;
-  if (rem > 0) return tick - rem + spacing;
-  return tick - rem;
-};
-
-export const token0ToToken1 = (amount0: bigint, price: bigint) => {
+export const token0ToToken1 = (amount0: bigint, price: bigint | Amount) => {
+  price = typeof price === 'bigint' ? price : price.scaled;
   return (amount0 * price) / PRICE_PRECISION;
 };
-export const token1ToToken0 = (amount1: bigint, price: bigint) => {
+export const token1ToToken0 = (amount1: bigint, price: bigint | Amount) => {
+  price = typeof price === 'bigint' ? price : price.scaled;
   return (amount1 * PRICE_PRECISION) / price;
 };
 

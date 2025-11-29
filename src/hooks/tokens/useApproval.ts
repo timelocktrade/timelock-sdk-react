@@ -1,12 +1,11 @@
 import {type Address, erc20Abi, maxUint256} from 'viem';
 import {waitForTransactionReceipt} from 'viem/actions';
-import {useWriteContract, useClient, useAccount} from 'wagmi';
-
-import {getErc20} from '../lib/contracts';
+import {useWriteContract, useClient, useConnection} from 'wagmi';
+import {getErc20} from '~/lib/contracts';
 
 export const useApproval = () => {
   const client = useClient();
-  const {address} = useAccount();
+  const {address} = useConnection();
   const {
     writeContractAsync,
     data: hash,

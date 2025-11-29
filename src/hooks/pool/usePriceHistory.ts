@@ -1,8 +1,8 @@
 import {useQuery} from '@tanstack/react-query';
 import type {Address} from 'viem';
 import {useChainId} from 'wagmi';
+import {useMarketData} from '~/hooks/market/useMarketData';
 import {getPriceHistory, type PriceResolution} from '~/lib/price';
-import {useMarketData} from '../options/useMarketData';
 
 export const usePriceHistory = (
   pool: Address | undefined,

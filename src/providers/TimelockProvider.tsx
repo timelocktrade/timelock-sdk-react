@@ -1,15 +1,10 @@
 'use client';
 import type {Address} from 'viem';
 import React, {createContext, useContext, useMemo, type ReactNode} from 'react';
-import {useChainId} from 'wagmi';
 import {GraphQLClient} from 'graphql-request';
 
 import {getSdk} from '~/generated/graphql';
-import {
-  type TimelockMarketData,
-  timelockLenses,
-  uniswapMathLenses,
-} from '~/lib/contracts';
+import {type TimelockMarketData} from '~/lib/contracts';
 import {PerpsOperator} from '~/lib/perpsOperator';
 
 type TimelockContextValue = {
@@ -37,11 +32,6 @@ export const TimelockProvider = ({
   envioGraphqlUrl?: string;
   perpsOperatorUrl?: string;
 }) => {
-  const chainId = useChainId();
-
-  const lensAddr = timelockLenses[chainId];
-  const uniswapMathLensAddr = uniswapMathLenses[chainId];
-
   const graphqlClient = useMemo(() => {
     if (envioGraphqlUrl) {
       return getSdk(new GraphQLClient(envioGraphqlUrl));
@@ -59,8 +49,6 @@ export const TimelockProvider = ({
   const contextValue = useMemo(
     () => ({
       marketData: marketData || {},
-      lensAddr,
-      uniswapMathLensAddr,
       envioGraphqlUrl,
       perpsOperator,
       graphqlClient,
@@ -68,8 +56,6 @@ export const TimelockProvider = ({
     }),
     [
       marketData,
-      lensAddr,
-      uniswapMathLensAddr,
       envioGraphqlUrl,
       perpsOperator,
       graphqlClient,

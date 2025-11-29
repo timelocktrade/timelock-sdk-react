@@ -1,13 +1,14 @@
 import type {Address} from 'viem';
-import {useQuery} from '@tanstack/react-query';
+import {useQuery, type NonUndefinedGuard} from '@tanstack/react-query';
 import {useTimelockConfig} from '~/providers/TimelockProvider';
-import {EMPTY_ARRAY} from '~/lib/numberUtils';
 
-export type OptionData = ReturnType<typeof useUserOptions>['data'][0];
+export type OptionData = NonUndefinedGuard<
+  ReturnType<typeof useUserOptions>['data']
+>[number];
 
 const useUserOptions = (
-  userAddr?: Address,
-  marketAddr?: Address | '*',
+  userAddr: Address | undefined,
+  marketAddr: Address | '*' | undefined,
   active = false,
 ) => {
   const {graphqlClient} = useTimelockConfig();
@@ -15,7 +16,7 @@ const useUserOptions = (
   userAddr = userAddr?.toLowerCase() as Address | undefined;
   marketAddr = marketAddr?.toLowerCase() as Address | '*' | undefined;
 
-  const {data, ...rest} = useQuery({
+  return useQuery({
     queryKey: ['userOptions', userAddr || '--', active],
     queryFn: async () => {
       if (!graphqlClient || !userAddr || !marketAddr) return [];
@@ -55,7 +56,6 @@ const useUserOptions = (
     },
     enabled: !!userAddr && !!marketAddr && !!graphqlClient,
   });
-  return {data: data || EMPTY_ARRAY, ...rest};
 };
 
 export const useActiveUserOptions = (

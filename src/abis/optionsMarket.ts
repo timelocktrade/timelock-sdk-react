@@ -18,11 +18,6 @@ export const optionsMarketAbi = [
         internalType: 'contract IFeeStrategy',
       },
       {
-        name: '_feeRecipient',
-        type: 'address',
-        internalType: 'address',
-      },
-      {
         name: '_guardian',
         type: 'address',
         internalType: 'contract TimelockGuardian',
@@ -32,22 +27,9 @@ export const optionsMarketAbi = [
         type: 'bool',
         internalType: 'bool',
       },
+      {name: '_owner', type: 'address', internalType: 'address'},
     ],
     stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    name: 'DUST_THRESHOLD',
-    inputs: [],
-    outputs: [{name: '', type: 'uint256', internalType: 'uint256'}],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'MAX_STEPS',
-    inputs: [],
-    outputs: [{name: '', type: 'uint256', internalType: 'uint256'}],
-    stateMutability: 'view',
   },
   {
     type: 'function',
@@ -70,6 +52,7 @@ export const optionsMarketAbi = [
     outputs: [
       {name: 'premium', type: 'uint256', internalType: 'uint256'},
       {name: 'protocolFee', type: 'uint256', internalType: 'uint256'},
+      {name: 'feeRecipient', type: 'address', internalType: 'address'},
     ],
     stateMutability: 'view',
   },
@@ -121,13 +104,6 @@ export const optionsMarketAbi = [
       {name: 'protocolFee', type: 'uint256', internalType: 'uint256'},
     ],
     stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    name: 'feeRecipient',
-    inputs: [],
-    outputs: [{name: '', type: 'address', internalType: 'address'}],
-    stateMutability: 'view',
   },
   {
     type: 'function',
@@ -200,6 +176,7 @@ export const optionsMarketAbi = [
       {name: 'strikeTick', type: 'int24', internalType: 'int24'},
       {name: 'duration', type: 'uint32', internalType: 'uint32'},
       {name: 'maxPremium', type: 'uint256', internalType: 'uint256'},
+      {name: 'maxSteps', type: 'uint24', internalType: 'uint24'},
       {name: 'refTick', type: 'int24', internalType: 'int24'},
     ],
     outputs: [
@@ -287,13 +264,52 @@ export const optionsMarketAbi = [
   },
   {
     type: 'function',
-    name: 'pool',
+    name: 'poolId',
+    inputs: [],
+    outputs: [{name: '', type: 'bytes32', internalType: 'PoolId'}],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'poolKey',
+    inputs: [],
+    outputs: [
+      {
+        name: '',
+        type: 'tuple',
+        internalType: 'struct PoolKey',
+        components: [
+          {
+            name: 'currency0',
+            type: 'address',
+            internalType: 'Currency',
+          },
+          {
+            name: 'currency1',
+            type: 'address',
+            internalType: 'Currency',
+          },
+          {name: 'fee', type: 'uint24', internalType: 'uint24'},
+          {name: 'tickSpacing', type: 'int24', internalType: 'int24'},
+          {
+            name: 'hooks',
+            type: 'address',
+            internalType: 'contract IHooks',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'poolManager',
     inputs: [],
     outputs: [
       {
         name: '',
         type: 'address',
-        internalType: 'contract IUniswapV3Pool',
+        internalType: 'contract IPoolManager',
       },
     ],
     stateMutability: 'view',
@@ -363,6 +379,13 @@ export const optionsMarketAbi = [
   },
   {
     type: 'function',
+    name: 'unlockCallback',
+    inputs: [{name: 'data', type: 'bytes', internalType: 'bytes'}],
+    outputs: [{name: '', type: 'bytes', internalType: 'bytes'}],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
     name: 'updateAddresses',
     inputs: [
       {
@@ -374,11 +397,6 @@ export const optionsMarketAbi = [
         name: '_feeStrategy',
         type: 'address',
         internalType: 'contract IFeeStrategy',
-      },
-      {
-        name: '_feeRecipient',
-        type: 'address',
-        internalType: 'address',
       },
     ],
     outputs: [],
@@ -398,29 +416,18 @@ export const optionsMarketAbi = [
     stateMutability: 'view',
   },
   {
-    type: 'event',
-    name: 'AddressesUpdated',
+    type: 'function',
+    name: 'whitelistSwapper',
     inputs: [
       {
-        name: 'optionPricing',
+        name: 'swapper',
         type: 'address',
-        indexed: false,
-        internalType: 'contract IOptionPricing',
+        internalType: 'contract ISwapper',
       },
-      {
-        name: 'feeStrategy',
-        type: 'address',
-        indexed: false,
-        internalType: 'contract IFeeStrategy',
-      },
-      {
-        name: 'feeRecipient',
-        type: 'address',
-        indexed: false,
-        internalType: 'address',
-      },
+      {name: 'whitelisted', type: 'bool', internalType: 'bool'},
     ],
-    anonymous: false,
+    outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
     type: 'event',
@@ -610,6 +617,25 @@ export const optionsMarketAbi = [
   },
   {
     type: 'event',
+    name: 'UpdateAddresses',
+    inputs: [
+      {
+        name: 'optionPricing',
+        type: 'address',
+        indexed: false,
+        internalType: 'contract IOptionPricing',
+      },
+      {
+        name: 'feeStrategy',
+        type: 'address',
+        indexed: false,
+        internalType: 'contract IFeeStrategy',
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
     name: 'UpdateOperatorPerms',
     inputs: [
       {
@@ -658,25 +684,55 @@ export const optionsMarketAbi = [
     anonymous: false,
   },
   {
+    type: 'event',
+    name: 'WhitelistSwapper',
+    inputs: [
+      {
+        name: 'swapper',
+        type: 'address',
+        indexed: true,
+        internalType: 'contract ISwapper',
+      },
+      {
+        name: 'whitelisted',
+        type: 'bool',
+        indexed: false,
+        internalType: 'bool',
+      },
+    ],
+    anonymous: false,
+  },
+  {
     type: 'error',
     name: 'AddressEmptyCode',
     inputs: [{name: 'target', type: 'address', internalType: 'address'}],
   },
   {type: 'error', name: 'FailedCall', inputs: []},
-  {type: 'error', name: 'InsufficientLiquidity', inputs: []},
+  {
+    type: 'error',
+    name: 'InsufficientLiquidity',
+    inputs: [
+      {
+        name: 'remainingAmount',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+  },
   {type: 'error', name: 'InvalidAmount', inputs: []},
   {type: 'error', name: 'InvalidArrayLength', inputs: []},
   {type: 'error', name: 'InvalidDuration', inputs: []},
   {type: 'error', name: 'InvalidOptionType', inputs: []},
   {
     type: 'error',
-    name: 'InvalidTickRange',
+    name: 'MInvalidTickRange',
     inputs: [
       {name: 'tickLower', type: 'int24', internalType: 'int24'},
       {name: 'tickUpper', type: 'int24', internalType: 'int24'},
     ],
   },
   {type: 'error', name: 'NotAuthorized', inputs: []},
+  {type: 'error', name: 'NotEnoughLiquidity', inputs: []},
   {type: 'error', name: 'NotEnoughPayout', inputs: []},
   {type: 'error', name: 'OptionExpired', inputs: []},
   {type: 'error', name: 'OptionNotFound', inputs: []},
@@ -690,6 +746,7 @@ export const optionsMarketAbi = [
     name: 'OwnableUnauthorizedAccount',
     inputs: [{name: 'account', type: 'address', internalType: 'address'}],
   },
+  {type: 'error', name: 'PoolNotSupported', inputs: []},
   {type: 'error', name: 'PremiumTooHigh', inputs: []},
   {type: 'error', name: 'ReentrancyGuardReentrantCall', inputs: []},
   {
@@ -697,8 +754,25 @@ export const optionsMarketAbi = [
     name: 'SafeERC20FailedOperation',
     inputs: [{name: 'token', type: 'address', internalType: 'address'}],
   },
-  {type: 'error', name: 'SwapFailed', inputs: []},
+  {
+    type: 'error',
+    name: 'SwapFailed',
+    inputs: [
+      {
+        name: 'amountReceived',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'amountExpected',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+  },
+  {type: 'error', name: 'SwapperNotWhitelisted', inputs: []},
   {type: 'error', name: 'TradingPaused', inputs: []},
+  {type: 'error', name: 'UnauthorizedCaller', inputs: []},
   {type: 'error', name: 'WithdrawNotAllowed', inputs: []},
   {type: 'error', name: 'ZeroAddress', inputs: []},
 ] as const;

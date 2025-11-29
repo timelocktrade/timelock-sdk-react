@@ -1,29 +1,29 @@
-import {maxUint256, type Address} from 'viem';
+import type {Address} from 'viem';
 import {waitForTransactionReceipt} from 'viem/actions';
-import {useWriteContract, useClient, useAccount} from 'wagmi';
+import {useWriteContract, useClient, useConnection} from 'wagmi';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 
-import {useMarketData} from './useMarketData';
+import {useMarketData} from '~/hooks/market/useMarketData';
 import {useCurrentTick} from '~/hooks/pool/useCurrentTick';
 import {usePoolData} from '~/hooks/pool/usePoolData';
+import {useApproval} from '~/hooks/tokens/useApproval';
 import {useLens} from '~/hooks/useLens';
-import {useApproval} from '~/hooks/useApproval';
 
 import {getTimelockMarket} from '~/lib/contracts';
 import {getNearestValidStrikeTick} from '~/lib/liquidityUtils';
 import {sleep} from '~/lib/utils';
 import {optionsMarketAbi} from '~/abis/optionsMarket';
 
-export const useMintOption = (marketAddr?: Address) => {
-  const {payoutAsset, vault, pool, optionAssetIsToken0} =
+export const useMintOption = (marketAddr: Address | undefined) => {
+  const {payoutAsset, vault, poolManager, poolKey, optionAssetIsToken0} =
     useMarketData(marketAddr);
 
-  const {tickSpacing} = usePoolData(pool);
-  const {refetch: refetchCurrentTick} = useCurrentTick(pool);
+  const {tickSpacing} = usePoolData(poolManager, poolKey);
+  const {refetch: refetchCurrentTick} = useCurrentTick(poolManager, poolKey);
 
   const queryClient = useQueryClient();
   const client = useClient();
-  const {address} = useAccount();
+  const {address} = useConnection();
   const {timelockLens} = useLens();
 
   const {askForApproval} = useApproval();
@@ -34,11 +34,13 @@ export const useMintOption = (marketAddr?: Address) => {
     amount,
     duration,
     strikeTick,
+    maxSteps = 100,
   }: {
     optionType: 'CALL' | 'PUT';
     amount: bigint;
     duration: number;
     strikeTick?: number;
+    maxSteps?: number;
   }) => {
     if (!client || !address) throw new Error('Wallet not connected');
     if (!marketAddr) throw new Error('Market address not available');
@@ -48,7 +50,7 @@ export const useMintOption = (marketAddr?: Address) => {
     if (!vault || !payoutAsset || optionAssetIsToken0 === undefined) {
       throw new Error('Market data not available');
     }
-    const {data: {exact: currentTick} = {}} = await refetchCurrentTick();
+    const {data: {currentTick} = {}} = await refetchCurrentTick();
 
     if (currentTick === undefined) {
       throw new Error('Could not fetch current tick');
@@ -82,7 +84,8 @@ export const useMintOption = (marketAddr?: Address) => {
         amount,
         strikeTick,
         duration,
-        maxUint256,
+        maxPremium,
+        maxSteps,
         await timelockLens.read.getRefTick([vault, strikeTick]),
       ],
     });

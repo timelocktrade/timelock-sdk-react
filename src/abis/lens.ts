@@ -20,7 +20,7 @@ export const lensAbi = [
       {
         name: 'vault',
         type: 'address',
-        internalType: 'contract TimelockVaultCore',
+        internalType: 'contract TimelockSingleOwnerVault',
       },
     ],
     outputs: [
@@ -43,6 +43,16 @@ export const lensAbi = [
           },
           {
             name: 'borrowedLiquidity',
+            type: 'uint128',
+            internalType: 'uint128',
+          },
+          {
+            name: 'reservedLiquidity',
+            type: 'uint128',
+            internalType: 'uint128',
+          },
+          {
+            name: 'availableLiquidity',
             type: 'uint128',
             internalType: 'uint128',
           },
@@ -81,7 +91,7 @@ export const lensAbi = [
         internalType: 'contract TimelockOptionsMarket',
       },
       {name: 'startId', type: 'uint256', internalType: 'uint256'},
-      {name: 'limit', type: 'uint256', internalType: 'uint256'},
+      {name: 'endId', type: 'uint256', internalType: 'uint256'},
     ],
     outputs: [
       {
@@ -116,8 +126,119 @@ export const lensAbi = [
           },
         ],
       },
-      {name: 'nextStartId', type: 'uint256', internalType: 'uint256'},
-      {name: 'hasMore', type: 'bool', internalType: 'bool'},
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getFeeRates',
+    inputs: [
+      {
+        name: 'feeStrategy',
+        type: 'address',
+        internalType: 'contract FeeStrategy',
+      },
+    ],
+    outputs: [
+      {
+        name: 'rates',
+        type: 'tuple',
+        internalType: 'struct TimelockLens.FeeStrategyRates',
+        components: [
+          {
+            name: 'openingFeeRate',
+            type: 'uint32',
+            internalType: 'uint32',
+          },
+          {
+            name: 'baseFeeRate',
+            type: 'uint32',
+            internalType: 'uint32',
+          },
+          {
+            name: 'minOpeningFee',
+            type: 'uint128',
+            internalType: 'uint128',
+          },
+          {
+            name: 'minBaseFee',
+            type: 'uint128',
+            internalType: 'uint128',
+          },
+          {
+            name: 'feeRecipient',
+            type: 'address',
+            internalType: 'address',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getGlobalGuardianState',
+    inputs: [
+      {
+        name: 'guardian',
+        type: 'address',
+        internalType: 'contract TimelockGuardian',
+      },
+    ],
+    outputs: [
+      {
+        name: 'guardianState',
+        type: 'tuple',
+        internalType: 'struct TimelockLens.GuardianGlobalState',
+        components: [
+          {
+            name: 'globalMintPaused',
+            type: 'tuple',
+            internalType: 'struct TimelockGuardian.PauseState',
+            components: [
+              {name: 'paused', type: 'bool', internalType: 'bool'},
+              {
+                name: 'updatedAt',
+                type: 'uint64',
+                internalType: 'uint64',
+              },
+            ],
+          },
+          {
+            name: 'globalBurnPaused',
+            type: 'tuple',
+            internalType: 'struct TimelockGuardian.PauseState',
+            components: [
+              {name: 'paused', type: 'bool', internalType: 'bool'},
+              {
+                name: 'updatedAt',
+                type: 'uint64',
+                internalType: 'uint64',
+              },
+            ],
+          },
+          {
+            name: 'globalTradingPaused',
+            type: 'tuple',
+            internalType: 'struct TimelockGuardian.PauseState',
+            components: [
+              {name: 'paused', type: 'bool', internalType: 'bool'},
+              {
+                name: 'updatedAt',
+                type: 'uint64',
+                internalType: 'uint64',
+              },
+            ],
+          },
+          {
+            name: 'minWithdrawalInterval',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {name: 'senderIsAdmin', type: 'bool', internalType: 'bool'},
+          {name: 'senderIsPauser', type: 'bool', internalType: 'bool'},
+        ],
+      },
     ],
     stateMutability: 'view',
   },
@@ -163,9 +284,9 @@ export const lensAbi = [
         internalType: 'struct TimelockLens.TimelockMarketData',
         components: [
           {
-            name: 'optionAssetIsToken0',
-            type: 'bool',
-            internalType: 'bool',
+            name: 'guardian',
+            type: 'address',
+            internalType: 'contract TimelockGuardian',
           },
           {
             name: 'vault',
@@ -173,9 +294,42 @@ export const lensAbi = [
             internalType: 'contract ITimelockVault',
           },
           {
-            name: 'pool',
+            name: 'poolManager',
             type: 'address',
-            internalType: 'contract IUniswapV3Pool',
+            internalType: 'contract IPoolManager',
+          },
+          {
+            name: 'poolKey',
+            type: 'tuple',
+            internalType: 'struct PoolKey',
+            components: [
+              {
+                name: 'currency0',
+                type: 'address',
+                internalType: 'Currency',
+              },
+              {
+                name: 'currency1',
+                type: 'address',
+                internalType: 'Currency',
+              },
+              {name: 'fee', type: 'uint24', internalType: 'uint24'},
+              {
+                name: 'tickSpacing',
+                type: 'int24',
+                internalType: 'int24',
+              },
+              {
+                name: 'hooks',
+                type: 'address',
+                internalType: 'contract IHooks',
+              },
+            ],
+          },
+          {
+            name: 'optionAssetIsToken0',
+            type: 'bool',
+            internalType: 'bool',
           },
           {
             name: 'optionAsset',
@@ -217,11 +371,6 @@ export const lensAbi = [
             type: 'string',
             internalType: 'string',
           },
-          {
-            name: 'optionsCount',
-            type: 'uint256',
-            internalType: 'uint256',
-          },
         ],
       },
     ],
@@ -229,14 +378,51 @@ export const lensAbi = [
   },
   {
     type: 'function',
-    name: 'getMaxATMSizes',
+    name: 'getMarketState',
     inputs: [
       {
         name: 'market',
         type: 'address',
         internalType: 'contract TimelockOptionsMarket',
       },
-      {name: 'maxRange', type: 'int24', internalType: 'int24'},
+    ],
+    outputs: [
+      {
+        name: 'marketState',
+        type: 'tuple',
+        internalType: 'struct TimelockLens.TimelockMarketState',
+        components: [
+          {
+            name: 'optionsCount',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'optionPricing',
+            type: 'address',
+            internalType: 'address',
+          },
+          {
+            name: 'feeStrategy',
+            type: 'address',
+            internalType: 'contract IFeeStrategy',
+          },
+          {name: 'owner', type: 'address', internalType: 'address'},
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getMaxATMPositionSizes',
+    inputs: [
+      {
+        name: 'market',
+        type: 'address',
+        internalType: 'contract TimelockOptionsMarket',
+      },
+      {name: 'maxSteps', type: 'int24', internalType: 'int24'},
     ],
     outputs: [
       {name: 'maxCallSize', type: 'uint256', internalType: 'uint256'},
@@ -254,7 +440,7 @@ export const lensAbi = [
         internalType: 'contract TimelockSingleOwnerVault',
       },
       {name: 'strikeTick', type: 'int24', internalType: 'int24'},
-      {name: 'maxRange', type: 'int24', internalType: 'int24'},
+      {name: 'maxSteps', type: 'int24', internalType: 'int24'},
     ],
     outputs: [{name: 'borrowable0', type: 'uint256', internalType: 'uint256'}],
     stateMutability: 'view',
@@ -269,9 +455,27 @@ export const lensAbi = [
         internalType: 'contract TimelockSingleOwnerVault',
       },
       {name: 'strikeTick', type: 'int24', internalType: 'int24'},
-      {name: 'maxRange', type: 'int24', internalType: 'int24'},
+      {name: 'maxSteps', type: 'int24', internalType: 'int24'},
     ],
     outputs: [{name: 'borrowable1', type: 'uint256', internalType: 'uint256'}],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getMaxPositionSizes',
+    inputs: [
+      {
+        name: 'market',
+        type: 'address',
+        internalType: 'contract TimelockOptionsMarket',
+      },
+      {name: 'strikeTick', type: 'int24', internalType: 'int24'},
+      {name: 'maxSteps', type: 'int24', internalType: 'int24'},
+    ],
+    outputs: [
+      {name: 'maxCallSize', type: 'uint256', internalType: 'uint256'},
+      {name: 'maxPutSize', type: 'uint256', internalType: 'uint256'},
+    ],
     stateMutability: 'view',
   },
   {
@@ -315,6 +519,48 @@ export const lensAbi = [
             name: 'liquidities',
             type: 'uint128[]',
             internalType: 'uint128[]',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getOptionPricingParams',
+    inputs: [
+      {
+        name: 'pricing',
+        type: 'address',
+        internalType: 'contract OptionPricing',
+      },
+    ],
+    outputs: [
+      {
+        name: 'params',
+        type: 'tuple',
+        internalType: 'struct TimelockLens.OptionPricingParams',
+        components: [
+          {
+            name: 'logicContract',
+            type: 'address',
+            internalType: 'contract StatelessOptionPricing',
+          },
+          {name: 'iv', type: 'uint32', internalType: 'uint32'},
+          {
+            name: 'riskFreeRate',
+            type: 'uint32',
+            internalType: 'uint32',
+          },
+          {
+            name: 'minPremiumDailyRate',
+            type: 'uint32',
+            internalType: 'uint32',
+          },
+          {
+            name: 'minPremiumAmount',
+            type: 'uint256',
+            internalType: 'uint256',
           },
         ],
       },
@@ -377,9 +623,33 @@ export const lensAbi = [
     name: 'getPoolData',
     inputs: [
       {
-        name: 'pool',
+        name: 'poolManager',
         type: 'address',
-        internalType: 'contract IUniswapV3Pool',
+        internalType: 'contract IPoolManager',
+      },
+      {
+        name: 'poolKey',
+        type: 'tuple',
+        internalType: 'struct PoolKey',
+        components: [
+          {
+            name: 'currency0',
+            type: 'address',
+            internalType: 'Currency',
+          },
+          {
+            name: 'currency1',
+            type: 'address',
+            internalType: 'Currency',
+          },
+          {name: 'fee', type: 'uint24', internalType: 'uint24'},
+          {name: 'tickSpacing', type: 'int24', internalType: 'int24'},
+          {
+            name: 'hooks',
+            type: 'address',
+            internalType: 'contract IHooks',
+          },
+        ],
       },
     ],
     outputs: [
@@ -429,6 +699,16 @@ export const lensAbi = [
   },
   {
     type: 'function',
+    name: 'getPricingParams',
+    inputs: [{name: 'pricing', type: 'address', internalType: 'address'}],
+    outputs: [
+      {name: 'pricingModel', type: 'uint8', internalType: 'uint8'},
+      {name: 'data', type: 'bytes', internalType: 'bytes'},
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     name: 'getRefTick',
     inputs: [
       {
@@ -439,6 +719,37 @@ export const lensAbi = [
       {name: 'tickLower', type: 'int24', internalType: 'int24'},
     ],
     outputs: [{name: 'refTick', type: 'int24', internalType: 'int24'}],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getStaticPricingParams',
+    inputs: [
+      {
+        name: 'pricing',
+        type: 'address',
+        internalType: 'contract StaticPerpsPricing',
+      },
+    ],
+    outputs: [
+      {
+        name: 'params',
+        type: 'tuple',
+        internalType: 'struct TimelockLens.StaticPerpsPricingParams',
+        components: [
+          {
+            name: 'dailyFundingRate',
+            type: 'uint32',
+            internalType: 'uint32',
+          },
+          {
+            name: 'minFundingAmount',
+            type: 'uint128',
+            internalType: 'uint128',
+          },
+        ],
+      },
+    ],
     stateMutability: 'view',
   },
   {
@@ -512,37 +823,76 @@ export const lensAbi = [
   },
   {
     type: 'function',
+    name: 'getVaultData',
+    inputs: [
+      {
+        name: 'vault',
+        type: 'address',
+        internalType: 'contract TimelockSingleOwnerVault',
+      },
+    ],
+    outputs: [
+      {
+        name: 'vaultData',
+        type: 'tuple',
+        internalType: 'struct TimelockLens.TimelockVaultData',
+        components: [
+          {
+            name: 'poolManager',
+            type: 'address',
+            internalType: 'contract IPoolManager',
+          },
+          {
+            name: 'poolKey',
+            type: 'tuple',
+            internalType: 'struct PoolKey',
+            components: [
+              {
+                name: 'currency0',
+                type: 'address',
+                internalType: 'Currency',
+              },
+              {
+                name: 'currency1',
+                type: 'address',
+                internalType: 'Currency',
+              },
+              {name: 'fee', type: 'uint24', internalType: 'uint24'},
+              {
+                name: 'tickSpacing',
+                type: 'int24',
+                internalType: 'int24',
+              },
+              {
+                name: 'hooks',
+                type: 'address',
+                internalType: 'contract IHooks',
+              },
+            ],
+          },
+          {name: 'owner', type: 'address', internalType: 'address'},
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     name: 'getVaultTVL',
     inputs: [
       {
         name: 'vault',
         type: 'address',
-        internalType: 'contract TimelockVaultCore',
+        internalType: 'contract TimelockSingleOwnerVault',
       },
     ],
     outputs: [
-      {
-        name: 'totalAmount0',
-        type: 'uint256',
-        internalType: 'uint256',
-      },
-      {
-        name: 'totalAmount1',
-        type: 'uint256',
-        internalType: 'uint256',
-      },
-      {
-        name: 'borrowedAmount0',
-        type: 'uint256',
-        internalType: 'uint256',
-      },
-      {
-        name: 'borrowedAmount1',
-        type: 'uint256',
-        internalType: 'uint256',
-      },
-      {name: 'tvl0', type: 'uint256', internalType: 'uint256'},
-      {name: 'tvl1', type: 'uint256', internalType: 'uint256'},
+      {name: 'total0', type: 'uint256', internalType: 'uint256'},
+      {name: 'total1', type: 'uint256', internalType: 'uint256'},
+      {name: 'borrowed0', type: 'uint256', internalType: 'uint256'},
+      {name: 'borrowed1', type: 'uint256', internalType: 'uint256'},
+      {name: 'tvlAs0', type: 'uint256', internalType: 'uint256'},
+      {name: 'tvlAs1', type: 'uint256', internalType: 'uint256'},
       {name: 'blocksCount', type: 'uint256', internalType: 'uint256'},
     ],
     stateMutability: 'view',

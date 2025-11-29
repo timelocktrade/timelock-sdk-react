@@ -8,7 +8,7 @@ export type LiquidityBlockData = ReturnType<
   typeof useLiquidityBlocks
 >['data'][0];
 
-export const useLiquidityBlocks = (vaultAddr?: Address) => {
+export const useLiquidityBlocks = (vaultAddr: Address | undefined) => {
   const {timelockLens} = useLens();
 
   const {data: blocks = [], ...rest} = useReadContract({
