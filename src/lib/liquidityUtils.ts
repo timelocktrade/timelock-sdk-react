@@ -5,36 +5,39 @@ import type {Amount} from './numberUtils';
 
 export const PRICE_PRECISION = BigInt(1e18);
 
-export const getPriceAtSqrtPriceX96 = (sqrtPriceX96: bigint) => {
+export const PRICE_PRECISION = BigInt(2) ** BigInt(128);
+
+export const getPriceAtSqrtPriceX96 = (
+  sqrtPriceX96: bigint,
+  token0For1 = true,
+) => {
   const priceX192 = sqrtPriceX96 * sqrtPriceX96;
   const price = (priceX192 * PRICE_PRECISION) / BigInt(2 ** 192);
 
+  if (!token0For1) {
+    return PRICE_PRECISION ** 2n / price;
+  }
   return price;
 };
 
 export const getSqrtPriceX96AtPrice = (price: bigint) => {
-  const priceX192 = (price * BigInt(2 ** 192)) / PRICE_PRECISION;
-
   const sqrtPriceX96 = JSBI.BigInt(
-    new Big(priceX192.toString()).sqrt().toFixed(0),
+    new Big(price.toString())
+      .mul(2 ** 192)
+      .div(PRICE_PRECISION.toString())
+      .sqrt()
+      .toFixed(0),
   );
   return sqrtPriceX96;
 };
 
-export const getPriceAtTick = (tick: number) => {
+export const getPriceAtTick = (tick: number, token0For1 = true) => {
   const sqrtRatioX96 = BigInt(TickMath.getSqrtRatioAtTick(tick).toString());
-
-  const priceX192 = sqrtRatioX96 * sqrtRatioX96;
-  const price = (priceX192 * PRICE_PRECISION) / BigInt(2 ** 192);
-
-  return price;
+  return getPriceAtSqrtPriceX96(sqrtRatioX96, token0For1);
 };
 
 export const getTickAtPrice = (price: bigint) => {
-  const priceX192 = (price * BigInt(2 ** 192)) / PRICE_PRECISION;
-  const sqrtPriceX96 = JSBI.BigInt(
-    new Big(priceX192.toString()).sqrt().toFixed(0),
-  );
+  const sqrtPriceX96 = getSqrtPriceX96AtPrice(price);
   return TickMath.getTickAtSqrtRatio(sqrtPriceX96);
 };
 
