@@ -1,23 +1,32 @@
 import Big from 'big.js';
+import {PRICE_PRECISION} from './liquidityUtils';
 
 export type Amount = {
   scaled: bigint;
   unscaled: Big;
-  decimals: number;
+  scalingFactor: Big;
   formatted: string;
 };
 
 export const zero: Amount = {
   scaled: 0n,
   unscaled: Big(0),
-  decimals: 18,
+  scalingFactor: Big(1e18),
   formatted: '0',
 };
 
+const scale = (amount: Big | number | string, scalingFactor: Big): bigint => {
+  return BigInt(Big(amount).mul(scalingFactor).toFixed(0));
+};
+const unscale = (amount: bigint, scalingFactor: Big): Big => {
+  return Big(amount.toString()).div(scalingFactor);
+};
+
 export const wrapAmount = (scaled: bigint, decimals: number): Amount => {
-  const unscaled = unscaleAmount(scaled, decimals);
+  const scalingFactor = Big(10).pow(decimals);
+  const unscaled = unscale(scaled, scalingFactor);
   const formatted = formatAmount(unscaled);
-  return {scaled, unscaled, decimals, formatted};
+  return {scaled, unscaled, scalingFactor, formatted};
 };
 
 export const wrapAmountUnscaled = (
@@ -25,9 +34,10 @@ export const wrapAmountUnscaled = (
   decimals: number,
 ): Amount => {
   unscaled = Big(unscaled);
-  const scaled = scaleAmount(unscaled, decimals);
+  const scalingFactor = Big(10).pow(decimals);
+  const scaled = scale(unscaled, scalingFactor);
   const formatted = formatAmount(unscaled);
-  return {scaled, unscaled, decimals, formatted};
+  return {scaled, unscaled, scalingFactor, formatted};
 };
 
 export const wrapPrice = (
@@ -35,9 +45,13 @@ export const wrapPrice = (
   decimals0: number,
   decimals1: number,
 ): Amount => {
-  const unscaled = unscalePrice(scaled, decimals0, decimals1);
+  const scalingFactor = Big(PRICE_PRECISION.toString())
+    .mul(Big(10).pow(decimals1))
+    .div(Big(10).pow(decimals0));
+
+  const unscaled = unscale(scaled, scalingFactor);
   const formatted = formatAmount(unscaled);
-  return {scaled, unscaled, decimals: 36 + decimals1 - decimals0, formatted};
+  return {scaled, unscaled, scalingFactor, formatted};
 };
 
 export const wrapPriceUnscaled = (
@@ -46,50 +60,15 @@ export const wrapPriceUnscaled = (
   decimals1: number,
 ): Amount => {
   unscaled = Big(unscaled);
-  const scaled = scalePrice(unscaled, decimals0, decimals1);
+
+  const scalingFactor = Big(PRICE_PRECISION.toString())
+    .mul(Big(10).pow(decimals1))
+    .div(Big(10).pow(decimals0));
+
+  const scaled = scale(unscaled, scalingFactor);
   const formatted = formatAmount(unscaled);
-  return {scaled, unscaled, decimals: 36 + decimals1 - decimals0, formatted};
-};
 
-export const unscaleAmount = (scaled: bigint, decimals: number) => {
-  return new Big(scaled.toString()).div(new Big(10).pow(decimals));
-};
-
-export const scaleAmount = (
-  unscaled: Big | number | string,
-  decimals: number,
-) => {
-  return BigInt(
-    Big(unscaled).mul(new Big(10).pow(decimals)).round().toFixed(0),
-  );
-};
-
-export const unscalePrice = (
-  scaled: bigint,
-  decimals0: number,
-  decimals1: number,
-  precision = 18,
-) => {
-  return new Big(scaled.toString())
-    .mul(new Big(10).pow(decimals0))
-    .div(new Big(10).pow(decimals1))
-    .div(new Big(10).pow(precision));
-};
-
-export const scalePrice = (
-  unscaled: Big | number | string,
-  decimals0: number,
-  decimals1: number,
-  precision = 18,
-) => {
-  return BigInt(
-    Big(unscaled)
-      .mul(new Big(10).pow(precision))
-      .mul(new Big(10).pow(decimals1))
-      .div(new Big(10).pow(decimals0))
-      .round()
-      .toFixed(0),
-  );
+  return {scaled, unscaled, scalingFactor, formatted};
 };
 
 export const formatAmount = (value?: Big | number | string) => {
