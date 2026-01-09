@@ -1,11 +1,12 @@
 import type {Address, Client, PublicClient, GetContractReturnType} from 'viem';
 import {getContract} from 'viem';
-import {monadTestnet, unichainSepolia} from 'viem/chains';
+import {baseSepolia} from 'viem/chains';
 
 import {erc20Abi} from '~/abis/erc20';
 import {lensAbi} from '~/abis/lens';
 import {optionsMarketAbi} from '~/abis/optionsMarket';
-import {statelessStateViewAbi} from '~/abis/statelessStateView';
+import {quoterAbi} from '~/abis/quoterV4';
+import {stateViewAbi} from '~/abis/stateView';
 
 export type TimelockMarket = GetContractReturnType<
   typeof optionsMarketAbi,
@@ -38,7 +39,16 @@ export const getStateView = async (client: PublicClient, address?: Address) => {
     address = stateViews[chainId];
     if (!address) throw new Error(`No state view found for ${chainId}`);
   }
-  return getContract({abi: statelessStateViewAbi, address, client});
+  return getContract({abi: stateViewAbi, address, client});
+};
+
+export const getQuoter = async (client: PublicClient, address?: Address) => {
+  if (!address) {
+    const chainId = await client.getChainId();
+    address = quoters[chainId];
+    if (!address) throw new Error(`No quoter found for ${chainId}`);
+  }
+  return getContract({abi: quoterAbi, address, client});
 };
 
 export const getTimelockLens = async (
@@ -54,21 +64,20 @@ export const getTimelockLens = async (
 };
 
 export const swappers: Record<number, Address> = {
-  [monadTestnet.id]: '0x877309663591ad974bE2c0C7fB453844c8D613D8',
-  [unichainSepolia.id]: '0xa145eb0CAdB5F3c5e42931e60ee609DE74FDEA0b',
+  [baseSepolia.id]: '0xA16412db5c1Fc7e81574077913f5760d6c368Bd9',
 };
 export const timelockLenses: Record<number, Address> = {
-  [monadTestnet.id]: '0x22745deD5F51A2F33D98c5682048f5d10baE3b92',
-  [unichainSepolia.id]: '0xDA4E5a75d5c867B6eB777006f37d0Bb07000Fd35',
+  [baseSepolia.id]: '0xd0FbA0BB1844Bd5De545CDb7607b38BAf7b96f91',
 };
 export const timelockFactories: Record<number, Address> = {
-  [unichainSepolia.id]: '0x8790e55d165591C082D3CBb811b36c9C893530DF',
+  [baseSepolia.id]: '0xea78d1869f78e301A18ab064b4287563974ab977',
 };
 export const swapRouters: Record<number, Address> = {
-  [monadTestnet.id]: '0xEd8a7Ca09c6Db6F4b9FAcB8De7e9A5449B1D21a4',
-  [unichainSepolia.id]: '0x7C9fBd739cb0e09657B7c6aB4eFc37bEe80820B0',
+  [baseSepolia.id]: '0x1a005FE3C05F076983F0d66a5F80CB9C61561a5b',
 };
 export const stateViews: Record<number, Address> = {
-  [monadTestnet.id]: '0xB85e32Ff9b08Be61cD888e5D997E51951BCA1A69',
-  [unichainSepolia.id]: '0x1B69d7338F027deB8Cc78a4085BC7087B251C049',
+  [baseSepolia.id]: '0x06AF24d39b8cb2100958EAAF279707Bec11160C8',
+};
+export const quoters: Record<number, Address> = {
+  [baseSepolia.id]: '0xD478003Dd94A76F3dC6D09412f5C60D2e060B49A',
 };
