@@ -819,11 +819,13 @@ export type TimelockMarket = {
   payoutAssetSymbol: Scalars['String']['output'];
   poolManager: Scalars['String']['output'];
   tickSpacing: Scalars['Int']['output'];
+  totalPremium: Scalars['numeric']['output'];
+  totalProfit: Scalars['numeric']['output'];
+  totalVolume: Scalars['numeric']['output'];
   /** An array relationship */
   traders: Array<TimelockMarketUser>;
   tradersCount: Scalars['numeric']['output'];
   vault: Scalars['String']['output'];
-  volume: Scalars['numeric']['output'];
 };
 
 /** columns and relationships of "TimelockMarket" */
@@ -857,6 +859,9 @@ export type TimelockMarketUser = {
   /** An array relationship */
   options: Array<UserOption>;
   optionsCount: Scalars['numeric']['output'];
+  totalPremium: Scalars['numeric']['output'];
+  totalProfit: Scalars['numeric']['output'];
+  totalVolume: Scalars['numeric']['output'];
 };
 
 /** columns and relationships of "TimelockMarketUser" */
@@ -895,6 +900,9 @@ export type TimelockMarketUserAggregateOrderBy = {
 /** order by avg() on columns of table "TimelockMarketUser" */
 export type TimelockMarketUserAvgOrderBy = {
   optionsCount?: InputMaybe<OrderBy>;
+  totalPremium?: InputMaybe<OrderBy>;
+  totalProfit?: InputMaybe<OrderBy>;
+  totalVolume?: InputMaybe<OrderBy>;
 };
 
 /** Boolean expression to filter rows from the table "TimelockMarketUser". All fields are combined with a logical 'AND'. */
@@ -909,6 +917,9 @@ export type TimelockMarketUserBoolExp = {
   operators?: InputMaybe<UserMarketOperatorBoolExp>;
   options?: InputMaybe<UserOptionBoolExp>;
   optionsCount?: InputMaybe<NumericComparisonExp>;
+  totalPremium?: InputMaybe<NumericComparisonExp>;
+  totalProfit?: InputMaybe<NumericComparisonExp>;
+  totalVolume?: InputMaybe<NumericComparisonExp>;
 };
 
 /** order by max() on columns of table "TimelockMarketUser" */
@@ -917,6 +928,9 @@ export type TimelockMarketUserMaxOrderBy = {
   id?: InputMaybe<OrderBy>;
   market_id?: InputMaybe<OrderBy>;
   optionsCount?: InputMaybe<OrderBy>;
+  totalPremium?: InputMaybe<OrderBy>;
+  totalProfit?: InputMaybe<OrderBy>;
+  totalVolume?: InputMaybe<OrderBy>;
 };
 
 /** order by min() on columns of table "TimelockMarketUser" */
@@ -925,6 +939,9 @@ export type TimelockMarketUserMinOrderBy = {
   id?: InputMaybe<OrderBy>;
   market_id?: InputMaybe<OrderBy>;
   optionsCount?: InputMaybe<OrderBy>;
+  totalPremium?: InputMaybe<OrderBy>;
+  totalProfit?: InputMaybe<OrderBy>;
+  totalVolume?: InputMaybe<OrderBy>;
 };
 
 /** Ordering options when selecting data from "TimelockMarketUser". */
@@ -936,6 +953,9 @@ export type TimelockMarketUserOrderBy = {
   operators_aggregate?: InputMaybe<UserMarketOperatorAggregateOrderBy>;
   optionsCount?: InputMaybe<OrderBy>;
   options_aggregate?: InputMaybe<UserOptionAggregateOrderBy>;
+  totalPremium?: InputMaybe<OrderBy>;
+  totalProfit?: InputMaybe<OrderBy>;
+  totalVolume?: InputMaybe<OrderBy>;
 };
 
 /** select columns of table "TimelockMarketUser" */
@@ -947,21 +967,36 @@ export type TimelockMarketUserSelectColumn =
   /** column name */
   | 'market_id'
   /** column name */
-  | 'optionsCount';
+  | 'optionsCount'
+  /** column name */
+  | 'totalPremium'
+  /** column name */
+  | 'totalProfit'
+  /** column name */
+  | 'totalVolume';
 
 /** order by stddev() on columns of table "TimelockMarketUser" */
 export type TimelockMarketUserStddevOrderBy = {
   optionsCount?: InputMaybe<OrderBy>;
+  totalPremium?: InputMaybe<OrderBy>;
+  totalProfit?: InputMaybe<OrderBy>;
+  totalVolume?: InputMaybe<OrderBy>;
 };
 
 /** order by stddev_pop() on columns of table "TimelockMarketUser" */
 export type TimelockMarketUserStddevPopOrderBy = {
   optionsCount?: InputMaybe<OrderBy>;
+  totalPremium?: InputMaybe<OrderBy>;
+  totalProfit?: InputMaybe<OrderBy>;
+  totalVolume?: InputMaybe<OrderBy>;
 };
 
 /** order by stddev_samp() on columns of table "TimelockMarketUser" */
 export type TimelockMarketUserStddevSampOrderBy = {
   optionsCount?: InputMaybe<OrderBy>;
+  totalPremium?: InputMaybe<OrderBy>;
+  totalProfit?: InputMaybe<OrderBy>;
+  totalVolume?: InputMaybe<OrderBy>;
 };
 
 /** Streaming cursor of the table "TimelockMarketUser" */
@@ -978,26 +1013,41 @@ export type TimelockMarketUserStreamCursorValueInput = {
   id?: InputMaybe<Scalars['String']['input']>;
   market_id?: InputMaybe<Scalars['String']['input']>;
   optionsCount?: InputMaybe<Scalars['numeric']['input']>;
+  totalPremium?: InputMaybe<Scalars['numeric']['input']>;
+  totalProfit?: InputMaybe<Scalars['numeric']['input']>;
+  totalVolume?: InputMaybe<Scalars['numeric']['input']>;
 };
 
 /** order by sum() on columns of table "TimelockMarketUser" */
 export type TimelockMarketUserSumOrderBy = {
   optionsCount?: InputMaybe<OrderBy>;
+  totalPremium?: InputMaybe<OrderBy>;
+  totalProfit?: InputMaybe<OrderBy>;
+  totalVolume?: InputMaybe<OrderBy>;
 };
 
 /** order by var_pop() on columns of table "TimelockMarketUser" */
 export type TimelockMarketUserVarPopOrderBy = {
   optionsCount?: InputMaybe<OrderBy>;
+  totalPremium?: InputMaybe<OrderBy>;
+  totalProfit?: InputMaybe<OrderBy>;
+  totalVolume?: InputMaybe<OrderBy>;
 };
 
 /** order by var_samp() on columns of table "TimelockMarketUser" */
 export type TimelockMarketUserVarSampOrderBy = {
   optionsCount?: InputMaybe<OrderBy>;
+  totalPremium?: InputMaybe<OrderBy>;
+  totalProfit?: InputMaybe<OrderBy>;
+  totalVolume?: InputMaybe<OrderBy>;
 };
 
 /** order by variance() on columns of table "TimelockMarketUser" */
 export type TimelockMarketUserVarianceOrderBy = {
   optionsCount?: InputMaybe<OrderBy>;
+  totalPremium?: InputMaybe<OrderBy>;
+  totalProfit?: InputMaybe<OrderBy>;
+  totalVolume?: InputMaybe<OrderBy>;
 };
 
 /** Boolean expression to filter rows from the table "TimelockMarket". All fields are combined with a logical 'AND'. */
@@ -1024,10 +1074,12 @@ export type TimelockMarketBoolExp = {
   payoutAssetSymbol?: InputMaybe<StringComparisonExp>;
   poolManager?: InputMaybe<StringComparisonExp>;
   tickSpacing?: InputMaybe<IntComparisonExp>;
+  totalPremium?: InputMaybe<NumericComparisonExp>;
+  totalProfit?: InputMaybe<NumericComparisonExp>;
+  totalVolume?: InputMaybe<NumericComparisonExp>;
   traders?: InputMaybe<TimelockMarketUserBoolExp>;
   tradersCount?: InputMaybe<NumericComparisonExp>;
   vault?: InputMaybe<StringComparisonExp>;
-  volume?: InputMaybe<NumericComparisonExp>;
 };
 
 /** Ordering options when selecting data from "TimelockMarket". */
@@ -1051,10 +1103,12 @@ export type TimelockMarketOrderBy = {
   payoutAssetSymbol?: InputMaybe<OrderBy>;
   poolManager?: InputMaybe<OrderBy>;
   tickSpacing?: InputMaybe<OrderBy>;
+  totalPremium?: InputMaybe<OrderBy>;
+  totalProfit?: InputMaybe<OrderBy>;
+  totalVolume?: InputMaybe<OrderBy>;
   tradersCount?: InputMaybe<OrderBy>;
   traders_aggregate?: InputMaybe<TimelockMarketUserAggregateOrderBy>;
   vault?: InputMaybe<OrderBy>;
-  volume?: InputMaybe<OrderBy>;
 };
 
 /** select columns of table "TimelockMarket" */
@@ -1096,11 +1150,15 @@ export type TimelockMarketSelectColumn =
   /** column name */
   | 'tickSpacing'
   /** column name */
+  | 'totalPremium'
+  /** column name */
+  | 'totalProfit'
+  /** column name */
+  | 'totalVolume'
+  /** column name */
   | 'tradersCount'
   /** column name */
-  | 'vault'
-  /** column name */
-  | 'volume';
+  | 'vault';
 
 /** Streaming cursor of the table "TimelockMarket" */
 export type TimelockMarketStreamCursorInput = {
@@ -1130,9 +1188,11 @@ export type TimelockMarketStreamCursorValueInput = {
   payoutAssetSymbol?: InputMaybe<Scalars['String']['input']>;
   poolManager?: InputMaybe<Scalars['String']['input']>;
   tickSpacing?: InputMaybe<Scalars['Int']['input']>;
+  totalPremium?: InputMaybe<Scalars['numeric']['input']>;
+  totalProfit?: InputMaybe<Scalars['numeric']['input']>;
+  totalVolume?: InputMaybe<Scalars['numeric']['input']>;
   tradersCount?: InputMaybe<Scalars['numeric']['input']>;
   vault?: InputMaybe<Scalars['String']['input']>;
-  volume?: InputMaybe<Scalars['numeric']['input']>;
 };
 
 /** columns and relationships of "UpdateOperatorPermsEvent" */
@@ -2887,7 +2947,9 @@ export type GetMarketVolumeQuery = {
     address: string;
     optionsCount: any;
     tradersCount: any;
-    volume: any;
+    totalVolume: any;
+    totalPremium: any;
+    totalProfit: any;
   }>;
 };
 
@@ -3065,7 +3127,9 @@ export const GetMarketVolumeDocument = gql`
       address
       optionsCount
       tradersCount
-      volume
+      totalVolume
+      totalPremium
+      totalProfit
     }
   }
 `;

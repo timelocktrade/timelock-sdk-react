@@ -99,7 +99,9 @@ query GetMarketVolume($marketAddr: String!) {
     address
     optionsCount
     tradersCount
-    volume
+    totalVolume
+    totalPremium
+    totalProfit
   }
 }
 

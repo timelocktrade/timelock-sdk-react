@@ -15,7 +15,9 @@ export const useMarketVolume = (marketAddr: Address | undefined) => {
       return {
         ...result.TimelockMarket[0],
         address: result.TimelockMarket[0].address as Address,
-        volume: BigInt(result.TimelockMarket[0].volume),
+        totalVolume: BigInt(result.TimelockMarket[0].totalVolume),
+        totalPremium: BigInt(result.TimelockMarket[0].totalPremium),
+        totalProfit: BigInt(result.TimelockMarket[0].totalProfit),
         optionsCount: BigInt(result.TimelockMarket[0].optionsCount),
         tradersCount: BigInt(result.TimelockMarket[0].tradersCount),
       };
