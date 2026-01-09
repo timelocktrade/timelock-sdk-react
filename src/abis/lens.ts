@@ -52,7 +52,12 @@ export const lensAbi = [
             internalType: 'uint128',
           },
           {
-            name: 'availableLiquidity',
+            name: 'borrowableLiquidity',
+            type: 'uint128',
+            internalType: 'uint128',
+          },
+          {
+            name: 'withdrawableLiquidity',
             type: 'uint128',
             internalType: 'uint128',
           },
@@ -326,6 +331,7 @@ export const lensAbi = [
               },
             ],
           },
+          {name: 'poolId', type: 'bytes32', internalType: 'PoolId'},
           {
             name: 'optionAssetIsToken0',
             type: 'bool',
@@ -623,7 +629,7 @@ export const lensAbi = [
     name: 'getPoolData',
     inputs: [
       {
-        name: 'poolManager',
+        name: '',
         type: 'address',
         internalType: 'contract IPoolManager',
       },
@@ -870,7 +876,9 @@ export const lensAbi = [
               },
             ],
           },
-          {name: 'owner', type: 'address', internalType: 'address'},
+          {name: 'poolId', type: 'bytes32', internalType: 'PoolId'},
+          {name: 'lowestTick', type: 'int24', internalType: 'int24'},
+          {name: 'highestTick', type: 'int24', internalType: 'int24'},
         ],
       },
     ],

@@ -33,6 +33,13 @@ export const optionsMarketAbi = [
   },
   {
     type: 'function',
+    name: 'MAX_OPTION_STEPS',
+    inputs: [],
+    outputs: [{name: '', type: 'uint24', internalType: 'uint24'}],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     name: 'calculatePremium',
     inputs: [
       {name: 'optionType', type: 'uint8', internalType: 'uint8'},
@@ -164,6 +171,34 @@ export const optionsMarketAbi = [
         internalType: 'contract TimelockGuardian',
       },
     ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'maxDuration',
+    inputs: [],
+    outputs: [{name: '', type: 'uint32', internalType: 'uint32'}],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'maxPositionSize',
+    inputs: [],
+    outputs: [{name: '', type: 'uint256', internalType: 'uint256'}],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'minDuration',
+    inputs: [],
+    outputs: [{name: '', type: 'uint32', internalType: 'uint32'}],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'minPositionSize',
+    inputs: [],
+    outputs: [{name: '', type: 'uint256', internalType: 'uint256'}],
     stateMutability: 'view',
   },
   {
@@ -397,6 +432,26 @@ export const optionsMarketAbi = [
         name: '_feeStrategy',
         type: 'address',
         internalType: 'contract IFeeStrategy',
+      },
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'updatePositionBounds',
+    inputs: [
+      {name: '_minDuration', type: 'uint32', internalType: 'uint32'},
+      {name: '_maxDuration', type: 'uint32', internalType: 'uint32'},
+      {
+        name: '_minPositionSize',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: '_maxPositionSize',
+        type: 'uint256',
+        internalType: 'uint256',
       },
     ],
     outputs: [],
@@ -685,6 +740,37 @@ export const optionsMarketAbi = [
   },
   {
     type: 'event',
+    name: 'UpdatePositionBounds',
+    inputs: [
+      {
+        name: 'minDuration',
+        type: 'uint32',
+        indexed: false,
+        internalType: 'uint32',
+      },
+      {
+        name: 'maxDuration',
+        type: 'uint32',
+        indexed: false,
+        internalType: 'uint32',
+      },
+      {
+        name: 'minPositionSize',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
+      },
+      {
+        name: 'maxPositionSize',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
     name: 'WhitelistSwapper',
     inputs: [
       {
@@ -707,6 +793,8 @@ export const optionsMarketAbi = [
     name: 'AddressEmptyCode',
     inputs: [{name: 'target', type: 'address', internalType: 'address'}],
   },
+  {type: 'error', name: 'DurationTooHigh', inputs: []},
+  {type: 'error', name: 'DurationTooLow', inputs: []},
   {type: 'error', name: 'FailedCall', inputs: []},
   {
     type: 'error',
@@ -747,7 +835,10 @@ export const optionsMarketAbi = [
     inputs: [{name: 'account', type: 'address', internalType: 'address'}],
   },
   {type: 'error', name: 'PoolNotSupported', inputs: []},
+  {type: 'error', name: 'PositionSizeTooHigh', inputs: []},
+  {type: 'error', name: 'PositionSizeTooLow', inputs: []},
   {type: 'error', name: 'PremiumTooHigh', inputs: []},
+  {type: 'error', name: 'PriceTooLow', inputs: []},
   {type: 'error', name: 'ReentrancyGuardReentrantCall', inputs: []},
   {
     type: 'error',
@@ -771,6 +862,14 @@ export const optionsMarketAbi = [
     ],
   },
   {type: 'error', name: 'SwapperNotWhitelisted', inputs: []},
+  {
+    type: 'error',
+    name: 'TooManySteps',
+    inputs: [
+      {name: 'steps', type: 'uint256', internalType: 'uint256'},
+      {name: 'maxSteps', type: 'uint256', internalType: 'uint256'},
+    ],
+  },
   {type: 'error', name: 'TradingPaused', inputs: []},
   {type: 'error', name: 'UnauthorizedCaller', inputs: []},
   {type: 'error', name: 'WithdrawNotAllowed', inputs: []},

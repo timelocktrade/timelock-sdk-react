@@ -1,6 +1,6 @@
 import {useQuery} from '@tanstack/react-query';
 import {usePublicClient} from 'wagmi';
-import {getTimelockLens, getStateView} from '../lib/contracts';
+import {getTimelockLens, getStateView, getQuoter} from '~/lib/contracts';
 
 export const useLens = () => {
   const client = usePublicClient();
@@ -15,5 +15,10 @@ export const useLens = () => {
     queryFn: () => (client ? getStateView(client) : undefined),
     enabled: !!client,
   });
-  return {timelockLens, stateView};
+  const {data: quoter} = useQuery({
+    queryKey: ['quoter', client?.uid],
+    queryFn: () => (client ? getQuoter(client) : undefined),
+    enabled: !!client,
+  });
+  return {timelockLens, stateView, quoter};
 };

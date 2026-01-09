@@ -1,9 +1,21 @@
+import type {Address} from 'viem';
 import {SqrtPriceMath, TickMath} from '@uniswap/v3-sdk';
 import Big from 'big.js';
 import JSBI from 'jsbi';
 import type {Amount} from './numberUtils';
 
-export const PRICE_PRECISION = BigInt(1e18);
+export type PoolKey = {
+  currency0: Address;
+  currency1: Address;
+  fee: number;
+  tickSpacing: number;
+  hooks: Address;
+};
+
+// Set Big.js precision to handle 512-bit arithmetic
+// 155 decimal places provides ~515 bits of precision (log2(10^155) ≈ 515)
+Big.DP = 155; // Decimal places for division and sqrt operations
+Big.RM = Big.roundDown; // Round down to match Solidity's integer division behavior
 
 export const PRICE_PRECISION = BigInt(2) ** BigInt(128);
 
