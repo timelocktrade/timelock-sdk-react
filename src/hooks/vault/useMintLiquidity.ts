@@ -1,4 +1,4 @@
-import {encodeFunctionData, type Address} from 'viem';
+import {encodeFunctionData, maxInt256, maxUint256, type Address} from 'viem';
 import {waitForTransactionReceipt} from 'viem/actions';
 import {useWriteContract, useClient} from 'wagmi';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
@@ -73,7 +73,9 @@ export const useMintLiquidity = (vaultAddr: Address | undefined) => {
 
   return useMutation({
     mutationFn: async (params: MintPositionParams | MintPositionParams[]) => {
-      if (!client) throw new Error('Wallet not connected');
+      if (!client) {
+        throw new Error('Wallet not connected');
+      }
       if (currentTick === undefined) {
         throw new Error('Current tick not available');
       }
@@ -96,7 +98,15 @@ export const useMintLiquidity = (vaultAddr: Address | undefined) => {
         encodeFunctionData({
           abi: singleOwnerVaultAbi,
           functionName: 'mint',
-          args: [p.tickLower, p.tickUpper, p.liquidity, refTicks[i]],
+          args: [
+            p.tickLower,
+            p.tickUpper,
+            p.liquidity,
+            refTicks[i],
+            maxInt256,
+            maxInt256,
+            maxUint256,
+          ],
         }),
       );
       const hash = await writeContractAsync({

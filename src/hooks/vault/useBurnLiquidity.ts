@@ -1,4 +1,4 @@
-import {type Address, encodeFunctionData} from 'viem';
+import {type Address, encodeFunctionData, maxUint256, minInt256} from 'viem';
 import {waitForTransactionReceipt} from 'viem/actions';
 import {useWriteContract, useWaitForTransactionReceipt, useClient} from 'wagmi';
 
@@ -20,7 +20,12 @@ export const useBurnLiquidity = (vaultAddr: Address | undefined) => {
   const {poolManager, poolKey} = useVaultData(vaultAddr);
   const {data: {currentTick} = {}} = useCurrentTick(poolManager, poolKey);
 
-  const {writeContractAsync, data: hash, isPending, error} = useWriteContract();
+  const {
+    mutateAsync: writeContractAsync,
+    data: hash,
+    isPending,
+    error,
+  } = useWriteContract();
 
   const {isLoading: isConfirming, isSuccess} = useWaitForTransactionReceipt({
     hash,
@@ -42,7 +47,15 @@ export const useBurnLiquidity = (vaultAddr: Address | undefined) => {
       address: vaultAddr,
       abi: singleOwnerVaultAbi,
       functionName: 'burn',
-      args: [tickLower, tickUpper, liquidity, refTick],
+      args: [
+        tickLower,
+        tickUpper,
+        liquidity,
+        refTick,
+        minInt256,
+        minInt256,
+        maxUint256,
+      ],
     });
     await waitForTransactionReceipt(client, {hash});
     return hash;
@@ -75,7 +88,15 @@ export const useBurnLiquidity = (vaultAddr: Address | undefined) => {
         encodeFunctionData({
           abi: singleOwnerVaultAbi,
           functionName: 'burn',
-          args: [p.tickLower, p.tickUpper, p.liquidity, refTick],
+          args: [
+            p.tickLower,
+            p.tickUpper,
+            p.liquidity,
+            refTick,
+            minInt256,
+            minInt256,
+            maxUint256,
+          ],
         }),
       );
       const hash = await writeContractAsync({

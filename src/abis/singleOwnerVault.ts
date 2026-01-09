@@ -3,36 +3,37 @@ export const singleOwnerVaultAbi = [
     type: 'constructor',
     inputs: [
       {
-        name: '_poolManager',
+        name: 'poolManager_',
         type: 'address',
         internalType: 'contract IPoolManager',
       },
       {
-        name: '_poolKey',
-        type: 'tuple',
-        internalType: 'struct PoolKey',
-        components: [
-          {
-            name: 'currency0',
-            type: 'address',
-            internalType: 'Currency',
-          },
-          {
-            name: 'currency1',
-            type: 'address',
-            internalType: 'Currency',
-          },
-          {name: 'fee', type: 'uint24', internalType: 'uint24'},
-          {name: 'tickSpacing', type: 'int24', internalType: 'int24'},
-          {
-            name: 'hooks',
-            type: 'address',
-            internalType: 'contract IHooks',
-          },
-        ],
+        name: 'token0_',
+        type: 'address',
+        internalType: 'contract IERC20',
       },
+      {
+        name: 'token1_',
+        type: 'address',
+        internalType: 'contract IERC20',
+      },
+      {name: 'poolFee_', type: 'uint24', internalType: 'uint24'},
+      {name: 'tickSpacing_', type: 'int24', internalType: 'int24'},
+      {
+        name: 'hooks_',
+        type: 'address',
+        internalType: 'contract IHooks',
+      },
+      {name: 'owner_', type: 'address', internalType: 'address'},
     ],
     stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'ADMIN_ROLE',
+    inputs: [],
+    outputs: [{name: '', type: 'bytes32', internalType: 'bytes32'}],
+    stateMutability: 'view',
   },
   {
     type: 'function',
@@ -43,9 +44,23 @@ export const singleOwnerVaultAbi = [
   },
   {
     type: 'function',
+    name: 'BORROWER_ROLE',
+    inputs: [],
+    outputs: [{name: '', type: 'bytes32', internalType: 'bytes32'}],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     name: 'BURN',
     inputs: [],
     outputs: [{name: '', type: 'uint8', internalType: 'uint8'}],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'DEFAULT_ADMIN_ROLE',
+    inputs: [],
+    outputs: [{name: '', type: 'bytes32', internalType: 'bytes32'}],
     stateMutability: 'view',
   },
   {
@@ -58,6 +73,13 @@ export const singleOwnerVaultAbi = [
   {
     type: 'function',
     name: 'REPAY',
+    inputs: [],
+    outputs: [{name: '', type: 'uint8', internalType: 'uint8'}],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'RESERVE',
     inputs: [],
     outputs: [{name: '', type: 'uint8', internalType: 'uint8'}],
     stateMutability: 'view',
@@ -77,6 +99,11 @@ export const singleOwnerVaultAbi = [
       },
       {
         name: 'borrowedLiquidity',
+        type: 'uint128',
+        internalType: 'uint128',
+      },
+      {
+        name: 'reservedLiquidity',
         type: 'uint128',
         internalType: 'uint128',
       },
@@ -107,19 +134,15 @@ export const singleOwnerVaultAbi = [
   },
   {
     type: 'function',
-    name: 'borrowerWhitelist',
-    inputs: [{name: '', type: 'address', internalType: 'address'}],
-    outputs: [{name: '', type: 'bool', internalType: 'bool'}],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
     name: 'burn',
     inputs: [
       {name: 'tickLower', type: 'int24', internalType: 'int24'},
       {name: 'tickUpper', type: 'int24', internalType: 'int24'},
       {name: 'liquidity', type: 'uint128', internalType: 'uint128'},
       {name: 'refTick', type: 'int24', internalType: 'int24'},
+      {name: 'amount0Min', type: 'int256', internalType: 'int256'},
+      {name: 'amount1Min', type: 'int256', internalType: 'int256'},
+      {name: 'deadline', type: 'uint256', internalType: 'uint256'},
     ],
     outputs: [
       {name: 'amount0', type: 'int256', internalType: 'int256'},
@@ -159,6 +182,11 @@ export const singleOwnerVaultAbi = [
             type: 'uint128',
             internalType: 'uint128',
           },
+          {
+            name: 'reservedLiquidity',
+            type: 'uint128',
+            internalType: 'uint128',
+          },
         ],
       },
     ],
@@ -166,9 +194,43 @@ export const singleOwnerVaultAbi = [
   },
   {
     type: 'function',
+    name: 'getRoleAdmin',
+    inputs: [{name: 'role', type: 'bytes32', internalType: 'bytes32'}],
+    outputs: [{name: '', type: 'bytes32', internalType: 'bytes32'}],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'grantRole',
+    inputs: [
+      {name: 'role', type: 'bytes32', internalType: 'bytes32'},
+      {name: 'account', type: 'address', internalType: 'address'},
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'hasRole',
+    inputs: [
+      {name: 'role', type: 'bytes32', internalType: 'bytes32'},
+      {name: 'account', type: 'address', internalType: 'address'},
+    ],
+    outputs: [{name: '', type: 'bool', internalType: 'bool'}],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     name: 'highestTick',
     inputs: [],
     outputs: [{name: '', type: 'int24', internalType: 'int24'}],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'hooks',
+    inputs: [],
+    outputs: [{name: '', type: 'address', internalType: 'contract IHooks'}],
     stateMutability: 'view',
   },
   {
@@ -186,6 +248,9 @@ export const singleOwnerVaultAbi = [
       {name: 'tickUpper', type: 'int24', internalType: 'int24'},
       {name: 'liquidity', type: 'uint128', internalType: 'uint128'},
       {name: 'refTick', type: 'int24', internalType: 'int24'},
+      {name: 'amount0Max', type: 'int256', internalType: 'int256'},
+      {name: 'amount1Max', type: 'int256', internalType: 'int256'},
+      {name: 'deadline', type: 'uint256', internalType: 'uint256'},
     ],
     outputs: [
       {name: 'amount0', type: 'int256', internalType: 'int256'},
@@ -204,9 +269,9 @@ export const singleOwnerVaultAbi = [
   },
   {
     type: 'function',
-    name: 'owner',
+    name: 'poolFee',
     inputs: [],
-    outputs: [{name: '', type: 'address', internalType: 'address'}],
+    outputs: [{name: '', type: 'uint24', internalType: 'uint24'}],
     stateMutability: 'view',
   },
   {
@@ -256,8 +321,15 @@ export const singleOwnerVaultAbi = [
   },
   {
     type: 'function',
-    name: 'renounceOwnership',
-    inputs: [],
+    name: 'renounceRole',
+    inputs: [
+      {name: 'role', type: 'bytes32', internalType: 'bytes32'},
+      {
+        name: 'callerConfirmation',
+        type: 'address',
+        internalType: 'address',
+      },
+    ],
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -278,6 +350,32 @@ export const singleOwnerVaultAbi = [
   },
   {
     type: 'function',
+    name: 'reserve',
+    inputs: [
+      {name: 'tickLower', type: 'int24', internalType: 'int24'},
+      {name: 'tickUpper', type: 'int24', internalType: 'int24'},
+      {
+        name: 'reservedLiquidity',
+        type: 'uint128',
+        internalType: 'uint128',
+      },
+      {name: 'refTick', type: 'int24', internalType: 'int24'},
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'revokeRole',
+    inputs: [
+      {name: 'role', type: 'bytes32', internalType: 'bytes32'},
+      {name: 'account', type: 'address', internalType: 'address'},
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
     name: 'settleAndTake',
     inputs: [],
     outputs: [
@@ -288,10 +386,31 @@ export const singleOwnerVaultAbi = [
   },
   {
     type: 'function',
-    name: 'transferOwnership',
-    inputs: [{name: 'newOwner', type: 'address', internalType: 'address'}],
-    outputs: [],
-    stateMutability: 'nonpayable',
+    name: 'supportsInterface',
+    inputs: [{name: 'interfaceId', type: 'bytes4', internalType: 'bytes4'}],
+    outputs: [{name: '', type: 'bool', internalType: 'bool'}],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'tickSpacing',
+    inputs: [],
+    outputs: [{name: '', type: 'int24', internalType: 'int24'}],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'token0',
+    inputs: [],
+    outputs: [{name: '', type: 'address', internalType: 'contract IERC20'}],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'token1',
+    inputs: [],
+    outputs: [{name: '', type: 'address', internalType: 'contract IERC20'}],
+    stateMutability: 'view',
   },
   {
     type: 'function',
@@ -437,25 +556,6 @@ export const singleOwnerVaultAbi = [
   },
   {
     type: 'event',
-    name: 'OwnershipTransferred',
-    inputs: [
-      {
-        name: 'previousOwner',
-        type: 'address',
-        indexed: true,
-        internalType: 'address',
-      },
-      {
-        name: 'newOwner',
-        type: 'address',
-        indexed: true,
-        internalType: 'address',
-      },
-    ],
-    anonymous: false,
-  },
-  {
-    type: 'event',
     name: 'Repay',
     inputs: [
       {
@@ -487,6 +587,112 @@ export const singleOwnerVaultAbi = [
   },
   {
     type: 'event',
+    name: 'Reserve',
+    inputs: [
+      {
+        name: 'user',
+        type: 'address',
+        indexed: false,
+        internalType: 'address',
+      },
+      {
+        name: 'tickLower',
+        type: 'int24',
+        indexed: false,
+        internalType: 'int24',
+      },
+      {
+        name: 'tickUpper',
+        type: 'int24',
+        indexed: false,
+        internalType: 'int24',
+      },
+      {
+        name: 'liquidity',
+        type: 'uint128',
+        indexed: false,
+        internalType: 'uint128',
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'RoleAdminChanged',
+    inputs: [
+      {
+        name: 'role',
+        type: 'bytes32',
+        indexed: true,
+        internalType: 'bytes32',
+      },
+      {
+        name: 'previousAdminRole',
+        type: 'bytes32',
+        indexed: true,
+        internalType: 'bytes32',
+      },
+      {
+        name: 'newAdminRole',
+        type: 'bytes32',
+        indexed: true,
+        internalType: 'bytes32',
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'RoleGranted',
+    inputs: [
+      {
+        name: 'role',
+        type: 'bytes32',
+        indexed: true,
+        internalType: 'bytes32',
+      },
+      {
+        name: 'account',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
+      },
+      {
+        name: 'sender',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'RoleRevoked',
+    inputs: [
+      {
+        name: 'role',
+        type: 'bytes32',
+        indexed: true,
+        internalType: 'bytes32',
+      },
+      {
+        name: 'account',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
+      },
+      {
+        name: 'sender',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
     name: 'TokenWithdrawn',
     inputs: [
       {
@@ -510,6 +716,15 @@ export const singleOwnerVaultAbi = [
     ],
     anonymous: false,
   },
+  {type: 'error', name: 'AccessControlBadConfirmation', inputs: []},
+  {
+    type: 'error',
+    name: 'AccessControlUnauthorizedAccount',
+    inputs: [
+      {name: 'account', type: 'address', internalType: 'address'},
+      {name: 'neededRole', type: 'bytes32', internalType: 'bytes32'},
+    ],
+  },
   {
     type: 'error',
     name: 'AddressEmptyCode',
@@ -519,6 +734,11 @@ export const singleOwnerVaultAbi = [
     type: 'error',
     name: 'BorrowerNotWhitelisted',
     inputs: [{name: 'borrower', type: 'address', internalType: 'address'}],
+  },
+  {
+    type: 'error',
+    name: 'DeadlinePassed',
+    inputs: [{name: 'deadline', type: 'uint256', internalType: 'uint256'}],
   },
   {type: 'error', name: 'FailedCall', inputs: []},
   {
@@ -547,15 +767,22 @@ export const singleOwnerVaultAbi = [
       {name: 'tickUpper', type: 'int24', internalType: 'int24'},
     ],
   },
+  {type: 'error', name: 'InvalidTickSpacing', inputs: []},
   {
     type: 'error',
-    name: 'OwnableInvalidOwner',
-    inputs: [{name: 'owner', type: 'address', internalType: 'address'}],
-  },
-  {
-    type: 'error',
-    name: 'OwnableUnauthorizedAccount',
-    inputs: [{name: 'account', type: 'address', internalType: 'address'}],
+    name: 'MintTooLarge',
+    inputs: [
+      {
+        name: 'existingLiquidity',
+        type: 'uint128',
+        internalType: 'uint128',
+      },
+      {
+        name: 'addedLiquidity',
+        type: 'uint128',
+        internalType: 'uint128',
+      },
+    ],
   },
   {type: 'error', name: 'ReentrancyGuardReentrantCall', inputs: []},
   {
@@ -565,12 +792,12 @@ export const singleOwnerVaultAbi = [
   },
   {
     type: 'error',
-    name: 'TooMuchRepay',
+    name: 'SlippageExceeded',
     inputs: [
-      {name: 'blockTickLower', type: 'int24', internalType: 'int24'},
-      {name: 'attempted', type: 'uint128', internalType: 'uint128'},
-      {name: 'maximum', type: 'uint128', internalType: 'uint128'},
+      {name: 'actual', type: 'int256', internalType: 'int256'},
+      {name: 'limit', type: 'int256', internalType: 'int256'},
     ],
   },
   {type: 'error', name: 'UnauthorizedCaller', inputs: []},
+  {type: 'error', name: 'ZeroAddress', inputs: []},
 ] as const;
