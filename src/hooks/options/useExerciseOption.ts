@@ -34,7 +34,7 @@ export const useExerciseOption = (marketAddr: Address | undefined) => {
     if (!marketAddr) throw new Error('Market address not available');
     if (!timelockLens) throw new Error('Timelock lens not available');
     if (!vault) throw new Error('Vault not available');
-    if (!poolKey) throw new Error('Pool data not available');
+    if (!poolKey || !poolManager) throw new Error('Pool data not available');
     if (!sqrtPriceX96) throw new Error('Current price not available');
 
     const swapper = swappers[client.chain.id];
@@ -42,6 +42,7 @@ export const useExerciseOption = (marketAddr: Address | undefined) => {
 
     const minSqrtPrice = (sqrtPriceX96 * 9n) / 10n;
     const maxSqrtPrice = (sqrtPriceX96 * 11n) / 10n;
+    const deadline = BigInt(Math.floor(Date.now() / 1000) + 60 * 10);
 
     const refTick = await timelockLens.read.getRefTick([
       vault,
@@ -57,21 +58,8 @@ export const useExerciseOption = (marketAddr: Address | undefined) => {
         0n,
         swapper,
         encodeAbiParameters(
-          [
-            {
-              type: 'tuple',
-              components: [
-                {type: 'address', name: 'currency0'},
-                {type: 'address', name: 'currency1'},
-                {type: 'uint24', name: 'fee'},
-                {type: 'int24', name: 'tickSpacing'},
-                {type: 'address', name: 'hooks'},
-              ],
-            },
-            {type: 'uint160'},
-            {type: 'uint160'},
-          ],
-          [poolKey, minSqrtPrice, maxSqrtPrice],
+          [{type: 'uint160'}, {type: 'uint160'}, {type: 'uint256'}],
+          [minSqrtPrice, maxSqrtPrice, deadline],
         ),
         refTick,
       ],
