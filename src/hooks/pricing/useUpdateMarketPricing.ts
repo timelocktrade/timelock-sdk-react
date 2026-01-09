@@ -12,7 +12,7 @@ import {factoryAbi} from '~/abis/factory';
 import {optionsMarketAbi} from '~/abis/optionsMarket';
 
 export const useUpdateMarketPricing = (marketAddr: Address | undefined) => {
-  const {writeContractAsync, ...rest} = useWriteContract();
+  const {mutateAsync: writeContractAsync, ...rest} = useWriteContract();
   const queryClient = useQueryClient();
   const publicClient = usePublicClient();
   const chainId = useChainId();

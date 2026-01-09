@@ -10,7 +10,7 @@ export const useSetOperatorPerms = (marketAddr: Address | undefined) => {
   const client = useClient();
   const {address} = useConnection();
 
-  const {writeContractAsync} = useWriteContract();
+  const {mutateAsync: writeContractAsync} = useWriteContract();
 
   const setOperatorPerms = async ({
     operator,

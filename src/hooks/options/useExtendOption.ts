@@ -18,7 +18,7 @@ export const useExtendOption = (marketAddr: Address | undefined) => {
   const {address} = useConnection();
 
   const {askForApproval} = useApproval();
-  const {writeContractAsync} = useWriteContract();
+  const {mutateAsync: writeContractAsync} = useWriteContract();
 
   const extendOption = async ({
     option,

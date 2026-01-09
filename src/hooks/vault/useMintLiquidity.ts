@@ -55,7 +55,7 @@ export const useMintLiquidity = (vaultAddr: Address | undefined) => {
   const {token0, token1} = usePoolData(poolManager, poolKey);
 
   const {askForApproval} = useApproval();
-  const {writeContractAsync} = useWriteContract();
+  const {mutateAsync: writeContractAsync} = useWriteContract();
 
   const processApproval = async (params: MintPositionParams[]) => {
     if (currentTick === undefined || !token0 || !token1 || !vaultAddr) {

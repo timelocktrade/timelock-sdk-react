@@ -19,7 +19,7 @@ export const useExerciseOption = (marketAddr: Address | undefined) => {
   const queryClient = useQueryClient();
   const client = useClient();
   const {address} = useConnection();
-  const {writeContractAsync} = useWriteContract();
+  const {mutateAsync: writeContractAsync} = useWriteContract();
 
   const {sqrtPriceX96} = useCurrentPrice(poolManager, poolKey);
 

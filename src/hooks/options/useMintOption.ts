@@ -27,7 +27,7 @@ export const useMintOption = (marketAddr: Address | undefined) => {
   const {timelockLens} = useLens();
 
   const {askForApproval} = useApproval();
-  const {writeContractAsync} = useWriteContract();
+  const {mutateAsync: writeContractAsync} = useWriteContract();
 
   const mintOption = async ({
     optionType,
