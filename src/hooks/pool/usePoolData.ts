@@ -66,7 +66,7 @@ export const usePoolsData = (pools: PoolInput[]) => {
 
   // Build contracts array for unique pools only
   const contracts = useMemo(() => {
-    if (!timelockLens) return [];
+    if (!timelockLens) return undefined;
 
     return uniquePools.map(({poolManager, poolKey}) => ({
       address: timelockLens.address,

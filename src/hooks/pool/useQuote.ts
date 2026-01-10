@@ -1,4 +1,3 @@
-import {useMemo} from 'react';
 import type {Address, Hex} from 'viem';
 import {useSimulateContract} from 'wagmi';
 import type {PoolKey} from '~/lib/liquidityUtils';
@@ -30,6 +29,18 @@ export type UseQuoteOptions = {
   enabled?: boolean;
 };
 
+type QuoteResult = {
+  deltaAmount: bigint;
+  gasEstimate: bigint;
+};
+
+const selectQuoteResult = (data: {
+  result: readonly [bigint, bigint];
+}): QuoteResult => ({
+  deltaAmount: data.result[0],
+  gasEstimate: data.result[1],
+});
+
 /**
  * Hook to get a quote for an exact input single-hop swap
  */
@@ -41,24 +52,16 @@ export const useQuoteExactInputSingle = (
   const {quoter} = useLens();
   const {enabled = true} = options;
 
-  const result = useSimulateContract({
+  return useSimulateContract({
     address: quoter?.address,
     abi: quoterAbi,
     functionName: 'quoteExactInputSingle',
     args: poolManager && params ? [poolManager, params] : undefined,
     query: {
       enabled: enabled && !!quoter?.address && !!poolManager && !!params,
+      select: selectQuoteResult,
     },
   });
-
-  return useMemo(
-    () => ({
-      ...result,
-      amountOut: result.data?.result?.[0],
-      gasEstimate: result.data?.result?.[1],
-    }),
-    [result],
-  );
 };
 
 /**
@@ -72,24 +75,16 @@ export const useQuoteExactOutputSingle = (
   const {quoter} = useLens();
   const {enabled = true} = options;
 
-  const result = useSimulateContract({
+  return useSimulateContract({
     address: quoter?.address,
     abi: quoterAbi,
     functionName: 'quoteExactOutputSingle',
     args: poolManager && params ? [poolManager, params] : undefined,
     query: {
       enabled: enabled && !!quoter?.address && !!poolManager && !!params,
+      select: selectQuoteResult,
     },
   });
-
-  return useMemo(
-    () => ({
-      ...result,
-      amountIn: result.data?.result?.[0],
-      gasEstimate: result.data?.result?.[1],
-    }),
-    [result],
-  );
 };
 
 /**
@@ -103,24 +98,16 @@ export const useQuoteExactInput = (
   const {quoter} = useLens();
   const {enabled = true} = options;
 
-  const result = useSimulateContract({
+  return useSimulateContract({
     address: quoter?.address,
     abi: quoterAbi,
     functionName: 'quoteExactInput',
     args: poolManager && params ? [poolManager, params] : undefined,
     query: {
       enabled: enabled && !!quoter?.address && !!poolManager && !!params,
+      select: selectQuoteResult,
     },
   });
-
-  return useMemo(
-    () => ({
-      ...result,
-      amountOut: result.data?.result?.[0],
-      gasEstimate: result.data?.result?.[1],
-    }),
-    [result],
-  );
 };
 
 /**
@@ -134,24 +121,16 @@ export const useQuoteExactOutput = (
   const {quoter} = useLens();
   const {enabled = true} = options;
 
-  const result = useSimulateContract({
+  return useSimulateContract({
     address: quoter?.address,
     abi: quoterAbi,
     functionName: 'quoteExactOutput',
     args: poolManager && params ? [poolManager, params] : undefined,
     query: {
       enabled: enabled && !!quoter?.address && !!poolManager && !!params,
+      select: selectQuoteResult,
     },
   });
-
-  return useMemo(
-    () => ({
-      ...result,
-      amountIn: result.data?.result?.[0],
-      gasEstimate: result.data?.result?.[1],
-    }),
-    [result],
-  );
 };
 
 /**
@@ -175,21 +154,40 @@ export const useQuote = (
     enabled?: boolean;
   },
 ) => {
-  const params = useMemo(() => {
-    if (!poolKey || exactAmount === undefined) return undefined;
-    return {
-      poolKey,
-      zeroForOne,
-      exactAmount,
-      hookData,
-    } satisfies QuoteExactSingleParams;
-  }, [poolKey, zeroForOne, exactAmount, hookData]);
+  const {quoter} = useLens();
 
-  const inputResult = useQuoteExactInputSingle(poolManager, params, {
-    enabled: enabled && exactInput,
+  const params =
+    poolKey && exactAmount !== undefined
+      ? {
+          poolKey,
+          zeroForOne,
+          exactAmount,
+          hookData,
+        }
+      : undefined;
+
+  const isEnabled = enabled && !!quoter?.address && !!poolManager && !!params;
+
+  const inputResult = useSimulateContract({
+    address: quoter?.address,
+    abi: quoterAbi,
+    functionName: 'quoteExactInputSingle',
+    args: poolManager && params ? [poolManager, params] : undefined,
+    query: {
+      enabled: isEnabled && exactInput,
+      select: selectQuoteResult,
+    },
   });
-  const outputResult = useQuoteExactOutputSingle(poolManager, params, {
-    enabled: enabled && !exactInput,
+
+  const outputResult = useSimulateContract({
+    address: quoter?.address,
+    abi: quoterAbi,
+    functionName: 'quoteExactOutputSingle',
+    args: poolManager && params ? [poolManager, params] : undefined,
+    query: {
+      enabled: isEnabled && !exactInput,
+      select: selectQuoteResult,
+    },
   });
 
   return exactInput ? inputResult : outputResult;

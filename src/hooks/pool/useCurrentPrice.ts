@@ -40,7 +40,7 @@ export const useCurrentPrices = (
     return ticksData.map(({sqrtPriceX96}, index) =>
       getPriceAtSqrtPriceX96(sqrtPriceX96, pools[index].token0For1),
     );
-  }, [ticksData, poolsData]);
+  }, [ticksData, pools]);
 
   const data = useMemo(() => {
     if (!ticksData || !pricesBigInt || !poolsData) return undefined;

@@ -2,7 +2,11 @@ import {useQuery} from '@tanstack/react-query';
 import {usePublicClient} from 'wagmi';
 import {getTimelockLens, getStateView, getQuoter} from '~/lib/contracts';
 
-export const useLens = () => {
+export const useLens = (): {
+  timelockLens: Awaited<ReturnType<typeof getTimelockLens>> | undefined;
+  stateView: Awaited<ReturnType<typeof getStateView>> | undefined;
+  quoter: Awaited<ReturnType<typeof getQuoter>> | undefined;
+} => {
   const client = usePublicClient();
 
   const {data: timelockLens} = useQuery({

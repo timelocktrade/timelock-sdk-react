@@ -1,114 +1,56 @@
-import type {Address, PublicClient} from 'viem';
 import type {OptionData} from '~/package/client';
-import {getQuoter} from './contracts';
 import {
   getPriceAtTick,
   liquiditiesToAmounts,
-  PRICE_PRECISION,
-  type PoolKey,
+  token0ToToken1,
+  token1ToToken0,
 } from './liquidityUtils';
 
-export const getPayoutAtTick = async (
-  client: PublicClient,
-  poolManager: Address,
-  poolKey: PoolKey,
+export const getPayoutAtTick = (
   option: OptionData,
   liquidities: bigint[],
   tick: number,
+  tickSpacing: number,
   optionAssetIsToken0: boolean,
 ) => {
   return getPayoutAtPrice(
-    client,
-    poolManager,
-    poolKey,
     option,
     liquidities,
     getPriceAtTick(tick),
+    tickSpacing,
     optionAssetIsToken0,
   );
 };
 
-export const getPayoutAtPrice = async (
-  client: PublicClient,
-  poolManager: Address,
-  poolKey: PoolKey,
+export const getPayoutAtPrice = (
   option: OptionData,
   liquidities: bigint[],
   price: bigint,
+  tickSpacing: number,
   optionAssetIsToken0: boolean,
 ) => {
-  // convert from payoutAsset/optionAsset to token1/token0
-  const entryPrice = optionAssetIsToken0
-    ? option.entryPrice
-    : PRICE_PRECISION ** 2n / option.entryPrice;
-
-  const [borrowed0, borrowed1] = liquiditiesToAmounts(
+  const [borrowedAmount0, borrowedAmount1] = liquiditiesToAmounts(
     liquidities,
     option.startTick,
-    entryPrice,
-    poolKey.tickSpacing,
+    option.entryPrice,
+    tickSpacing,
   );
-  const [repay0, repay1] = liquiditiesToAmounts(
+  const [repayAmount0, repayAmount1] = liquiditiesToAmounts(
     liquidities,
     option.startTick,
     price,
-    poolKey.tickSpacing,
+    tickSpacing,
   );
+  const totalAmount = optionAssetIsToken0
+    ? borrowedAmount1 + token0ToToken1(borrowedAmount0, price)
+    : borrowedAmount0 + token1ToToken0(borrowedAmount1, price);
 
-  // Determine if we're long token0 or token1
-  const isLong0 =
-    (optionAssetIsToken0 && option.optionType === 'CALL') ||
-    (!optionAssetIsToken0 && option.optionType === 'PUT');
+  const repayAmount = optionAssetIsToken0
+    ? repayAmount1 + token0ToToken1(repayAmount0, price)
+    : repayAmount0 + token1ToToken0(repayAmount1, price);
 
-  // Get borrowed amount (only one will be non-zero)
-  const borrowedLong = isLong0 ? borrowed0 : borrowed1;
-  const repayLong = isLong0 ? repay0 : repay1;
+  const delta = totalAmount - repayAmount;
+  const payout = delta < 0n ? 0n : delta;
 
-  // Calculate excess borrowed amount after repay
-  const excessLong = borrowedLong > repayLong ? borrowedLong - repayLong : 0n;
-  const neededShort = isLong0 ? repay1 : repay0;
-
-  // If no conversion needed, return immediately
-  if (neededShort === 0n || excessLong === 0n) return 0n;
-
-  // Check if output asset is same as borrowed asset
-  const output0 = !optionAssetIsToken0;
-
-  const quoter = await getQuoter(client);
-
-  if ((isLong0 && output0) || (!isLong0 && !output0)) {
-    // Output asset same as borrowed asset
-    // Convert minimum required amount, excess is payout
-
-    // Use quoteExactOutputSingle to find how much input needed for exact output
-    const result = await quoter.simulate.quoteExactOutputSingle([
-      poolManager,
-      {
-        poolKey,
-        zeroForOne: isLong0, // swapping long asset for short
-        exactAmount: neededShort,
-        hookData: '0x',
-      },
-    ]);
-    const amountIn = result.result[0];
-
-    return excessLong > amountIn ? excessLong - amountIn : 0n;
-  } else {
-    // Output asset is not same as borrowed asset
-    // Convert all of borrowed asset, excess non-borrowed asset is payout
-
-    // Use quoteExactInputSingle to find how much output from swapping all excess
-    const result = await quoter.simulate.quoteExactInputSingle([
-      poolManager,
-      {
-        poolKey,
-        zeroForOne: isLong0,
-        exactAmount: excessLong,
-        hookData: '0x',
-      },
-    ]);
-    const amountOut = result.result[0];
-
-    return amountOut > neededShort ? amountOut - neededShort : 0n;
-  }
+  return payout;
 };

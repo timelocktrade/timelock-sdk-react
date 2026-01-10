@@ -46,7 +46,7 @@ export const useMarketsData = (marketAddrs: Address[]) => {
 
   // Build contracts array for unique addresses only
   const contracts = useMemo(() => {
-    if (!timelockLens) return [];
+    if (!timelockLens) return undefined;
 
     return uniqueAddrs.map(addr => ({
       address: timelockLens.address,

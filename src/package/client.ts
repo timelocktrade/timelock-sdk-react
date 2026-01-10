@@ -34,6 +34,7 @@ export * from '~/hooks/pool/useCurrentTick';
 export * from '~/hooks/pool/usePoolData';
 export * from '~/hooks/pool/usePriceAtTick';
 export * from '~/hooks/pool/usePriceHistory';
+export * from '~/hooks/pool/useQuote';
 
 // Vault Hooks
 export * from '~/hooks/vault/useBurnLiquidity';

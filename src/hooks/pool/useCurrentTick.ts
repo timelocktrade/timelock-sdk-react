@@ -57,7 +57,7 @@ export const useCurrentTicks = (pools: PoolInput[]) => {
 
   // Build contracts array for unique pools only
   const contracts = useMemo(() => {
-    if (!stateView) return [];
+    if (!stateView) return undefined;
 
     return uniquePools.map(({poolManager, poolKey}) => ({
       address: stateView.address,
