@@ -46,6 +46,8 @@ export * from '~/hooks/vault/useLiquidityBlocks';
 export * from '~/hooks/vault/useMintLiquidity';
 export * from '~/hooks/vault/useVaultData';
 export * from '~/hooks/vault/useVaultTVL';
+export * from '~/hooks/vault/useWithdrawPremium';
+export * from '~/hooks/vault/useCollectedPremium';
 
 // Token Hooks
 export * from '~/hooks/tokens/useTokenData';
