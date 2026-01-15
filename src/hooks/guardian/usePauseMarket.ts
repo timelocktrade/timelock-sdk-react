@@ -3,23 +3,23 @@ import {useWriteContract} from 'wagmi';
 import {useMarketData} from '~/hooks/market/useMarketData';
 import {guardianAbi} from '~/abis/guardian';
 
-export const usePauseMarketTrading = (marketAddr: Address | undefined) => {
+export const usePauseMarket = (marketAddr: Address | undefined) => {
   const {guardian} = useMarketData(marketAddr);
-  const {writeContractAsync, ...rest} = useWriteContract();
+  const {mutateAsync, ...rest} = useWriteContract();
 
-  const pauseMarketTrading = async (paused: boolean) => {
+  const pauseMarket = async (paused: boolean) => {
     if (!marketAddr) {
       throw new Error('Market address is required');
     }
     if (!guardian) {
       throw new Error('Could not load guardian address');
     }
-    return await writeContractAsync({
+    return await mutateAsync({
       address: guardian,
       abi: guardianAbi,
       functionName: 'pauseMarket',
       args: [marketAddr, paused],
     });
   };
-  return {pauseMarketTrading, ...rest};
+  return {pauseMarket, ...rest};
 };

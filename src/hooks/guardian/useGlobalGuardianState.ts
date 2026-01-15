@@ -1,9 +1,9 @@
 import type {Address} from 'viem';
 import {useReadContract} from 'wagmi';
-import {useLens} from '../useLens';
+import {useLens} from '~/hooks/useLens';
 import {lensAbi} from '~/abis/lens';
 
-export const useGuardianGlobalState = (guardianAddr?: Address) => {
+export const useGlobalGuardianState = (guardianAddr?: Address) => {
   const {timelockLens} = useLens();
 
   return useReadContract({

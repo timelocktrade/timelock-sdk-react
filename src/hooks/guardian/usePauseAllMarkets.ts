@@ -1,22 +1,17 @@
 import type {Address} from 'viem';
 import {usePublicClient, useWriteContract} from 'wagmi';
-import {useMarketData} from '~/hooks/market/useMarketData';
+import {useGlobalGuardianState} from './useGlobalGuardianState';
 import {guardianAbi} from '~/abis/guardian';
-import {useGuardianGlobalState} from './useGuardianGlobalState';
 
-export const usePauseGlobalTrading = (marketAddr: Address | undefined) => {
-  const {guardian} = useMarketData(marketAddr);
+export const usePauseAllMarkets = (guardianAddr: Address | undefined) => {
   const {data: {globalBurnPaused, globalMintPaused} = {}, refetch} =
-    useGuardianGlobalState(guardian);
+    useGlobalGuardianState(guardianAddr);
 
   const publicClient = usePublicClient();
-  const {writeContractAsync, ...rest} = useWriteContract();
+  const {mutateAsync, ...rest} = useWriteContract();
 
-  const pauseGlobalTrading = async (paused: boolean) => {
-    if (!marketAddr) {
-      throw new Error('Market address is required');
-    }
-    if (!guardian) {
+  const pauseAllMarkets = async (paused: boolean) => {
+    if (!guardianAddr) {
       throw new Error('Could not load guardian address');
     }
     if (!globalMintPaused || !globalBurnPaused) {
@@ -25,8 +20,8 @@ export const usePauseGlobalTrading = (marketAddr: Address | undefined) => {
     if (!publicClient) {
       throw new Error('Could not load public client');
     }
-    const hash = await writeContractAsync({
-      address: guardian,
+    const hash = await mutateAsync({
+      address: guardianAddr,
       abi: guardianAbi,
       functionName: 'pauseGlobal',
       args: [globalMintPaused.paused, globalBurnPaused.paused, paused],
@@ -36,5 +31,5 @@ export const usePauseGlobalTrading = (marketAddr: Address | undefined) => {
 
     return hash;
   };
-  return {pauseGlobalTrading, ...rest};
+  return {pauseAllMarkets, ...rest};
 };

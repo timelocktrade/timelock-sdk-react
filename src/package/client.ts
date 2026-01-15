@@ -53,9 +53,10 @@ export * from '~/hooks/tokens/useTokenBalance';
 export * from '~/hooks/tokens/useApproval';
 
 // Guardian Hooks
-export * from '~/hooks/guardian/useGuardianGlobalState';
-export * from '~/hooks/guardian/usePauseGlobalTrading';
-export * from '~/hooks/guardian/usePauseMarketTrading';
+export * from '~/hooks/guardian/useGlobalGuardianState';
+export * from '~/hooks/guardian/useMarketGuardianState';
+export * from '~/hooks/guardian/usePauseAllMarkets';
+export * from '~/hooks/guardian/usePauseMarket';
 
 // Fees Hooks
 export * from '~/hooks/fees/useFeeRates';
