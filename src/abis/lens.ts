@@ -418,6 +418,26 @@ export const lensAbi = [
             type: 'address',
             internalType: 'contract IPriceFeed',
           },
+          {
+            name: 'minDuration',
+            type: 'uint32',
+            internalType: 'uint32',
+          },
+          {
+            name: 'maxDuration',
+            type: 'uint32',
+            internalType: 'uint32',
+          },
+          {
+            name: 'minPositionSize',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'maxPositionSize',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
           {name: 'owner', type: 'address', internalType: 'address'},
         ],
       },

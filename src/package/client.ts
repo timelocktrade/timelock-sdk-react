@@ -7,6 +7,7 @@ export * from '~/hooks/market/useMarketData';
 export * from '~/hooks/market/useMarketState';
 export * from '~/hooks/market/useMarketVolume';
 export * from '~/hooks/market/useMarketUserVolume';
+export * from '~/hooks/market/useUpdateMarketBounds';
 
 // Options Hooks
 export * from '~/hooks/options/useMaxPositionSize';
