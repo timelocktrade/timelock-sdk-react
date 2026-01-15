@@ -47,7 +47,6 @@ export const useOptionTimeline = (
       const exerciseEvents = result.ExerciseOptionEvent.map(event => ({
         id: event.id,
         payout: BigInt(event.payout),
-        price: BigInt(event.price),
         liquidities: event.liquidities.map(l => BigInt(l)),
         timestamp: new Date(Number(event.timestamp) * 1000),
         blockNumber: BigInt(event.blockNumber),
