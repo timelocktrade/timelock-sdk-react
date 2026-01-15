@@ -18,8 +18,15 @@ export const useUpdateMarketFees = (marketAddr: Address) => {
     error: stateError,
   } = useMarketState(marketAddr);
 
-  const {openingFeeRate, baseFeeRate, minOpeningFee, minBaseFee, feeRecipient} =
-    useFeeRates(feeStrategy);
+  const {
+    data: {
+      openingFeeRate,
+      baseFeeRate,
+      minOpeningFee,
+      minBaseFee,
+      feeRecipient,
+    } = {},
+  } = useFeeRates(feeStrategy);
 
   const updateMarketFees = async (rates: {
     openingFeeRate?: number;
