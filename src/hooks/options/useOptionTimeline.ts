@@ -13,7 +13,7 @@ export const useOptionTimeline = (
   marketAddr: Address | undefined,
   optionId: bigint | undefined,
 ) => {
-  const {graphqlClient} = useTimelockConfig();
+  const {timelockGraphqlClient} = useTimelockConfig();
   marketAddr = marketAddr?.toLowerCase() as Address | undefined;
 
   return useQuery({
@@ -23,10 +23,10 @@ export const useOptionTimeline = (
       optionId?.toString() || '--',
     ],
     queryFn: async () => {
-      if (!graphqlClient || !marketAddr || optionId === undefined) {
+      if (!timelockGraphqlClient || !marketAddr || optionId === undefined) {
         return [];
       }
-      const result = await graphqlClient.GetOptionEvents({
+      const result = await timelockGraphqlClient.GetOptionEvents({
         marketAddr: marketAddr,
         optionId: optionId.toString(),
       });
@@ -81,6 +81,6 @@ export const useOptionTimeline = (
         (a, b) => a.data.timestamp.getTime() - b.data.timestamp.getTime(),
       );
     },
-    enabled: !!marketAddr && optionId !== undefined && !!graphqlClient,
+    enabled: !!marketAddr && optionId !== undefined && !!timelockGraphqlClient,
   });
 };

@@ -1,13 +1,11 @@
 import {useMemo} from 'react';
-import {useReadContracts} from 'wagmi';
 import {useQuery} from '@tanstack/react-query';
 import {usePublicClient} from 'wagmi';
 
 import type {OptionData} from './useUserOptions';
-import {useMarketData, useMarketsData} from '~/hooks/market/useMarketData';
-import {useCurrentPrice, useCurrentPrices} from '~/hooks/pool/useCurrentPrice';
+import {useMarketData} from '~/hooks/market/useMarketData';
+import {useCurrentPrice} from '~/hooks/pool/useCurrentPrice';
 import {usePoolData} from '~/hooks/pool/usePoolData';
-import {useLens} from '~/hooks/useLens';
 import {
   liquiditiesToAmounts,
   PRICE_PRECISION,
@@ -18,7 +16,6 @@ import {
 } from '~/lib/liquidityUtils';
 import {type Amount, wrapAmount} from '~/lib/numberUtils';
 import {getQuoter} from '~/lib/contracts';
-import {quoterAbi} from '~/abis/quoterV4';
 
 const calculateDisplayPnl = (
   option: OptionData,

@@ -42,7 +42,7 @@ const clearSignature = (userAddr: Address) => {
 export const usePerpsOperator = () => {
   const {address: userAddr} = useConnection();
   const {perpsOperatorUrl, perpsOperator: operator} = useTimelockConfig();
-  const {signMessageAsync} = useSignMessage();
+  const {mutateAsync: signMessageAsync} = useSignMessage();
 
   const {data: address} = useQuery({
     queryKey: ['perpsOperatorAddr', perpsOperatorUrl || '--'],

@@ -1,4 +1,4 @@
-import {type Address, decodeAbiParameters} from 'viem';
+import {type Address, decodeAbiParameters, type Hex} from 'viem';
 import {useReadContract} from 'wagmi';
 import {useLens} from '../useLens';
 import {lensAbi} from '~/abis/lens';
@@ -45,7 +45,7 @@ export const usePricingParams = (pricingAddr: Address | undefined) => {
               {name: 'minPremiumDailyRate', type: 'uint32'},
               {name: 'minPremiumAmount', type: 'uint256'},
             ],
-            rawData as `0x${string}`,
+            rawData as Hex,
           );
 
           return {
@@ -62,7 +62,7 @@ export const usePricingParams = (pricingAddr: Address | undefined) => {
               {name: 'dailyFundingRate', type: 'uint32'},
               {name: 'minFundingAmount', type: 'uint128'},
             ],
-            rawData as `0x${string}`,
+            rawData as Hex,
           );
           return {model: 'static', dailyFundingRate, minFundingAmount};
         }
