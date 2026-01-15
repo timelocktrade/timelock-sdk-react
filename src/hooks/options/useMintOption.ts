@@ -70,6 +70,7 @@ export const useMintOption = (marketAddr: Address | undefined) => {
       strikeTick,
       duration,
       0,
+      '0x',
     ]);
     const maxPremium = ((premium + protocolFee) * 11n) / 10n;
     await askForApproval(payoutAsset, marketAddr, maxPremium);
@@ -87,6 +88,7 @@ export const useMintOption = (marketAddr: Address | undefined) => {
         maxPremium,
         maxSteps,
         await timelockLens.read.getRefTick([vault, strikeTick]),
+        '0x',
       ],
     });
     await waitForTransactionReceipt(client, {hash});
