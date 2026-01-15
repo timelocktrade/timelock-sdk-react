@@ -82,6 +82,7 @@ export const useMintPerp = (marketAddr: Address | undefined) => {
       validStrikeTick,
       duration,
       0,
+      '0x',
     ]);
     const maxPremium = ((premium + protocolFee) * 11n) / 10n;
 

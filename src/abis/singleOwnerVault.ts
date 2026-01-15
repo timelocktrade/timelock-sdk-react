@@ -8,21 +8,28 @@ export const singleOwnerVaultAbi = [
         internalType: 'contract IPoolManager',
       },
       {
-        name: 'token0_',
-        type: 'address',
-        internalType: 'contract IERC20',
-      },
-      {
-        name: 'token1_',
-        type: 'address',
-        internalType: 'contract IERC20',
-      },
-      {name: 'poolFee_', type: 'uint24', internalType: 'uint24'},
-      {name: 'tickSpacing_', type: 'int24', internalType: 'int24'},
-      {
-        name: 'hooks_',
-        type: 'address',
-        internalType: 'contract IHooks',
+        name: 'poolKey_',
+        type: 'tuple',
+        internalType: 'struct PoolKey',
+        components: [
+          {
+            name: 'currency0',
+            type: 'address',
+            internalType: 'Currency',
+          },
+          {
+            name: 'currency1',
+            type: 'address',
+            internalType: 'Currency',
+          },
+          {name: 'fee', type: 'uint24', internalType: 'uint24'},
+          {name: 'tickSpacing', type: 'int24', internalType: 'int24'},
+          {
+            name: 'hooks',
+            type: 'address',
+            internalType: 'contract IHooks',
+          },
+        ],
       },
       {name: 'owner_', type: 'address', internalType: 'address'},
     ],
@@ -228,13 +235,6 @@ export const singleOwnerVaultAbi = [
   },
   {
     type: 'function',
-    name: 'hooks',
-    inputs: [],
-    outputs: [{name: '', type: 'address', internalType: 'contract IHooks'}],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
     name: 'lowestTick',
     inputs: [],
     outputs: [{name: '', type: 'int24', internalType: 'int24'}],
@@ -266,13 +266,6 @@ export const singleOwnerVaultAbi = [
     inputs: [{name: 'data', type: 'bytes[]', internalType: 'bytes[]'}],
     outputs: [{name: 'results', type: 'bytes[]', internalType: 'bytes[]'}],
     stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    name: 'poolFee',
-    inputs: [],
-    outputs: [{name: '', type: 'uint24', internalType: 'uint24'}],
-    stateMutability: 'view',
   },
   {
     type: 'function',
@@ -396,20 +389,6 @@ export const singleOwnerVaultAbi = [
     name: 'tickSpacing',
     inputs: [],
     outputs: [{name: '', type: 'int24', internalType: 'int24'}],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'token0',
-    inputs: [],
-    outputs: [{name: '', type: 'address', internalType: 'contract IERC20'}],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'token1',
-    inputs: [],
-    outputs: [{name: '', type: 'address', internalType: 'contract IERC20'}],
     stateMutability: 'view',
   },
   {
@@ -754,6 +733,7 @@ export const singleOwnerVaultAbi = [
     name: 'InvalidActionType',
     inputs: [{name: 'actionType', type: 'uint8', internalType: 'uint8'}],
   },
+  {type: 'error', name: 'InvalidPoolKey', inputs: []},
   {
     type: 'error',
     name: 'InvalidRefTick',
@@ -767,7 +747,6 @@ export const singleOwnerVaultAbi = [
       {name: 'tickUpper', type: 'int24', internalType: 'int24'},
     ],
   },
-  {type: 'error', name: 'InvalidTickSpacing', inputs: []},
   {
     type: 'error',
     name: 'MintTooLarge',

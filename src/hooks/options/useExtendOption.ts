@@ -44,6 +44,7 @@ export const useExtendOption = (marketAddr: Address | undefined) => {
       option.strikeTick,
       duration,
       remainingDuration,
+      '0x',
     ]);
     const maxPremium = ((premium + protocolFee) * 11n) / 10n;
     await askForApproval(payoutAsset, marketAddr, maxPremium);
@@ -52,7 +53,7 @@ export const useExtendOption = (marketAddr: Address | undefined) => {
       address: marketAddr,
       abi: optionsMarketAbi,
       functionName: 'extendOption',
-      args: [option.optionId, duration, maxUint256],
+      args: [option.optionId, duration, maxUint256, '0x'],
     });
     await waitForTransactionReceipt(client, {hash});
 

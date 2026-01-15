@@ -18,6 +18,11 @@ export const optionsMarketAbi = [
         internalType: 'contract IFeeStrategy',
       },
       {
+        name: '_priceFeed',
+        type: 'address',
+        internalType: 'contract IPriceFeed',
+      },
+      {
         name: '_guardian',
         type: 'address',
         internalType: 'contract TimelockGuardian',
@@ -55,6 +60,7 @@ export const optionsMarketAbi = [
         type: 'uint32',
         internalType: 'uint32',
       },
+      {name: 'priceFeedData', type: 'bytes', internalType: 'bytes'},
     ],
     outputs: [
       {name: 'premium', type: 'uint256', internalType: 'uint256'},
@@ -105,6 +111,7 @@ export const optionsMarketAbi = [
       {name: 'optionId', type: 'uint256', internalType: 'uint256'},
       {name: 'addedDuration', type: 'uint32', internalType: 'uint32'},
       {name: 'maxPremium', type: 'uint256', internalType: 'uint256'},
+      {name: 'priceFeedData', type: 'bytes', internalType: 'bytes'},
     ],
     outputs: [
       {name: 'premium', type: 'uint256', internalType: 'uint256'},
@@ -213,6 +220,7 @@ export const optionsMarketAbi = [
       {name: 'maxPremium', type: 'uint256', internalType: 'uint256'},
       {name: 'maxSteps', type: 'uint24', internalType: 'uint24'},
       {name: 'refTick', type: 'int24', internalType: 'int24'},
+      {name: 'priceFeedData', type: 'bytes', internalType: 'bytes'},
     ],
     outputs: [
       {name: 'optionId', type: 'uint256', internalType: 'uint256'},
@@ -351,6 +359,13 @@ export const optionsMarketAbi = [
   },
   {
     type: 'function',
+    name: 'priceFeed',
+    inputs: [],
+    outputs: [{name: '', type: 'address', internalType: 'contract IPriceFeed'}],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     name: 'renounceOwnership',
     inputs: [],
     outputs: [],
@@ -432,6 +447,11 @@ export const optionsMarketAbi = [
         name: '_feeStrategy',
         type: 'address',
         internalType: 'contract IFeeStrategy',
+      },
+      {
+        name: '_priceFeed',
+        type: 'address',
+        internalType: 'contract IPriceFeed',
       },
     ],
     outputs: [],
@@ -518,12 +538,6 @@ export const optionsMarketAbi = [
         type: 'uint128[]',
         indexed: false,
         internalType: 'uint128[]',
-      },
-      {
-        name: 'currentPrice',
-        type: 'uint256',
-        indexed: false,
-        internalType: 'uint256',
       },
       {
         name: 'payout',
@@ -685,6 +699,12 @@ export const optionsMarketAbi = [
         type: 'address',
         indexed: false,
         internalType: 'contract IFeeStrategy',
+      },
+      {
+        name: 'priceFeed',
+        type: 'address',
+        indexed: false,
+        internalType: 'contract IPriceFeed',
       },
     ],
     anonymous: false,

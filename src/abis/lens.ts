@@ -413,6 +413,11 @@ export const lensAbi = [
             type: 'address',
             internalType: 'contract IFeeStrategy',
           },
+          {
+            name: 'priceFeed',
+            type: 'address',
+            internalType: 'contract IPriceFeed',
+          },
           {name: 'owner', type: 'address', internalType: 'address'},
         ],
       },

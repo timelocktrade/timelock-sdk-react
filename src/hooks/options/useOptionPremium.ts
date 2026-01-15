@@ -53,6 +53,7 @@ export const useOptionPremium = (
             strikeTickRounded,
             addedDuration,
             remainingDuration,
+            '0x',
           ]
         : undefined,
   });

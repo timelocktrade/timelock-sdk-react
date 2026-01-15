@@ -17,8 +17,10 @@ export const useUpdateMarketPricing = (marketAddr: Address | undefined) => {
   const publicClient = usePublicClient();
   const chainId = useChainId();
 
-  const {data: {feeStrategy, optionPricing} = {}, error: stateError} =
-    useMarketState(marketAddr);
+  const {
+    data: {feeStrategy, optionPricing, priceFeed} = {},
+    error: stateError,
+  } = useMarketState(marketAddr);
 
   const {data: pricingData, error: pricingError} =
     usePricingParams(optionPricing);
@@ -39,8 +41,8 @@ export const useUpdateMarketPricing = (marketAddr: Address | undefined) => {
     if (!publicClient) {
       throw new Error('Public client not available');
     }
-    if (!feeStrategy) {
-      throw new Error('Fee strategy not available: ' + stateError?.message);
+    if (!feeStrategy || !priceFeed) {
+      throw new Error('Market state not available: ' + stateError?.message);
     }
     const factoryAddr = timelockFactories[chainId].toLowerCase() as Address;
 
@@ -141,7 +143,7 @@ export const useUpdateMarketPricing = (marketAddr: Address | undefined) => {
       address: marketAddr,
       abi: optionsMarketAbi,
       functionName: 'updateAddresses',
-      args: [pricingAddr, feeStrategy],
+      args: [pricingAddr, feeStrategy, priceFeed],
     });
     void queryClient.invalidateQueries({queryKey: ['readContract']});
     return {deployHash: hash, updateHash: hash2, newPricingAddr: pricingAddr};

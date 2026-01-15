@@ -8,12 +8,15 @@ import {factoryAbi} from '~/abis/factory';
 import {optionsMarketAbi} from '~/abis/optionsMarket';
 
 export const useUpdateMarketFees = (marketAddr: Address) => {
-  const {writeContractAsync, ...rest} = useWriteContract();
+  const {mutateAsync: writeContractAsync, ...rest} = useWriteContract();
   const queryClient = useQueryClient();
   const publicClient = usePublicClient();
   const chainId = useChainId();
 
-  const {data: {feeStrategy, optionPricing} = {}} = useMarketState(marketAddr);
+  const {
+    data: {feeStrategy, optionPricing, priceFeed} = {},
+    error: stateError,
+  } = useMarketState(marketAddr);
 
   const {openingFeeRate, baseFeeRate, minOpeningFee, minBaseFee, feeRecipient} =
     useFeeRates(feeStrategy);
@@ -34,8 +37,8 @@ export const useUpdateMarketFees = (marketAddr: Address) => {
     ) {
       throw new Error('Missing current fee rates');
     }
-    if (!optionPricing) {
-      throw new Error('Could not load market state');
+    if (!optionPricing || !priceFeed) {
+      throw new Error('Market state not available: ' + stateError?.message);
     }
     if (!publicClient) {
       throw new Error('Public client not available');
@@ -77,7 +80,7 @@ export const useUpdateMarketFees = (marketAddr: Address) => {
       address: marketAddr,
       abi: optionsMarketAbi,
       functionName: 'updateAddresses',
-      args: [optionPricing, newFeeStrategy],
+      args: [optionPricing, newFeeStrategy, priceFeed],
     });
     void queryClient.invalidateQueries({queryKey: ['readContract']});
     return {deployHash: hash, updateHash: hash2, newFeeStrategy};

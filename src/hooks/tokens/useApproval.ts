@@ -6,13 +6,7 @@ import {getErc20} from '~/lib/contracts';
 export const useApproval = () => {
   const client = useClient();
   const {address} = useConnection();
-  const {
-    writeContractAsync,
-    data: hash,
-    isPending,
-    error,
-    reset,
-  } = useWriteContract();
+  const {mutateAsync, data: hash, ...rest} = useWriteContract();
 
   const askForApproval = async (
     tokenAddress: Address,
@@ -29,7 +23,7 @@ export const useApproval = () => {
     ]);
 
     if (allowance < amount) {
-      const approvalHash = await writeContractAsync({
+      const approvalHash = await mutateAsync({
         address: tokenAddress,
         abi: erc20Abi,
         functionName: 'approve',
@@ -38,5 +32,5 @@ export const useApproval = () => {
       await waitForTransactionReceipt(client, {hash: approvalHash});
     }
   };
-  return {askForApproval, hash, isPending, error, reset};
+  return {askForApproval, hash, ...rest};
 };
