@@ -1,4 +1,4 @@
-import {GraphQLClient, RequestOptions} from 'graphql-request';
+import {GraphQLClient, type RequestOptions} from 'graphql-request';
 import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -2953,6 +2953,23 @@ export type GetMarketVolumeQuery = {
   }>;
 };
 
+export type GetMarketUserVolumeQueryVariables = Exact<{
+  marketAddr: Scalars['String']['input'];
+  userAddr: Scalars['String']['input'];
+}>;
+
+export type GetMarketUserVolumeQuery = {
+  __typename: 'query_root';
+  TimelockMarketUser: Array<{
+    __typename: 'TimelockMarketUser';
+    address: string;
+    totalVolume: any;
+    totalProfit: any;
+    totalPremium: any;
+    optionsCount: any;
+  }>;
+};
+
 export type GetUserMarketOperatorsQueryVariables = Exact<{
   userAddr: Scalars['String']['input'];
   marketAddr: Scalars['String']['input'];
@@ -3130,6 +3147,20 @@ export const GetMarketVolumeDocument = gql`
       totalVolume
       totalPremium
       totalProfit
+    }
+  }
+`;
+export const GetMarketUserVolumeDocument = gql`
+  query GetMarketUserVolume($marketAddr: String!, $userAddr: String!) {
+    TimelockMarketUser(
+      where: {address: {_eq: $userAddr}, market: {address: {_eq: $marketAddr}}}
+      limit: 1
+    ) {
+      address
+      totalVolume
+      totalProfit
+      totalPremium
+      optionsCount
     }
   }
 `;
@@ -3338,6 +3369,24 @@ export function getSdk(
             signal,
           }),
         'GetMarketVolume',
+        'query',
+        variables,
+      );
+    },
+    GetMarketUserVolume(
+      variables: GetMarketUserVolumeQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+      signal?: RequestInit['signal'],
+    ): Promise<GetMarketUserVolumeQuery> {
+      return withWrapper(
+        wrappedRequestHeaders =>
+          client.request<GetMarketUserVolumeQuery>({
+            document: GetMarketUserVolumeDocument,
+            variables,
+            requestHeaders: {...requestHeaders, ...wrappedRequestHeaders},
+            signal,
+          }),
+        'GetMarketUserVolume',
         'query',
         variables,
       );

@@ -1,0 +1,113 @@
+query GetPoolVolume($poolId: String!) {
+  Pool(where: {id: {_eq: $poolId}}) {
+    id
+    volume0
+    volume1
+    fees0
+    fees1
+    txCount
+    swapCount
+    modifyLiquidityCount
+    positionCount
+  }
+}
+
+query GetPoolUserVolume($poolId: String!, $userAddr: String!) {
+  PoolUser(where: {pool: {id: {_eq: $poolId}}, address: {_eq: $userAddr}}) {
+    address
+    volume0
+    volume1
+    fees0
+    fees1
+    swapCount
+  }
+}
+
+query GetLPFees($lpId: String!) {
+  LiquidityProvider(where: {id: {_eq: $lpId}}) {
+    id
+    fees0
+    fees1
+  }
+}
+
+query GetPoolDayData(
+  $poolId: String!
+  $startTimestamp: Int
+  $endTimestamp: Int
+  $limit: Int
+  $offset: Int
+) {
+  PoolDayData(
+    where: {
+      pool: {id: {_eq: $poolId}}
+      startTimestamp: {_gte: $startTimestamp, _lte: $endTimestamp}
+    }
+    order_by: {startTimestamp: asc}
+    limit: $limit
+    offset: $offset
+  ) {
+    startTimestamp
+    volume0
+    volume1
+    open_
+    high
+    low
+    close
+    sqrtPriceX96
+  }
+}
+
+query GetPoolHourData(
+  $poolId: String!
+  $startTimestamp: Int
+  $endTimestamp: Int
+  $limit: Int
+  $offset: Int
+) {
+  PoolHourData(
+    where: {
+      pool: {id: {_eq: $poolId}}
+      startTimestamp: {_gte: $startTimestamp, _lte: $endTimestamp}
+    }
+    order_by: {startTimestamp: asc}
+    limit: $limit
+    offset: $offset
+  ) {
+    startTimestamp
+    volume0
+    volume1
+    open_
+    high
+    low
+    close
+    sqrtPriceX96
+  }
+}
+
+query GetPool5MinuteData(
+  $poolId: String!
+  $startTimestamp: Int
+  $endTimestamp: Int
+  $limit: Int
+  $offset: Int
+) {
+  Pool5MinuteData(
+    where: {
+      pool: {id: {_eq: $poolId}}
+      startTimestamp: {_gte: $startTimestamp, _lte: $endTimestamp}
+    }
+    order_by: {startTimestamp: asc}
+    limit: $limit
+    offset: $offset
+  ) {
+    startTimestamp
+    volume0
+    volume1
+    open_
+    high
+    low
+    close
+    sqrtPriceX96
+  }
+}

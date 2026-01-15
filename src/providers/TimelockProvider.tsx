@@ -3,7 +3,9 @@ import type {Address} from 'viem';
 import React, {createContext, useContext, useMemo, type ReactNode} from 'react';
 import {GraphQLClient} from 'graphql-request';
 
-import {getSdk} from '~/generated/graphql';
+import {getSdk as getTimelockGraphqlSdk} from '~/generated/timelock';
+import {getSdk as getUniV4GraphqlSdk} from '~/generated/univ4';
+
 import {type TimelockMarketData} from '~/lib/contracts';
 import {PerpsOperator} from '~/lib/perpsOperator';
 
@@ -11,8 +13,9 @@ type TimelockContextValue = {
   marketData: Partial<TimelockMarketData>;
   lensAddr?: Address;
   uniswapMathLensAddr?: Address;
-  envioGraphqlUrl?: string;
-  graphqlClient?: ReturnType<typeof getSdk>;
+  timelockGraphqlUrl?: string;
+  timelockGraphqlClient?: ReturnType<typeof getTimelockGraphqlSdk>;
+  uniV4GraphqlClient?: ReturnType<typeof getUniV4GraphqlSdk>;
   perpsOperator?: PerpsOperator;
   perpsOperatorUrl?: string;
 };
@@ -24,20 +27,29 @@ const TimelockContext = createContext<TimelockContextValue | undefined>(
 export const TimelockProvider = ({
   children,
   marketData,
-  envioGraphqlUrl,
+  timelockGraphqlUrl,
+  uniV4GraphqlUrl,
   perpsOperatorUrl,
 }: {
   children: ReactNode;
   marketData?: Partial<TimelockMarketData>;
-  envioGraphqlUrl?: string;
+  timelockGraphqlUrl?: string;
+  uniV4GraphqlUrl?: string;
   perpsOperatorUrl?: string;
 }) => {
-  const graphqlClient = useMemo(() => {
-    if (envioGraphqlUrl) {
-      return getSdk(new GraphQLClient(envioGraphqlUrl));
+  const timelockGraphqlClient = useMemo(() => {
+    if (timelockGraphqlUrl) {
+      return getTimelockGraphqlSdk(new GraphQLClient(timelockGraphqlUrl));
     }
     return undefined;
-  }, [envioGraphqlUrl]);
+  }, [timelockGraphqlUrl]);
+
+  const uniV4GraphqlClient = useMemo(() => {
+    if (uniV4GraphqlUrl) {
+      return getUniV4GraphqlSdk(new GraphQLClient(uniV4GraphqlUrl));
+    }
+    return undefined;
+  }, [uniV4GraphqlUrl]);
 
   const perpsOperator = useMemo(() => {
     if (perpsOperatorUrl) {
@@ -49,16 +61,20 @@ export const TimelockProvider = ({
   const contextValue = useMemo(
     () => ({
       marketData: marketData || {},
-      envioGraphqlUrl,
+      timelockGraphqlUrl,
+      uniV4GraphqlUrl,
       perpsOperator,
-      graphqlClient,
+      uniV4GraphqlClient,
+      timelockGraphqlClient,
       perpsOperatorUrl,
     }),
     [
       marketData,
-      envioGraphqlUrl,
+      timelockGraphqlUrl,
+      uniV4GraphqlUrl,
       perpsOperator,
-      graphqlClient,
+      timelockGraphqlClient,
+      uniV4GraphqlClient,
       perpsOperatorUrl,
     ],
   );

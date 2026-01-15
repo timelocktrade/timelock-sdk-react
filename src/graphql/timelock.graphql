@@ -105,6 +105,19 @@ query GetMarketVolume($marketAddr: String!) {
   }
 }
 
+query GetMarketUserVolume($marketAddr: String!, $userAddr: String!) {
+  TimelockMarketUser(
+    where: {address: {_eq: $userAddr}, market: {address: {_eq: $marketAddr}}}
+    limit: 1
+  ) {
+    address
+    totalVolume
+    totalProfit
+    totalPremium
+    optionsCount
+  }
+}
+
 query GetUserMarketOperators($userAddr: String!, $marketAddr: String!) {
   UserMarketOperator(
     where: {

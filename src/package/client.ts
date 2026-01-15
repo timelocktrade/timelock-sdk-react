@@ -6,6 +6,7 @@ export * from '~/providers/TimelockProvider';
 export * from '~/hooks/market/useMarketData';
 export * from '~/hooks/market/useMarketState';
 export * from '~/hooks/market/useMarketVolume';
+export * from '~/hooks/market/useMarketUserVolume';
 
 // Options Hooks
 export * from '~/hooks/options/useMaxPositionSize';
@@ -34,6 +35,8 @@ export * from '~/hooks/pool/useCurrentTick';
 export * from '~/hooks/pool/usePoolData';
 export * from '~/hooks/pool/usePriceAtTick';
 export * from '~/hooks/pool/usePriceHistory';
+export * from '~/hooks/pool/usePoolVolume';
+export * from '~/hooks/pool/usePoolUserVolume';
 export * from '~/hooks/pool/useQuote';
 
 // Vault Hooks

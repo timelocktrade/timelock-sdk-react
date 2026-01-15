@@ -4,12 +4,12 @@ import {useQuery} from '@tanstack/react-query';
 import {useTimelockConfig} from '~/providers/TimelockProvider';
 
 export const useMarketVolume = (marketAddr: Address | undefined) => {
-  const {graphqlClient} = useTimelockConfig();
+  const {timelockGraphqlClient} = useTimelockConfig();
 
   return useQuery({
     queryKey: ['marketVolume', marketAddr?.toLowerCase() || '--'],
     queryFn: async () => {
-      const result = await graphqlClient!.GetMarketVolume({
+      const result = await timelockGraphqlClient!.GetMarketVolume({
         marketAddr: marketAddr!.toLowerCase(),
       });
       return {
@@ -22,6 +22,6 @@ export const useMarketVolume = (marketAddr: Address | undefined) => {
         tradersCount: BigInt(result.TimelockMarket[0].tradersCount),
       };
     },
-    enabled: !!marketAddr && !!graphqlClient,
+    enabled: !!marketAddr && !!timelockGraphqlClient,
   });
 };
