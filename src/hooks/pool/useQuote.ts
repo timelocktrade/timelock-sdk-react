@@ -30,14 +30,14 @@ export type UseQuoteOptions = {
 };
 
 type QuoteResult = {
-  deltaAmount: bigint;
+  quotedAmount: bigint;
   gasEstimate: bigint;
 };
 
 const selectQuoteResult = (data: {
   result: readonly [bigint, bigint];
 }): QuoteResult => ({
-  deltaAmount: data.result[0],
+  quotedAmount: data.result[0],
   gasEstimate: data.result[1],
 });
 
