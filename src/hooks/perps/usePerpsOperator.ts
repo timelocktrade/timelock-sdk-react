@@ -1,19 +1,25 @@
 import type {Address, Hex} from 'viem';
 import {useEffect} from 'react';
 import {useConnection, useSignMessage} from 'wagmi';
-import {z} from 'zod';
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {useTimelockConfig} from '~/providers/TimelockProvider';
 
-const ZHex = z
-  .string()
-  .regex(/^0x[a-fA-F0-9]+$/, 'Invalid hex string')
-  .transform(v => v as Hex);
+const isValidHex = (value: unknown): value is Hex => {
+  return typeof value === 'string' && /^0x[a-fA-F0-9]+$/.test(value);
+};
 
-const ZSavedSignature = z.object({
-  signature: ZHex,
-  message: z.string(),
-});
+const isValidSavedSignature = (
+  data: unknown,
+): data is {signature: Hex; message: string} => {
+  return (
+    typeof data === 'object' &&
+    data !== null &&
+    'signature' in data &&
+    'message' in data &&
+    isValidHex(data.signature) &&
+    typeof data.message === 'string'
+  );
+};
 
 const getSavedSignature = (userAddr: Address) => {
   const key = `perps-auth-${userAddr.toLowerCase()}`;
@@ -21,7 +27,12 @@ const getSavedSignature = (userAddr: Address) => {
   if (!raw) return;
 
   try {
-    return ZSavedSignature.parse(JSON.parse(raw));
+    const parsed = JSON.parse(raw);
+    if (!isValidSavedSignature(parsed)) {
+      clearSignature(userAddr);
+      throw new Error('Invalid stored signature: ' + raw);
+    }
+    return parsed;
   } catch (error) {
     clearSignature(userAddr);
     throw new Error('Invalid stored signature: ' + raw);
