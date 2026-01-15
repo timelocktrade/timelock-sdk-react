@@ -4,7 +4,7 @@ const config: CodegenConfig = {
   overwrite: true,
   generates: {
     'src/generated/timelock.ts': {
-      schema: 'https://indexer.dev.hyperindex.xyz/e929262/v1/graphql',
+      schema: 'https://indexer.dev.hyperindex.xyz/9600e01/v1/graphql',
       documents: 'src/graphql/timelock.graphql',
       plugins: [
         'typescript',

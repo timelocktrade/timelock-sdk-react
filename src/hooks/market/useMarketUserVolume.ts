@@ -24,7 +24,7 @@ export const useMarketUserVolume = (
         address: result.TimelockMarketUser[0].address as Address,
         totalVolume: BigInt(result.TimelockMarketUser[0].totalVolume),
         totalPremium: BigInt(result.TimelockMarketUser[0].totalPremium),
-        totalProfit: BigInt(result.TimelockMarketUser[0].totalProfit),
+        totalPayout: BigInt(result.TimelockMarketUser[0].totalPayout),
         optionsCount: BigInt(result.TimelockMarketUser[0].optionsCount),
       };
     },

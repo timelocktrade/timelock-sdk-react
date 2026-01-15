@@ -101,7 +101,22 @@ query GetMarketVolume($marketAddr: String!) {
     tradersCount
     totalVolume
     totalPremium
-    totalProfit
+    totalPayout
+    totalProtocolFee
+  }
+}
+
+query GetMarketDailyVolume($marketAddr: String!) {
+  MarketDailyData(
+    where: {market: {address: {_eq: $marketAddr}}}
+    order_by: {date: asc}
+  ) {
+    id
+    date
+    totalVolume
+    totalPremium
+    totalPayout
+    totalProtocolFee
   }
 }
 
@@ -112,8 +127,9 @@ query GetMarketUserVolume($marketAddr: String!, $userAddr: String!) {
   ) {
     address
     totalVolume
-    totalProfit
+    totalPayout
     totalPremium
+    totalProtocolFee
     optionsCount
   }
 }
@@ -171,7 +187,6 @@ query GetOptionEvents($marketAddr: String!, $optionId: numeric!) {
   ) {
     id
     liquidities
-    price
     payout
     timestamp
     blockNumber

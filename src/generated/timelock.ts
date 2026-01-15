@@ -1,4 +1,4 @@
-import {GraphQLClient, type RequestOptions} from 'graphql-request';
+import {GraphQLClient, RequestOptions} from 'graphql-request';
 import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -222,7 +222,6 @@ export type ExerciseOptionEvent = {
   option?: Maybe<UserOption>;
   option_id: Scalars['String']['output'];
   payout: Scalars['numeric']['output'];
-  price: Scalars['numeric']['output'];
   timestamp: Scalars['numeric']['output'];
   transactionHash: Scalars['String']['output'];
 };
@@ -238,7 +237,6 @@ export type ExerciseOptionEventBoolExp = {
   option?: InputMaybe<UserOptionBoolExp>;
   option_id?: InputMaybe<StringComparisonExp>;
   payout?: InputMaybe<NumericComparisonExp>;
-  price?: InputMaybe<NumericComparisonExp>;
   timestamp?: InputMaybe<NumericComparisonExp>;
   transactionHash?: InputMaybe<StringComparisonExp>;
 };
@@ -251,7 +249,6 @@ export type ExerciseOptionEventOrderBy = {
   option?: InputMaybe<UserOptionOrderBy>;
   option_id?: InputMaybe<OrderBy>;
   payout?: InputMaybe<OrderBy>;
-  price?: InputMaybe<OrderBy>;
   timestamp?: InputMaybe<OrderBy>;
   transactionHash?: InputMaybe<OrderBy>;
 };
@@ -268,8 +265,6 @@ export type ExerciseOptionEventSelectColumn =
   | 'option_id'
   /** column name */
   | 'payout'
-  /** column name */
-  | 'price'
   /** column name */
   | 'timestamp'
   /** column name */
@@ -290,7 +285,6 @@ export type ExerciseOptionEventStreamCursorValueInput = {
   liquidities?: InputMaybe<Array<Scalars['String']['input']>>;
   option_id?: InputMaybe<Scalars['String']['input']>;
   payout?: InputMaybe<Scalars['numeric']['input']>;
-  price?: InputMaybe<Scalars['numeric']['input']>;
   timestamp?: InputMaybe<Scalars['numeric']['input']>;
   transactionHash?: InputMaybe<Scalars['String']['input']>;
 };
@@ -395,6 +389,83 @@ export type IntComparisonExp = {
   _lte?: InputMaybe<Scalars['Int']['input']>;
   _neq?: InputMaybe<Scalars['Int']['input']>;
   _nin?: InputMaybe<Array<Scalars['Int']['input']>>;
+};
+
+/** columns and relationships of "MarketDailyData" */
+export type MarketDailyData = {
+  __typename: 'MarketDailyData';
+  date: Scalars['numeric']['output'];
+  id: Scalars['String']['output'];
+  /** An object relationship */
+  market?: Maybe<TimelockMarket>;
+  market_id: Scalars['String']['output'];
+  totalPayout: Scalars['numeric']['output'];
+  totalPremium: Scalars['numeric']['output'];
+  totalProtocolFee: Scalars['numeric']['output'];
+  totalVolume: Scalars['numeric']['output'];
+};
+
+/** Boolean expression to filter rows from the table "MarketDailyData". All fields are combined with a logical 'AND'. */
+export type MarketDailyDataBoolExp = {
+  _and?: InputMaybe<Array<MarketDailyDataBoolExp>>;
+  _not?: InputMaybe<MarketDailyDataBoolExp>;
+  _or?: InputMaybe<Array<MarketDailyDataBoolExp>>;
+  date?: InputMaybe<NumericComparisonExp>;
+  id?: InputMaybe<StringComparisonExp>;
+  market?: InputMaybe<TimelockMarketBoolExp>;
+  market_id?: InputMaybe<StringComparisonExp>;
+  totalPayout?: InputMaybe<NumericComparisonExp>;
+  totalPremium?: InputMaybe<NumericComparisonExp>;
+  totalProtocolFee?: InputMaybe<NumericComparisonExp>;
+  totalVolume?: InputMaybe<NumericComparisonExp>;
+};
+
+/** Ordering options when selecting data from "MarketDailyData". */
+export type MarketDailyDataOrderBy = {
+  date?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  market?: InputMaybe<TimelockMarketOrderBy>;
+  market_id?: InputMaybe<OrderBy>;
+  totalPayout?: InputMaybe<OrderBy>;
+  totalPremium?: InputMaybe<OrderBy>;
+  totalProtocolFee?: InputMaybe<OrderBy>;
+  totalVolume?: InputMaybe<OrderBy>;
+};
+
+/** select columns of table "MarketDailyData" */
+export type MarketDailyDataSelectColumn =
+  /** column name */
+  | 'date'
+  /** column name */
+  | 'id'
+  /** column name */
+  | 'market_id'
+  /** column name */
+  | 'totalPayout'
+  /** column name */
+  | 'totalPremium'
+  /** column name */
+  | 'totalProtocolFee'
+  /** column name */
+  | 'totalVolume';
+
+/** Streaming cursor of the table "MarketDailyData" */
+export type MarketDailyDataStreamCursorInput = {
+  /** Stream column input with initial value */
+  initial_value: MarketDailyDataStreamCursorValueInput;
+  /** cursor ordering */
+  ordering?: InputMaybe<CursorOrdering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type MarketDailyDataStreamCursorValueInput = {
+  date?: InputMaybe<Scalars['numeric']['input']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  market_id?: InputMaybe<Scalars['String']['input']>;
+  totalPayout?: InputMaybe<Scalars['numeric']['input']>;
+  totalPremium?: InputMaybe<Scalars['numeric']['input']>;
+  totalProtocolFee?: InputMaybe<Scalars['numeric']['input']>;
+  totalVolume?: InputMaybe<Scalars['numeric']['input']>;
 };
 
 /** columns and relationships of "MarketOperator" */
@@ -819,8 +890,9 @@ export type TimelockMarket = {
   payoutAssetSymbol: Scalars['String']['output'];
   poolManager: Scalars['String']['output'];
   tickSpacing: Scalars['Int']['output'];
+  totalPayout: Scalars['numeric']['output'];
   totalPremium: Scalars['numeric']['output'];
-  totalProfit: Scalars['numeric']['output'];
+  totalProtocolFee: Scalars['numeric']['output'];
   totalVolume: Scalars['numeric']['output'];
   /** An array relationship */
   traders: Array<TimelockMarketUser>;
@@ -859,8 +931,9 @@ export type TimelockMarketUser = {
   /** An array relationship */
   options: Array<UserOption>;
   optionsCount: Scalars['numeric']['output'];
+  totalPayout: Scalars['numeric']['output'];
   totalPremium: Scalars['numeric']['output'];
-  totalProfit: Scalars['numeric']['output'];
+  totalProtocolFee: Scalars['numeric']['output'];
   totalVolume: Scalars['numeric']['output'];
 };
 
@@ -900,8 +973,9 @@ export type TimelockMarketUserAggregateOrderBy = {
 /** order by avg() on columns of table "TimelockMarketUser" */
 export type TimelockMarketUserAvgOrderBy = {
   optionsCount?: InputMaybe<OrderBy>;
+  totalPayout?: InputMaybe<OrderBy>;
   totalPremium?: InputMaybe<OrderBy>;
-  totalProfit?: InputMaybe<OrderBy>;
+  totalProtocolFee?: InputMaybe<OrderBy>;
   totalVolume?: InputMaybe<OrderBy>;
 };
 
@@ -917,8 +991,9 @@ export type TimelockMarketUserBoolExp = {
   operators?: InputMaybe<UserMarketOperatorBoolExp>;
   options?: InputMaybe<UserOptionBoolExp>;
   optionsCount?: InputMaybe<NumericComparisonExp>;
+  totalPayout?: InputMaybe<NumericComparisonExp>;
   totalPremium?: InputMaybe<NumericComparisonExp>;
-  totalProfit?: InputMaybe<NumericComparisonExp>;
+  totalProtocolFee?: InputMaybe<NumericComparisonExp>;
   totalVolume?: InputMaybe<NumericComparisonExp>;
 };
 
@@ -928,8 +1003,9 @@ export type TimelockMarketUserMaxOrderBy = {
   id?: InputMaybe<OrderBy>;
   market_id?: InputMaybe<OrderBy>;
   optionsCount?: InputMaybe<OrderBy>;
+  totalPayout?: InputMaybe<OrderBy>;
   totalPremium?: InputMaybe<OrderBy>;
-  totalProfit?: InputMaybe<OrderBy>;
+  totalProtocolFee?: InputMaybe<OrderBy>;
   totalVolume?: InputMaybe<OrderBy>;
 };
 
@@ -939,8 +1015,9 @@ export type TimelockMarketUserMinOrderBy = {
   id?: InputMaybe<OrderBy>;
   market_id?: InputMaybe<OrderBy>;
   optionsCount?: InputMaybe<OrderBy>;
+  totalPayout?: InputMaybe<OrderBy>;
   totalPremium?: InputMaybe<OrderBy>;
-  totalProfit?: InputMaybe<OrderBy>;
+  totalProtocolFee?: InputMaybe<OrderBy>;
   totalVolume?: InputMaybe<OrderBy>;
 };
 
@@ -953,8 +1030,9 @@ export type TimelockMarketUserOrderBy = {
   operators_aggregate?: InputMaybe<UserMarketOperatorAggregateOrderBy>;
   optionsCount?: InputMaybe<OrderBy>;
   options_aggregate?: InputMaybe<UserOptionAggregateOrderBy>;
+  totalPayout?: InputMaybe<OrderBy>;
   totalPremium?: InputMaybe<OrderBy>;
-  totalProfit?: InputMaybe<OrderBy>;
+  totalProtocolFee?: InputMaybe<OrderBy>;
   totalVolume?: InputMaybe<OrderBy>;
 };
 
@@ -969,33 +1047,38 @@ export type TimelockMarketUserSelectColumn =
   /** column name */
   | 'optionsCount'
   /** column name */
+  | 'totalPayout'
+  /** column name */
   | 'totalPremium'
   /** column name */
-  | 'totalProfit'
+  | 'totalProtocolFee'
   /** column name */
   | 'totalVolume';
 
 /** order by stddev() on columns of table "TimelockMarketUser" */
 export type TimelockMarketUserStddevOrderBy = {
   optionsCount?: InputMaybe<OrderBy>;
+  totalPayout?: InputMaybe<OrderBy>;
   totalPremium?: InputMaybe<OrderBy>;
-  totalProfit?: InputMaybe<OrderBy>;
+  totalProtocolFee?: InputMaybe<OrderBy>;
   totalVolume?: InputMaybe<OrderBy>;
 };
 
 /** order by stddev_pop() on columns of table "TimelockMarketUser" */
 export type TimelockMarketUserStddevPopOrderBy = {
   optionsCount?: InputMaybe<OrderBy>;
+  totalPayout?: InputMaybe<OrderBy>;
   totalPremium?: InputMaybe<OrderBy>;
-  totalProfit?: InputMaybe<OrderBy>;
+  totalProtocolFee?: InputMaybe<OrderBy>;
   totalVolume?: InputMaybe<OrderBy>;
 };
 
 /** order by stddev_samp() on columns of table "TimelockMarketUser" */
 export type TimelockMarketUserStddevSampOrderBy = {
   optionsCount?: InputMaybe<OrderBy>;
+  totalPayout?: InputMaybe<OrderBy>;
   totalPremium?: InputMaybe<OrderBy>;
-  totalProfit?: InputMaybe<OrderBy>;
+  totalProtocolFee?: InputMaybe<OrderBy>;
   totalVolume?: InputMaybe<OrderBy>;
 };
 
@@ -1013,40 +1096,45 @@ export type TimelockMarketUserStreamCursorValueInput = {
   id?: InputMaybe<Scalars['String']['input']>;
   market_id?: InputMaybe<Scalars['String']['input']>;
   optionsCount?: InputMaybe<Scalars['numeric']['input']>;
+  totalPayout?: InputMaybe<Scalars['numeric']['input']>;
   totalPremium?: InputMaybe<Scalars['numeric']['input']>;
-  totalProfit?: InputMaybe<Scalars['numeric']['input']>;
+  totalProtocolFee?: InputMaybe<Scalars['numeric']['input']>;
   totalVolume?: InputMaybe<Scalars['numeric']['input']>;
 };
 
 /** order by sum() on columns of table "TimelockMarketUser" */
 export type TimelockMarketUserSumOrderBy = {
   optionsCount?: InputMaybe<OrderBy>;
+  totalPayout?: InputMaybe<OrderBy>;
   totalPremium?: InputMaybe<OrderBy>;
-  totalProfit?: InputMaybe<OrderBy>;
+  totalProtocolFee?: InputMaybe<OrderBy>;
   totalVolume?: InputMaybe<OrderBy>;
 };
 
 /** order by var_pop() on columns of table "TimelockMarketUser" */
 export type TimelockMarketUserVarPopOrderBy = {
   optionsCount?: InputMaybe<OrderBy>;
+  totalPayout?: InputMaybe<OrderBy>;
   totalPremium?: InputMaybe<OrderBy>;
-  totalProfit?: InputMaybe<OrderBy>;
+  totalProtocolFee?: InputMaybe<OrderBy>;
   totalVolume?: InputMaybe<OrderBy>;
 };
 
 /** order by var_samp() on columns of table "TimelockMarketUser" */
 export type TimelockMarketUserVarSampOrderBy = {
   optionsCount?: InputMaybe<OrderBy>;
+  totalPayout?: InputMaybe<OrderBy>;
   totalPremium?: InputMaybe<OrderBy>;
-  totalProfit?: InputMaybe<OrderBy>;
+  totalProtocolFee?: InputMaybe<OrderBy>;
   totalVolume?: InputMaybe<OrderBy>;
 };
 
 /** order by variance() on columns of table "TimelockMarketUser" */
 export type TimelockMarketUserVarianceOrderBy = {
   optionsCount?: InputMaybe<OrderBy>;
+  totalPayout?: InputMaybe<OrderBy>;
   totalPremium?: InputMaybe<OrderBy>;
-  totalProfit?: InputMaybe<OrderBy>;
+  totalProtocolFee?: InputMaybe<OrderBy>;
   totalVolume?: InputMaybe<OrderBy>;
 };
 
@@ -1074,8 +1162,9 @@ export type TimelockMarketBoolExp = {
   payoutAssetSymbol?: InputMaybe<StringComparisonExp>;
   poolManager?: InputMaybe<StringComparisonExp>;
   tickSpacing?: InputMaybe<IntComparisonExp>;
+  totalPayout?: InputMaybe<NumericComparisonExp>;
   totalPremium?: InputMaybe<NumericComparisonExp>;
-  totalProfit?: InputMaybe<NumericComparisonExp>;
+  totalProtocolFee?: InputMaybe<NumericComparisonExp>;
   totalVolume?: InputMaybe<NumericComparisonExp>;
   traders?: InputMaybe<TimelockMarketUserBoolExp>;
   tradersCount?: InputMaybe<NumericComparisonExp>;
@@ -1103,8 +1192,9 @@ export type TimelockMarketOrderBy = {
   payoutAssetSymbol?: InputMaybe<OrderBy>;
   poolManager?: InputMaybe<OrderBy>;
   tickSpacing?: InputMaybe<OrderBy>;
+  totalPayout?: InputMaybe<OrderBy>;
   totalPremium?: InputMaybe<OrderBy>;
-  totalProfit?: InputMaybe<OrderBy>;
+  totalProtocolFee?: InputMaybe<OrderBy>;
   totalVolume?: InputMaybe<OrderBy>;
   tradersCount?: InputMaybe<OrderBy>;
   traders_aggregate?: InputMaybe<TimelockMarketUserAggregateOrderBy>;
@@ -1150,9 +1240,11 @@ export type TimelockMarketSelectColumn =
   /** column name */
   | 'tickSpacing'
   /** column name */
+  | 'totalPayout'
+  /** column name */
   | 'totalPremium'
   /** column name */
-  | 'totalProfit'
+  | 'totalProtocolFee'
   /** column name */
   | 'totalVolume'
   /** column name */
@@ -1188,8 +1280,9 @@ export type TimelockMarketStreamCursorValueInput = {
   payoutAssetSymbol?: InputMaybe<Scalars['String']['input']>;
   poolManager?: InputMaybe<Scalars['String']['input']>;
   tickSpacing?: InputMaybe<Scalars['Int']['input']>;
+  totalPayout?: InputMaybe<Scalars['numeric']['input']>;
   totalPremium?: InputMaybe<Scalars['numeric']['input']>;
-  totalProfit?: InputMaybe<Scalars['numeric']['input']>;
+  totalProtocolFee?: InputMaybe<Scalars['numeric']['input']>;
   totalVolume?: InputMaybe<Scalars['numeric']['input']>;
   tradersCount?: InputMaybe<Scalars['numeric']['input']>;
   vault?: InputMaybe<Scalars['String']['input']>;
@@ -2102,6 +2195,10 @@ export type QueryRoot = {
   ExtendOptionEvent: Array<ExtendOptionEvent>;
   /** fetch data from the table: "ExtendOptionEvent" using primary key columns */
   ExtendOptionEvent_by_pk?: Maybe<ExtendOptionEvent>;
+  /** fetch data from the table: "MarketDailyData" */
+  MarketDailyData: Array<MarketDailyData>;
+  /** fetch data from the table: "MarketDailyData" using primary key columns */
+  MarketDailyData_by_pk?: Maybe<MarketDailyData>;
   /** fetch data from the table: "MarketOperator" */
   MarketOperator: Array<MarketOperator>;
   /** fetch data from the table: "MarketOperator" using primary key columns */
@@ -2193,6 +2290,18 @@ export type QueryRootExtendOptionEventArgs = {
 };
 
 export type QueryRootExtendOptionEventByPkArgs = {
+  id: Scalars['String']['input'];
+};
+
+export type QueryRootMarketDailyDataArgs = {
+  distinct_on?: InputMaybe<Array<MarketDailyDataSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<MarketDailyDataOrderBy>>;
+  where?: InputMaybe<MarketDailyDataBoolExp>;
+};
+
+export type QueryRootMarketDailyDataByPkArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -2482,6 +2591,12 @@ export type SubscriptionRoot = {
   ExtendOptionEvent_by_pk?: Maybe<ExtendOptionEvent>;
   /** fetch data from the table in a streaming manner: "ExtendOptionEvent" */
   ExtendOptionEvent_stream: Array<ExtendOptionEvent>;
+  /** fetch data from the table: "MarketDailyData" */
+  MarketDailyData: Array<MarketDailyData>;
+  /** fetch data from the table: "MarketDailyData" using primary key columns */
+  MarketDailyData_by_pk?: Maybe<MarketDailyData>;
+  /** fetch data from the table in a streaming manner: "MarketDailyData" */
+  MarketDailyData_stream: Array<MarketDailyData>;
   /** fetch data from the table: "MarketOperator" */
   MarketOperator: Array<MarketOperator>;
   /** fetch data from the table: "MarketOperator" using primary key columns */
@@ -2622,6 +2737,24 @@ export type SubscriptionRootExtendOptionEventStreamArgs = {
   batch_size: Scalars['Int']['input'];
   cursor: Array<InputMaybe<ExtendOptionEventStreamCursorInput>>;
   where?: InputMaybe<ExtendOptionEventBoolExp>;
+};
+
+export type SubscriptionRootMarketDailyDataArgs = {
+  distinct_on?: InputMaybe<Array<MarketDailyDataSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<MarketDailyDataOrderBy>>;
+  where?: InputMaybe<MarketDailyDataBoolExp>;
+};
+
+export type SubscriptionRootMarketDailyDataByPkArgs = {
+  id: Scalars['String']['input'];
+};
+
+export type SubscriptionRootMarketDailyDataStreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<MarketDailyDataStreamCursorInput>>;
+  where?: InputMaybe<MarketDailyDataBoolExp>;
 };
 
 export type SubscriptionRootMarketOperatorArgs = {
@@ -2949,7 +3082,25 @@ export type GetMarketVolumeQuery = {
     tradersCount: any;
     totalVolume: any;
     totalPremium: any;
-    totalProfit: any;
+    totalPayout: any;
+    totalProtocolFee: any;
+  }>;
+};
+
+export type GetMarketDailyVolumeQueryVariables = Exact<{
+  marketAddr: Scalars['String']['input'];
+}>;
+
+export type GetMarketDailyVolumeQuery = {
+  __typename: 'query_root';
+  MarketDailyData: Array<{
+    __typename: 'MarketDailyData';
+    id: string;
+    date: any;
+    totalVolume: any;
+    totalPremium: any;
+    totalPayout: any;
+    totalProtocolFee: any;
   }>;
 };
 
@@ -2964,8 +3115,9 @@ export type GetMarketUserVolumeQuery = {
     __typename: 'TimelockMarketUser';
     address: string;
     totalVolume: any;
-    totalProfit: any;
+    totalPayout: any;
     totalPremium: any;
+    totalProtocolFee: any;
     optionsCount: any;
   }>;
 };
@@ -3014,7 +3166,6 @@ export type GetOptionEventsQuery = {
     __typename: 'ExerciseOptionEvent';
     id: string;
     liquidities: Array<string>;
-    price: any;
     payout: any;
     timestamp: any;
     blockNumber: any;
@@ -3146,7 +3297,23 @@ export const GetMarketVolumeDocument = gql`
       tradersCount
       totalVolume
       totalPremium
-      totalProfit
+      totalPayout
+      totalProtocolFee
+    }
+  }
+`;
+export const GetMarketDailyVolumeDocument = gql`
+  query GetMarketDailyVolume($marketAddr: String!) {
+    MarketDailyData(
+      where: {market: {address: {_eq: $marketAddr}}}
+      order_by: {date: asc}
+    ) {
+      id
+      date
+      totalVolume
+      totalPremium
+      totalPayout
+      totalProtocolFee
     }
   }
 `;
@@ -3158,8 +3325,9 @@ export const GetMarketUserVolumeDocument = gql`
     ) {
       address
       totalVolume
-      totalProfit
+      totalPayout
       totalPremium
+      totalProtocolFee
       optionsCount
     }
   }
@@ -3219,7 +3387,6 @@ export const GetOptionEventsDocument = gql`
     ) {
       id
       liquidities
-      price
       payout
       timestamp
       blockNumber
@@ -3369,6 +3536,24 @@ export function getSdk(
             signal,
           }),
         'GetMarketVolume',
+        'query',
+        variables,
+      );
+    },
+    GetMarketDailyVolume(
+      variables: GetMarketDailyVolumeQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+      signal?: RequestInit['signal'],
+    ): Promise<GetMarketDailyVolumeQuery> {
+      return withWrapper(
+        wrappedRequestHeaders =>
+          client.request<GetMarketDailyVolumeQuery>({
+            document: GetMarketDailyVolumeDocument,
+            variables,
+            requestHeaders: {...requestHeaders, ...wrappedRequestHeaders},
+            signal,
+          }),
+        'GetMarketDailyVolume',
         'query',
         variables,
       );
