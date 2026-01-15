@@ -1,8 +1,12 @@
 import type {Address} from 'viem';
-import {SqrtPriceMath, TickMath} from '@uniswap/v3-sdk';
 import Big from 'big.js';
-import JSBI from 'jsbi';
 import type {Amount} from './numberUtils';
+import {
+  getAmount0Delta,
+  getAmount1Delta,
+  getSqrtRatioAtTick,
+  getTickAtSqrtRatio,
+} from './uniswapUtils';
 
 export type PoolKey = {
   currency0: Address;
@@ -33,7 +37,7 @@ export const getPriceAtSqrtPriceX96 = (
 };
 
 export const getSqrtPriceX96AtPrice = (price: bigint) => {
-  const sqrtPriceX96 = JSBI.BigInt(
+  const sqrtPriceX96 = BigInt(
     new Big(price.toString())
       .mul(2 ** 192)
       .div(PRICE_PRECISION.toString())
@@ -44,13 +48,13 @@ export const getSqrtPriceX96AtPrice = (price: bigint) => {
 };
 
 export const getPriceAtTick = (tick: number, token0For1 = true) => {
-  const sqrtRatioX96 = BigInt(TickMath.getSqrtRatioAtTick(tick).toString());
+  const sqrtRatioX96 = BigInt(getSqrtRatioAtTick(tick).toString());
   return getPriceAtSqrtPriceX96(sqrtRatioX96, token0For1);
 };
 
 export const getTickAtPrice = (price: bigint) => {
   const sqrtPriceX96 = getSqrtPriceX96AtPrice(price);
-  return TickMath.getTickAtSqrtRatio(sqrtPriceX96);
+  return getTickAtSqrtRatio(sqrtPriceX96);
 };
 
 export const getNearestValidStrikeTick = (
@@ -101,41 +105,20 @@ export const getAmountsFromLiquidity = (
   liquidity: bigint,
   currentTick: number,
 ): [bigint, bigint] => {
-  const sqrtRatioX96 = TickMath.getSqrtRatioAtTick(currentTick);
-  const sqrtRatioAX96 = TickMath.getSqrtRatioAtTick(tickLower);
-  const sqrtRatioBX96 = TickMath.getSqrtRatioAtTick(tickUpper);
-  const liquidityJSBI = JSBI.BigInt(liquidity.toString());
+  const sqrtRatioX96 = getSqrtRatioAtTick(currentTick);
+  const sqrtRatioAX96 = getSqrtRatioAtTick(tickLower);
+  const sqrtRatioBX96 = getSqrtRatioAtTick(tickUpper);
 
-  let delta0 = JSBI.BigInt(0);
-  let delta1 = JSBI.BigInt(0);
+  let delta0 = 0n;
+  let delta1 = 0n;
 
   if (currentTick < tickLower) {
-    delta0 = SqrtPriceMath.getAmount0Delta(
-      sqrtRatioAX96,
-      sqrtRatioBX96,
-      liquidityJSBI,
-      false,
-    );
+    delta0 = getAmount0Delta(sqrtRatioAX96, sqrtRatioBX96, liquidity, false);
   } else if (currentTick >= tickUpper) {
-    delta1 = SqrtPriceMath.getAmount1Delta(
-      sqrtRatioAX96,
-      sqrtRatioBX96,
-      liquidityJSBI,
-      false,
-    );
+    delta1 = getAmount1Delta(sqrtRatioAX96, sqrtRatioBX96, liquidity, false);
   } else {
-    delta0 = SqrtPriceMath.getAmount0Delta(
-      sqrtRatioX96,
-      sqrtRatioBX96,
-      liquidityJSBI,
-      false,
-    );
-    delta1 = SqrtPriceMath.getAmount1Delta(
-      sqrtRatioAX96,
-      sqrtRatioX96,
-      liquidityJSBI,
-      false,
-    );
+    delta0 = getAmount0Delta(sqrtRatioX96, sqrtRatioBX96, liquidity, false);
+    delta1 = getAmount1Delta(sqrtRatioAX96, sqrtRatioX96, liquidity, false);
   }
   return [BigInt(delta0.toString()), BigInt(delta1.toString())];
 };
@@ -154,14 +137,13 @@ export const liquiditiesToAmount0 = (
     const tickLower = startTick + tickSpacing * i;
     const tickUpper = tickLower + tickSpacing;
 
-    const sqrtRatioAX96 = TickMath.getSqrtRatioAtTick(tickLower);
-    const sqrtRatioBX96 = TickMath.getSqrtRatioAtTick(tickUpper);
-    const liquidityJSBI = JSBI.BigInt(liquidity.toString());
+    const sqrtRatioAX96 = getSqrtRatioAtTick(tickLower);
+    const sqrtRatioBX96 = getSqrtRatioAtTick(tickUpper);
 
-    const amount0Delta = SqrtPriceMath.getAmount0Delta(
+    const amount0Delta = getAmount0Delta(
       sqrtRatioAX96,
       sqrtRatioBX96,
-      liquidityJSBI,
+      liquidity,
       false,
     );
     amount0 += BigInt(amount0Delta.toString());
@@ -183,14 +165,13 @@ export const liquiditiesToAmount1 = (
     const tickLower = startTick + tickSpacing * i;
     const tickUpper = tickLower + tickSpacing;
 
-    const sqrtRatioAX96 = TickMath.getSqrtRatioAtTick(tickLower);
-    const sqrtRatioBX96 = TickMath.getSqrtRatioAtTick(tickUpper);
-    const liquidityJSBI = JSBI.BigInt(liquidity.toString());
+    const sqrtRatioAX96 = getSqrtRatioAtTick(tickLower);
+    const sqrtRatioBX96 = getSqrtRatioAtTick(tickUpper);
 
-    const amount1Delta = SqrtPriceMath.getAmount1Delta(
+    const amount1Delta = getAmount1Delta(
       sqrtRatioAX96,
       sqrtRatioBX96,
-      liquidityJSBI,
+      liquidity,
       false,
     );
     amount1 += BigInt(amount1Delta.toString());
@@ -216,38 +197,37 @@ export const liquiditiesToAmounts = (
     const tickLower = startTick + tickSpacing * i;
     const tickUpper = tickLower + tickSpacing;
 
-    const sqrtRatioAX96 = TickMath.getSqrtRatioAtTick(tickLower);
-    const sqrtRatioBX96 = TickMath.getSqrtRatioAtTick(tickUpper);
-    const liquidityJSBI = JSBI.BigInt(liquidity.toString());
+    const sqrtRatioAX96 = getSqrtRatioAtTick(tickLower);
+    const sqrtRatioBX96 = getSqrtRatioAtTick(tickUpper);
 
-    if (JSBI.lessThanOrEqual(sqrtRatioX96, sqrtRatioAX96)) {
-      const delta0 = SqrtPriceMath.getAmount0Delta(
+    if (sqrtRatioX96 <= sqrtRatioAX96) {
+      const delta0 = getAmount0Delta(
         sqrtRatioAX96,
         sqrtRatioBX96,
-        liquidityJSBI,
+        liquidity,
         false,
       );
       amount0 += BigInt(delta0.toString());
-    } else if (JSBI.lessThan(sqrtRatioX96, sqrtRatioBX96)) {
-      const delta0 = SqrtPriceMath.getAmount0Delta(
+    } else if (sqrtRatioX96 < sqrtRatioBX96) {
+      const delta0 = getAmount0Delta(
         sqrtRatioX96,
         sqrtRatioBX96,
-        liquidityJSBI,
+        liquidity,
         false,
       );
-      const delta1 = SqrtPriceMath.getAmount1Delta(
+      const delta1 = getAmount1Delta(
         sqrtRatioAX96,
         sqrtRatioX96,
-        liquidityJSBI,
+        liquidity,
         false,
       );
       amount0 += BigInt(delta0.toString());
       amount1 += BigInt(delta1.toString());
     } else {
-      const delta1 = SqrtPriceMath.getAmount1Delta(
+      const delta1 = getAmount1Delta(
         sqrtRatioAX96,
         sqrtRatioBX96,
-        liquidityJSBI,
+        liquidity,
         false,
       );
       amount1 += BigInt(delta1.toString());

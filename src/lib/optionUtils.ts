@@ -1,4 +1,4 @@
-import type {OptionData} from '~/package/client';
+import type {OptionData} from '~/hooks/options/useUserOptions';
 import {
   getPriceAtTick,
   liquiditiesToAmounts,
