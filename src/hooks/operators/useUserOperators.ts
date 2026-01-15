@@ -4,7 +4,7 @@ import {useQuery} from '@tanstack/react-query';
 import {useTimelockConfig} from '~/providers/TimelockProvider';
 
 export const useUserOperators = (userAddr?: Address, marketAddr?: Address) => {
-  const {graphqlClient} = useTimelockConfig();
+  const {timelockGraphqlClient} = useTimelockConfig();
 
   return useQuery({
     queryKey: [
@@ -15,7 +15,7 @@ export const useUserOperators = (userAddr?: Address, marketAddr?: Address) => {
     queryFn: async () => {
       if (!userAddr || !marketAddr) return undefined;
 
-      const result = await graphqlClient!.GetUserMarketOperators({
+      const result = await timelockGraphqlClient!.GetUserMarketOperators({
         userAddr: userAddr.toLowerCase(),
         marketAddr: marketAddr.toLowerCase(),
       });
@@ -25,6 +25,6 @@ export const useUserOperators = (userAddr?: Address, marketAddr?: Address) => {
         operatorAddr: operator.operator!.address.toLowerCase(),
       }));
     },
-    enabled: !!userAddr && !!marketAddr && !!graphqlClient,
+    enabled: !!userAddr && !!marketAddr && !!timelockGraphqlClient,
   });
 };

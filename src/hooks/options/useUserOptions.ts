@@ -11,7 +11,7 @@ const useUserOptions = (
   marketAddr: Address | '*' | undefined,
   active = false,
 ) => {
-  const {graphqlClient} = useTimelockConfig();
+  const {timelockGraphqlClient} = useTimelockConfig();
 
   userAddr = userAddr?.toLowerCase() as Address | undefined;
   marketAddr = marketAddr?.toLowerCase() as Address | '*' | undefined;
@@ -19,18 +19,18 @@ const useUserOptions = (
   return useQuery({
     queryKey: ['userOptions', userAddr || '--', active],
     queryFn: async () => {
-      if (!graphqlClient || !userAddr || !marketAddr) return [];
+      if (!timelockGraphqlClient || !userAddr || !marketAddr) return [];
 
       const data = await (marketAddr === '*'
         ? active
-          ? graphqlClient.GetActiveUserOptions({userAddr})
-          : graphqlClient.GetClosedUserOptions({userAddr})
+          ? timelockGraphqlClient.GetActiveUserOptions({userAddr})
+          : timelockGraphqlClient.GetClosedUserOptions({userAddr})
         : active
-          ? graphqlClient.GetActiveUserOptionsByMarket({
+          ? timelockGraphqlClient.GetActiveUserOptionsByMarket({
               userAddr,
               marketAddr,
             })
-          : graphqlClient.GetClosedUserOptionsByMarket({
+          : timelockGraphqlClient.GetClosedUserOptionsByMarket({
               userAddr,
               marketAddr,
             }));
@@ -54,7 +54,7 @@ const useUserOptions = (
         entryPrice: BigInt(option.entryPrice),
       })).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
     },
-    enabled: !!userAddr && !!marketAddr && !!graphqlClient,
+    enabled: !!userAddr && !!marketAddr && !!timelockGraphqlClient,
   });
 };
 
