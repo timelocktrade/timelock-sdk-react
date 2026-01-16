@@ -67,7 +67,7 @@ export const swappers: Record<number, Address> = {
   [baseSepolia.id]: '0xA16412db5c1Fc7e81574077913f5760d6c368Bd9',
 };
 export const timelockLenses: Record<number, Address> = {
-  [baseSepolia.id]: '0x93eae2b30142c1934e1e3F9aa0f13d35a0137fDa',
+  [baseSepolia.id]: '0x9C6E5BeAe9549219056bb79dbe1B32E1BE9965D8',
 };
 export const timelockFactories: Record<number, Address> = {
   [baseSepolia.id]: '0xea78d1869f78e301A18ab064b4287563974ab977',
