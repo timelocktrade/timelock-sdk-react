@@ -45,32 +45,6 @@ export const optionsMarketAbi = [
   },
   {
     type: 'function',
-    name: 'calculatePremium',
-    inputs: [
-      {name: 'optionType', type: 'uint8', internalType: 'uint8'},
-      {
-        name: 'optionAmount',
-        type: 'uint256',
-        internalType: 'uint256',
-      },
-      {name: 'strikeTick', type: 'int24', internalType: 'int24'},
-      {name: 'addedDuration', type: 'uint32', internalType: 'uint32'},
-      {
-        name: 'remainingDuration',
-        type: 'uint32',
-        internalType: 'uint32',
-      },
-      {name: 'priceFeedData', type: 'bytes', internalType: 'bytes'},
-    ],
-    outputs: [
-      {name: 'premium', type: 'uint256', internalType: 'uint256'},
-      {name: 'protocolFee', type: 'uint256', internalType: 'uint256'},
-      {name: 'feeRecipient', type: 'address', internalType: 'address'},
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
     name: 'emergencyWithdraw',
     inputs: [
       {
@@ -129,6 +103,53 @@ export const optionsMarketAbi = [
         type: 'address',
         internalType: 'contract IFeeStrategy',
       },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getExtendFees',
+    inputs: [
+      {name: 'optionType', type: 'uint8', internalType: 'uint8'},
+      {
+        name: 'optionAmount',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {name: 'strikeTick', type: 'int24', internalType: 'int24'},
+      {name: 'addedDuration', type: 'uint32', internalType: 'uint32'},
+      {
+        name: 'remainingDuration',
+        type: 'uint32',
+        internalType: 'uint32',
+      },
+      {name: 'priceFeedData', type: 'bytes', internalType: 'bytes'},
+    ],
+    outputs: [
+      {name: 'premium', type: 'uint256', internalType: 'uint256'},
+      {name: 'protocolFee', type: 'uint256', internalType: 'uint256'},
+      {name: 'feeRecipient', type: 'address', internalType: 'address'},
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getMintFees',
+    inputs: [
+      {name: 'optionType', type: 'uint8', internalType: 'uint8'},
+      {
+        name: 'optionAmount',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {name: 'strikeTick', type: 'int24', internalType: 'int24'},
+      {name: 'duration', type: 'uint32', internalType: 'uint32'},
+      {name: 'priceFeedData', type: 'bytes', internalType: 'bytes'},
+    ],
+    outputs: [
+      {name: 'premium', type: 'uint256', internalType: 'uint256'},
+      {name: 'protocolFee', type: 'uint256', internalType: 'uint256'},
+      {name: 'feeRecipient', type: 'address', internalType: 'address'},
     ],
     stateMutability: 'view',
   },

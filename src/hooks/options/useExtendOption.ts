@@ -38,7 +38,7 @@ export const useExtendOption = (marketAddr: Address | undefined) => {
       0,
       Math.floor((option.expiresAt.getTime() - Date.now()) / 1000),
     );
-    const [premium, protocolFee] = await market.read.calculatePremium([
+    const [premium, protocolFee] = await market.read.getExtendFees([
       option.optionType === 'CALL' ? 0 : 1,
       option.positionSizeCurrent,
       option.strikeTick,

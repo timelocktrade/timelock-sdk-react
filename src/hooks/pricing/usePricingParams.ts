@@ -5,7 +5,9 @@ import {lensAbi} from '~/abis/lens';
 
 export type StaticPricingParams = {
   model: 'static';
+  openingRate: number;
   dailyFundingRate: number;
+  minOpeningAmount: bigint;
   minFundingAmount: bigint;
 };
 
@@ -57,14 +59,27 @@ export const usePricingParams = (pricingAddr: Address | undefined) => {
             minPremiumAmount,
           };
         } else if (pricingModel === 1) {
-          const [dailyFundingRate, minFundingAmount] = decodeAbiParameters(
+          const [
+            openingRate,
+            dailyFundingRate,
+            minOpeningAmount,
+            minFundingAmount,
+          ] = decodeAbiParameters(
             [
+              {name: 'openingRate', type: 'uint32'},
               {name: 'dailyFundingRate', type: 'uint32'},
+              {name: 'minOpeningAmount', type: 'uint128'},
               {name: 'minFundingAmount', type: 'uint128'},
             ],
             rawData as Hex,
           );
-          return {model: 'static', dailyFundingRate, minFundingAmount};
+          return {
+            model: 'static',
+            openingRate,
+            dailyFundingRate,
+            minOpeningAmount,
+            minFundingAmount,
+          };
         }
         throw new Error('Unknown pricing model');
       },

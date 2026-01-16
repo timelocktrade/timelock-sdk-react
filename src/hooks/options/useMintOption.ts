@@ -64,12 +64,11 @@ export const useMintOption = (marketAddr: Address | undefined) => {
     );
     const market = getTimelockMarket(marketAddr, client);
 
-    const [premium, protocolFee] = await market.read.calculatePremium([
+    const [premium, protocolFee] = await market.read.getMintFees([
       optionType === 'CALL' ? 0 : 1,
       amount,
       strikeTick,
       duration,
-      0,
       '0x',
     ]);
     const maxPremium = ((premium + protocolFee) * 11n) / 10n;

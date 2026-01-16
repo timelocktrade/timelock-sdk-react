@@ -47,7 +47,9 @@ export const useUpdateMarketPricing = (marketAddr: Address | undefined) => {
     const factoryAddr = timelockFactories[chainId].toLowerCase() as Address;
 
     if (data.model === 'static' && pricingData.model === 'static') {
+      data.openingRate ??= pricingData.openingRate;
       data.dailyFundingRate ??= pricingData.dailyFundingRate;
+      data.minOpeningAmount ??= pricingData.minOpeningAmount;
       data.minFundingAmount ??= pricingData.minFundingAmount;
     }
     if (data.model === 'bsm' && pricingData.model === 'bsm') {
@@ -59,9 +61,19 @@ export const useUpdateMarketPricing = (marketAddr: Address | undefined) => {
     }
     if (data.model !== pricingData.model) {
       if (data.model === 'static') {
+        if (data.openingRate === undefined) {
+          throw new Error(
+            'openingRate is required when switching to static model',
+          );
+        }
         if (data.dailyFundingRate === undefined) {
           throw new Error(
             'dailyFundingRate is required when switching to static model',
+          );
+        }
+        if (data.minOpeningAmount === undefined) {
+          throw new Error(
+            'minOpeningAmount is required when switching to static model',
           );
         }
         if (data.minFundingAmount === undefined) {
@@ -102,7 +114,12 @@ export const useUpdateMarketPricing = (marketAddr: Address | undefined) => {
             address: factoryAddr,
             abi: factoryAbi,
             functionName: 'deployStaticPerpsPricing',
-            args: [data.dailyFundingRate!, data.minFundingAmount!],
+            args: [
+              data.openingRate!,
+              data.dailyFundingRate!,
+              data.minOpeningAmount!,
+              data.minFundingAmount!,
+            ],
           })
         : await writeContractAsync({
             address: factoryAddr,

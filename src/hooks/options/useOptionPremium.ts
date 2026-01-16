@@ -15,7 +15,6 @@ export const useOptionPremium = (
   optionType: 'CALL' | 'PUT',
   optionAmount?: bigint,
   addedDuration?: number,
-  remainingDuration = 0,
   strikeTick?: number,
 ) => {
   const {poolManager, poolKey, payoutAssetDecimals, optionAssetIsToken0} =
@@ -42,7 +41,7 @@ export const useOptionPremium = (
   const {data: [premium, protocolFee] = []} = useReadContract({
     address: marketAddr,
     abi: optionsMarketAbi,
-    functionName: 'calculatePremium',
+    functionName: 'getMintFees',
     args:
       strikeTickRounded !== undefined &&
       optionAmount !== undefined &&
@@ -52,7 +51,6 @@ export const useOptionPremium = (
             optionAmount,
             strikeTickRounded,
             addedDuration,
-            remainingDuration,
             '0x',
           ]
         : undefined,

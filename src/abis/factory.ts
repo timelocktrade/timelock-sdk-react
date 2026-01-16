@@ -65,10 +65,16 @@ export const factoryAbi = [
     type: 'function',
     name: 'deployStaticPerpsPricing',
     inputs: [
+      {name: '_openingRate', type: 'uint32', internalType: 'uint32'},
       {
         name: '_dailyFundingRate',
         type: 'uint32',
         internalType: 'uint32',
+      },
+      {
+        name: '_minOpeningAmount',
+        type: 'uint128',
+        internalType: 'uint128',
       },
       {
         name: '_minFundingAmount',
@@ -221,10 +227,22 @@ export const factoryAbi = [
         internalType: 'contract StaticPerpsPricing',
       },
       {
+        name: 'openingRate',
+        type: 'uint32',
+        indexed: false,
+        internalType: 'uint32',
+      },
+      {
         name: 'dailyFundingRate',
         type: 'uint32',
         indexed: false,
         internalType: 'uint32',
+      },
+      {
+        name: 'minOpeningAmount',
+        type: 'uint128',
+        indexed: false,
+        internalType: 'uint128',
       },
       {
         name: 'minFundingAmount',

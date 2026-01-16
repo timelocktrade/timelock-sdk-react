@@ -3,4 +3,4 @@ export * from '~/lib/price';
 export * from '~/lib/liquidityUtils';
 export * from '~/lib/numberUtils';
 export * from '~/lib/uniswapUtils';
-// export * from '~/lib/optionUtils';
+export * from '~/lib/optionUtils';

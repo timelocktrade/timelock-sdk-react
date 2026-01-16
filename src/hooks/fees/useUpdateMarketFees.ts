@@ -21,25 +21,25 @@ export const useUpdateMarketFees = (marketAddr: Address) => {
   const {
     data: {
       openingFeeRate,
-      baseFeeRate,
+      extensionFeeRate,
       minOpeningFee,
-      minBaseFee,
+      minExtensionFee,
       feeRecipient,
     } = {},
   } = useFeeRates(feeStrategy);
 
   const updateMarketFees = async (rates: {
     openingFeeRate?: number;
-    baseFeeRate?: number;
+    extensionFeeRate?: number;
     minOpeningFee?: bigint;
-    minBaseFee?: bigint;
+    minExtensionFee?: bigint;
     feeRecipient?: Address;
   }) => {
     if (
       openingFeeRate === undefined ||
-      baseFeeRate === undefined ||
+      extensionFeeRate === undefined ||
       minOpeningFee === undefined ||
-      minBaseFee === undefined ||
+      minExtensionFee === undefined ||
       feeRecipient === undefined
     ) {
       throw new Error('Missing current fee rates');
@@ -58,9 +58,9 @@ export const useUpdateMarketFees = (marketAddr: Address) => {
       functionName: 'deployFeeStrategy',
       args: [
         rates.openingFeeRate ?? openingFeeRate,
-        rates.baseFeeRate ?? baseFeeRate,
+        rates.extensionFeeRate ?? extensionFeeRate,
         rates.minOpeningFee ?? minOpeningFee,
-        rates.minBaseFee ?? minBaseFee,
+        rates.minExtensionFee ?? minExtensionFee,
         rates.feeRecipient ?? feeRecipient,
       ],
     });

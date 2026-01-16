@@ -417,6 +417,8 @@ export const singleOwnerVaultAbi = [
         type: 'address[]',
         internalType: 'contract IERC20[]',
       },
+      {name: 'amounts', type: 'uint256[]', internalType: 'uint256[]'},
+      {name: 'recipient', type: 'address', internalType: 'address'},
     ],
     outputs: [],
     stateMutability: 'nonpayable',
@@ -709,6 +711,7 @@ export const singleOwnerVaultAbi = [
     name: 'AddressEmptyCode',
     inputs: [{name: 'target', type: 'address', internalType: 'address'}],
   },
+  {type: 'error', name: 'ArrayLengthMismatch', inputs: []},
   {
     type: 'error',
     name: 'BorrowerNotWhitelisted',

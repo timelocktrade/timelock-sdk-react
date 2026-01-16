@@ -1,4 +1,3 @@
-import type {NonUndefinedGuard} from '@tanstack/react-query';
 import type {Address} from 'viem';
 import {useReadContract} from 'wagmi';
 import {useLens} from '../useLens';

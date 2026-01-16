@@ -76,12 +76,11 @@ export const useMintPerp = (marketAddr: Address | undefined) => {
       currentTick,
       strikeTick,
     );
-    const [premium, protocolFee] = await market.read.calculatePremium([
+    const [premium, protocolFee] = await market.read.getMintFees([
       optionType === 'CALL' ? 0 : 1,
       amount,
       validStrikeTick,
       duration,
-      0,
       '0x',
     ]);
     const maxPremium = ((premium + protocolFee) * 11n) / 10n;

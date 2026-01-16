@@ -17,6 +17,7 @@ export const useMarketDailyVolume = (marketAddr: Address | undefined) => {
         totalVolume: BigInt(data.totalVolume),
         totalPremium: BigInt(data.totalPremium),
         totalPayout: BigInt(data.totalPayout),
+        totalProtocolFee: BigInt(data.totalProtocolFee),
       }));
     },
     enabled: !!marketAddr && !!timelockGraphqlClient,
