@@ -10,11 +10,11 @@ import {wrapAmount} from '~/lib/numberUtils';
 import {roundTick} from '~/lib/liquidityUtils';
 import {optionsMarketAbi} from '~/abis/optionsMarket';
 
-export const useOptionPremium = (
+export const useMintFees = (
   marketAddr: Address | undefined,
   optionType: 'CALL' | 'PUT',
   optionAmount?: bigint,
-  addedDuration?: number,
+  duration?: number,
   strikeTick?: number,
 ) => {
   const {poolManager, poolKey, payoutAssetDecimals, optionAssetIsToken0} =
@@ -45,12 +45,12 @@ export const useOptionPremium = (
     args:
       strikeTickRounded !== undefined &&
       optionAmount !== undefined &&
-      addedDuration !== undefined
+      duration !== undefined
         ? [
             optionType === 'CALL' ? 0 : 1,
             optionAmount,
             strikeTickRounded,
-            addedDuration,
+            duration,
             '0x',
           ]
         : undefined,
