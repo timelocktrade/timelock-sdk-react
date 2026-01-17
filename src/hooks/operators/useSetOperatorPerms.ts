@@ -30,18 +30,19 @@ export const useSetOperatorPerms = (marketAddr: Address | undefined) => {
     if (!client || !address) throw new Error('Wallet not connected');
     if (!marketAddr) throw new Error('Market address not available');
 
+    const perms = {
+      canExtend,
+      canExercise,
+      canTransfer,
+      canMint,
+      spendingApproval,
+    };
+
     const hash = await writeContractAsync({
       address: marketAddr,
       abi: optionsMarketAbi,
-      functionName: 'setOperatorPerms',
-      args: [
-        operator,
-        canExtend,
-        canExercise,
-        canTransfer,
-        canMint,
-        spendingApproval,
-      ],
+      functionName: 'setOperatorsPerms',
+      args: [[operator], [perms]],
     });
     await waitForTransactionReceipt(client, {hash});
 

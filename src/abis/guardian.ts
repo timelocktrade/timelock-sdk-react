@@ -143,7 +143,7 @@ export const guardianAbi = [
     inputs: [
       {name: 'mintPaused', type: 'bool', internalType: 'bool'},
       {name: 'burnPaused', type: 'bool', internalType: 'bool'},
-      {name: 'TradingPaused', type: 'bool', internalType: 'bool'},
+      {name: 'tradingPaused', type: 'bool', internalType: 'bool'},
     ],
     outputs: [],
     stateMutability: 'nonpayable',
@@ -153,7 +153,7 @@ export const guardianAbi = [
     name: 'pauseMarket',
     inputs: [
       {name: 'market', type: 'address', internalType: 'address'},
-      {name: 'TradingPaused', type: 'bool', internalType: 'bool'},
+      {name: 'tradingPaused', type: 'bool', internalType: 'bool'},
     ],
     outputs: [],
     stateMutability: 'nonpayable',
@@ -247,7 +247,7 @@ export const guardianAbi = [
         internalType: 'bool',
       },
       {
-        name: 'TradingPaused',
+        name: 'tradingPaused',
         type: 'bool',
         indexed: false,
         internalType: 'bool',
@@ -402,4 +402,5 @@ export const guardianAbi = [
       {name: 'neededRole', type: 'bytes32', internalType: 'bytes32'},
     ],
   },
+  {type: 'error', name: 'ZeroAddress', inputs: []},
 ] as const;
