@@ -1,9 +1,8 @@
-import type {Address} from 'viem';
+import {erc20Abi, type Address} from 'viem';
 import {useReadContract} from 'wagmi';
 import {useMemo} from 'react';
 import {useTokenData} from './useTokenData';
 import {wrapAmount} from '~/lib/numberUtils';
-import {erc20Abi} from '~/abis/erc20';
 
 export const useTokenBalance = (token?: Address, user?: Address) => {
   const {decimals} = useTokenData(token);

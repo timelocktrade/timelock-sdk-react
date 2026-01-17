@@ -1,8 +1,7 @@
 import type {Address, Client, PublicClient, GetContractReturnType} from 'viem';
-import {getContract} from 'viem';
+import {erc20Abi, getContract} from 'viem';
 import {baseSepolia} from 'viem/chains';
 
-import {erc20Abi} from '~/abis/erc20';
 import {lensAbi} from '~/abis/lens';
 import {optionsMarketAbi} from '~/abis/optionsMarket';
 import {quoterAbi} from '~/abis/quoterV4';
