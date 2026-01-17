@@ -48,21 +48,15 @@ export const useExerciseOption = (marketAddr: Address | undefined) => {
       vault,
       option.startTick,
     ]);
+    const swapperData = encodeAbiParameters(
+      [{type: 'uint160'}, {type: 'uint160'}, {type: 'uint256'}],
+      [minSqrtPrice, maxSqrtPrice, deadline],
+    );
     const hash = await writeContractAsync({
       address: marketAddr,
       abi: optionsMarketAbi,
       functionName: 'exerciseOption',
-      args: [
-        option.optionId,
-        liquidities,
-        0n,
-        swapper,
-        encodeAbiParameters(
-          [{type: 'uint160'}, {type: 'uint160'}, {type: 'uint256'}],
-          [minSqrtPrice, maxSqrtPrice, deadline],
-        ),
-        refTick,
-      ],
+      args: [option.optionId, liquidities, 0n, swapper, swapperData, refTick],
     });
     await waitForTransactionReceipt(client, {hash});
 
