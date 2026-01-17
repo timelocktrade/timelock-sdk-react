@@ -64,13 +64,13 @@ export const getTimelockLens = async (
 };
 
 export const swappers: Record<number, Address> = {
-  [baseSepolia.id]: '0xA16412db5c1Fc7e81574077913f5760d6c368Bd9',
+  [baseSepolia.id]: '0xBFbC719F902B27A8E29da42Fa2214710Db9Fab17',
 };
 export const timelockLenses: Record<number, Address> = {
   [baseSepolia.id]: '0x9C6E5BeAe9549219056bb79dbe1B32E1BE9965D8',
 };
 export const timelockFactories: Record<number, Address> = {
-  [baseSepolia.id]: '0xea78d1869f78e301A18ab064b4287563974ab977',
+  [baseSepolia.id]: '0x07e4E1829794745b03476CC9401de8dbC862899a',
 };
 export const swapRouters: Record<number, Address> = {
   [baseSepolia.id]: '0x1a005FE3C05F076983F0d66a5F80CB9C61561a5b',
