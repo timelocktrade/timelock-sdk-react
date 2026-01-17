@@ -1,5 +1,4 @@
 // ABIs
-export * from '~/abis/erc20';
 export * from '~/abis/factory';
 export * from '~/abis/guardian';
 export * from '~/abis/lens';
