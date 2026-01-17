@@ -1,21 +1,28 @@
 import {useMemo} from 'react';
-import {useQuery} from '@tanstack/react-query';
-import {usePublicClient} from 'wagmi';
+import {
+  useSimulateContract,
+  useChainId,
+  useReadContract,
+  useConnection,
+} from 'wagmi';
+import {encodeAbiParameters, maxUint160} from 'viem';
 
 import type {OptionData} from './useUserOptions';
 import {useMarketData} from '~/hooks/market/useMarketData';
 import {useCurrentPrice} from '~/hooks/pool/useCurrentPrice';
-import {usePoolData} from '~/hooks/pool/usePoolData';
+import {useLens} from '~/hooks/useLens';
 import {
-  liquiditiesToAmounts,
-  PRICE_PRECISION,
   token0ToToken1,
   token0ToToken1AtTick,
   token1ToToken0,
   token1ToToken0AtTick,
 } from '~/lib/liquidityUtils';
 import {type Amount, wrapAmount} from '~/lib/numberUtils';
-import {getQuoter} from '~/lib/contracts';
+import {swappers} from '~/lib/contracts';
+import {MAX_SQRT_RATIO, MIN_SQRT_RATIO} from '~/lib/uniswapUtils';
+
+import {optionsMarketAbi} from '~/abis/optionsMarket';
+import {lensAbi} from '~/abis/lens';
 
 const calculateDisplayPnl = (
   option: OptionData,
@@ -37,14 +44,29 @@ const calculateDisplayPnl = (
   return wrapAmount(pnl, payoutAssetDecimals);
 };
 
-export const useOptionPnl = (option?: OptionData) => {
-  const client = usePublicClient();
+const swapperData = encodeAbiParameters(
+  [{type: 'uint160'}, {type: 'uint160'}, {type: 'uint256'}],
+  [
+    MIN_SQRT_RATIO + 1n,
+    MAX_SQRT_RATIO - 1n,
+    BigInt(Math.floor(Date.now() / 1000) + 60 * 10),
+  ],
+);
 
-  const {poolManager, poolKey, optionAssetIsToken0, payoutAssetDecimals} =
-    useMarketData(option?.marketAddr);
+export const useOptionPnl = (option?: OptionData) => {
+  const chainId = useChainId();
+  const {address: account} = useConnection();
+  const {timelockLens} = useLens();
+
+  const {
+    vault,
+    poolManager,
+    poolKey,
+    optionAssetIsToken0,
+    payoutAssetDecimals,
+  } = useMarketData(option?.marketAddr);
 
   const {currentPrice: poolPrice} = useCurrentPrice(poolManager, poolKey);
-  const {tickSpacing} = usePoolData(poolManager, poolKey);
 
   // Simple theoretical PnL (no slippage)
   const displayPnl = useMemo(() => {
@@ -64,94 +86,46 @@ export const useOptionPnl = (option?: OptionData) => {
     );
   }, [option, optionAssetIsToken0, poolPrice, payoutAssetDecimals]);
 
-  // Actual payout accounting for slippage via quoter
-  const canQueryPayout =
-    !!client &&
-    !!poolManager &&
-    !!poolKey &&
-    !!tickSpacing &&
-    !!poolPrice &&
-    !!payoutAssetDecimals &&
-    optionAssetIsToken0 !== undefined;
-
-  const {data: unrealizedPayout} = useQuery({
-    queryKey: [
-      'unrealizedPayout',
-      option?.id || '-',
-      poolPrice?.scaled.toString() || '-',
-    ],
-    queryFn: async () => {
-      if (!option || !poolPrice || !payoutAssetDecimals || !tickSpacing) return;
-
-      const {optionType, marketAddr} = option;
-
-      const entryPrice = optionAssetIsToken0
-        ? option.entryPrice
-        : PRICE_PRECISION ** 2n / option.entryPrice;
-
-      const [borrowed0, borrowed1] = liquiditiesToAmounts(
-        option.liquiditiesCurrent,
-        option.startTick,
-        entryPrice,
-        tickSpacing,
-      );
-      const [repay0, repay1] = liquiditiesToAmounts(
-        option.liquiditiesCurrent,
-        option.startTick,
-        poolPrice.scaled,
-        tickSpacing,
-      );
-      const isLong0 =
-        (optionAssetIsToken0 && optionType === 'CALL') ||
-        (!optionAssetIsToken0 && optionType === 'PUT');
-
-      const borrowedLong = isLong0 ? borrowed0 : borrowed1;
-      const repayLong = isLong0 ? repay0 : repay1;
-
-      const excessLong =
-        borrowedLong > repayLong ? borrowedLong - repayLong : 0n;
-      const neededShort = isLong0 ? repay1 : repay0;
-
-      if (neededShort === 0n || excessLong === 0n)
-        return wrapAmount(0n, payoutAssetDecimals!);
-
-      const quoter = await getQuoter(client!);
-      const output0 = !optionAssetIsToken0;
-
-      let payout: bigint;
-
-      const isExactOutput = (isLong0 && output0) || (!isLong0 && !output0);
-      const exactAmount = isExactOutput ? neededShort : excessLong;
-
-      const params = {
-        poolKey: poolKey!,
-        zeroForOne: isLong0,
-        exactAmount,
-        hookData: '0x',
-      } as const;
-
-      if (isExactOutput) {
-        const {
-          result: [swappedLong],
-        } = await quoter.simulate.quoteExactOutputSingle(
-          [poolManager!, params],
-          {account: marketAddr},
-        );
-        payout = excessLong > swappedLong ? excessLong - swappedLong : 0n;
-      } else {
-        const {
-          result: [receviedShort],
-        } = await quoter.simulate.quoteExactInputSingle(
-          [poolManager!, params],
-          {account: marketAddr},
-        );
-        payout = receviedShort > neededShort ? receviedShort - neededShort : 0n;
-      }
-      return wrapAmount(payout, payoutAssetDecimals);
-    },
-    enabled: canQueryPayout,
-    staleTime: 10_000, // Cache for 10s to avoid excessive quoter calls
+  const {data: refTick} = useReadContract({
+    address: timelockLens?.address,
+    abi: lensAbi,
+    functionName: 'getRefTick',
+    args: vault && option?.startTick ? [vault, option.startTick] : undefined,
   });
 
-  return {unrealizedPayout, displayPnl};
+  const swapper = swappers[chainId];
+
+  // Actual payout accounting for slippage via simulate call to exerciseOption
+  const {data: unrealizedPayout, ...rest} = useSimulateContract({
+    address: option?.marketAddr,
+    abi: optionsMarketAbi,
+    functionName: 'exerciseOption',
+    account,
+    args:
+      option && refTick
+        ? [
+            option.optionId,
+            option.liquiditiesCurrent,
+            0n,
+            swapper,
+            swapperData,
+            refTick,
+          ]
+        : undefined,
+    query: {
+      enabled:
+        !!option &&
+        !!swapperData &&
+        !!swapper &&
+        refTick !== undefined &&
+        !!account,
+      staleTime: 10_000, // Cache for 10s to avoid excessive calls
+      select: data => {
+        if (!payoutAssetDecimals) return undefined;
+        return wrapAmount(data.result, payoutAssetDecimals);
+      },
+    },
+  });
+
+  return {...rest, data: {displayPnl, unrealizedPayout}};
 };
