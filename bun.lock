@@ -5,27 +5,27 @@
     "": {
       "name": "timelock-sdk",
       "devDependencies": {
-        "@graphql-codegen/cli": "^6.1.1",
-        "@graphql-codegen/typescript": "^5.0.7",
-        "@graphql-codegen/typescript-graphql-request": "^6.4.0",
-        "@graphql-codegen/typescript-operations": "^5.0.7",
-        "@types/big.js": "^6.2.2",
-        "@types/node": "^25.0.8",
-        "@types/react": "^19.2.8",
-        "gts": "^7.0.0",
-        "tsdown": "^0.20.0-beta.3",
-        "typescript": "^5.9.3",
+        "@graphql-codegen/cli": "latest",
+        "@graphql-codegen/typescript": "latest",
+        "@graphql-codegen/typescript-graphql-request": "latest",
+        "@graphql-codegen/typescript-operations": "latest",
+        "@types/big.js": "latest",
+        "@types/node": "latest",
+        "@types/react": "latest",
+        "gts": "latest",
+        "tsdown": "latest",
+        "typescript": "latest",
       },
       "peerDependencies": {
-        "@tanstack/react-query": "^5.90.17",
-        "big.js": "^7.0.1",
-        "graphql": "^16.12.0",
-        "graphql-request": "^7.4.0",
-        "graphql-tag": "^2.12.6",
-        "react": "^19.2.3",
-        "react-dom": "^19.2.3",
-        "viem": "^2.44.2",
-        "wagmi": "^3.3.2",
+        "@tanstack/react-query": "latest",
+        "big.js": "latest",
+        "graphql": "latest",
+        "graphql-request": "latest",
+        "graphql-tag": "latest",
+        "react": "latest",
+        "react-dom": "latest",
+        "viem": "latest",
+        "wagmi": "latest",
       },
     },
   },
@@ -350,9 +350,9 @@
 
     "@scure/bip39": ["@scure/bip39@1.6.0", "", { "dependencies": { "@noble/hashes": "~1.8.0", "@scure/base": "~1.2.5" } }, "sha512-+lF0BbLiJNwVlev4eKelw1WWLaiKXw7sSl8T6FvBlWkdX+94aGJ4o8XjUdlyhTCjd8c+B3KT3JfS8P0bLRNU6A=="],
 
-    "@tanstack/query-core": ["@tanstack/query-core@5.90.17", "", {}, "sha512-hDww+RyyYhjhUfoYQ4es6pbgxY7LNiPWxt4l1nJqhByjndxJ7HIjDxTBtfvMr5HwjYavMrd+ids5g4Rfev3lVQ=="],
+    "@tanstack/query-core": ["@tanstack/query-core@5.90.19", "", {}, "sha512-GLW5sjPVIvH491VV1ufddnfldyVB+teCnpPIvweEfkpRx7CfUmUGhoh9cdcUKBh/KwVxk22aNEDxeTsvmyB/WA=="],
 
-    "@tanstack/react-query": ["@tanstack/react-query@5.90.17", "", { "dependencies": { "@tanstack/query-core": "5.90.17" }, "peerDependencies": { "react": "^18 || ^19" } }, "sha512-PGc2u9KLwohDUSchjW9MZqeDQJfJDON7y4W7REdNBgiFKxQy+Pf7eGjiFWEj5xPqKzAeHYdAb62IWI1a9UJyGQ=="],
+    "@tanstack/react-query": ["@tanstack/react-query@5.90.19", "", { "dependencies": { "@tanstack/query-core": "5.90.19" }, "peerDependencies": { "react": "^18 || ^19" } }, "sha512-qTZRZ4QyTzQc+M0IzrbKHxSeISUmRB3RPGmao5bT+sI6ayxSRhn0FXEnT5Hg3as8SBFcRosrXXRFB+yAcxVxJQ=="],
 
     "@theguild/federation-composition": ["@theguild/federation-composition@0.21.2", "", { "dependencies": { "constant-case": "^3.0.4", "debug": "4.4.3", "json5": "^2.2.3", "lodash.sortby": "^4.7.0" }, "peerDependencies": { "graphql": "^16.0.0" } }, "sha512-vkaJrMaG5TXtEzdrbfTZ5IhOot/Ct2aZHEgG4fYmzZa037DpLaic6W1l1NIlFZ7c/gHZS3Wz4Wt3ZTvsDgOAOQ=="],
 
@@ -1074,7 +1074,7 @@
 
     "validate-npm-package-license": ["validate-npm-package-license@3.0.4", "", { "dependencies": { "spdx-correct": "^3.0.0", "spdx-expression-parse": "^3.0.0" } }, "sha512-DpKm2Ui/xN7/HQKCtpZxoRWBhZ9Z0kqtygG8XCgNQ8ZlDnxuQmWhj566j8fN4Cu3/JmbhsDo7fcAJq4s9h27Ew=="],
 
-    "viem": ["viem@2.44.2", "", { "dependencies": { "@noble/curves": "1.9.1", "@noble/hashes": "1.8.0", "@scure/bip32": "1.7.0", "@scure/bip39": "1.6.0", "abitype": "1.2.3", "isows": "1.0.7", "ox": "0.11.3", "ws": "8.18.3" }, "peerDependencies": { "typescript": ">=5.0.4" }, "optionalPeers": ["typescript"] }, "sha512-nHY872t/T3flLpVsnvQT/89bwbrJwxaL917FDv7Oxy4E5FWIFkokRQOKXG3P+hgl30QYVZxi9o2SUHLnebycxw=="],
+    "viem": ["viem@2.44.4", "", { "dependencies": { "@noble/curves": "1.9.1", "@noble/hashes": "1.8.0", "@scure/bip32": "1.7.0", "@scure/bip39": "1.6.0", "abitype": "1.2.3", "isows": "1.0.7", "ox": "0.11.3", "ws": "8.18.3" }, "peerDependencies": { "typescript": ">=5.0.4" }, "optionalPeers": ["typescript"] }, "sha512-sJDLVl2EsS5Fo7GSWZME5CXEV7QRYkUJPeBw7ac+4XI3D4ydvMw/gjulTsT5pgqcpu70BploFnOAC6DLpan1Yg=="],
 
     "wagmi": ["wagmi@3.3.2", "", { "dependencies": { "@wagmi/connectors": "7.1.2", "@wagmi/core": "3.2.2", "use-sync-external-store": "1.4.0" }, "peerDependencies": { "@tanstack/react-query": ">=5.0.0", "react": ">=18", "typescript": ">=5.7.3", "viem": "2.x" }, "optionalPeers": ["typescript"] }, "sha512-WPHuWnEOWpOTko+P9f5pR22y7Ozjq6nJse79uBOk3j6ke4ipbGCzJtXfdh/QGQzYHQTU+Iv5HXjiYeabdjdvaQ=="],
 

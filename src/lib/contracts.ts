@@ -1,6 +1,6 @@
 import type {Address, Client, PublicClient, GetContractReturnType} from 'viem';
 import {erc20Abi, getContract} from 'viem';
-import {baseSepolia} from 'viem/chains';
+import {baseSepolia, monad} from 'viem/chains';
 
 import {lensAbi} from '~/abis/lens';
 import {optionsMarketAbi} from '~/abis/optionsMarket';
@@ -64,19 +64,21 @@ export const getTimelockLens = async (
 
 export const swappers: Record<number, Address> = {
   [baseSepolia.id]: '0xBFbC719F902B27A8E29da42Fa2214710Db9Fab17',
+  [monad.id]: '0x83afD3E04032Ad8B5bdd666eecCA06FED1F8b7bc',
 };
 export const timelockLenses: Record<number, Address> = {
   [baseSepolia.id]: '0x9C6E5BeAe9549219056bb79dbe1B32E1BE9965D8',
+  [monad.id]: '0xfd1857a78D13140CB01c78D673070c542B5b7C7C',
 };
 export const timelockFactories: Record<number, Address> = {
   [baseSepolia.id]: '0x07e4E1829794745b03476CC9401de8dbC862899a',
-};
-export const swapRouters: Record<number, Address> = {
-  [baseSepolia.id]: '0x1a005FE3C05F076983F0d66a5F80CB9C61561a5b',
+  [monad.id]: '0x1B3c134dF94AC0E9981580D58fB7181b5471C3b3',
 };
 export const stateViews: Record<number, Address> = {
   [baseSepolia.id]: '0x06AF24d39b8cb2100958EAAF279707Bec11160C8',
+  [monad.id]: '0x12d0d24919ae456ac24b1f8795C404690FCd64E5',
 };
 export const quoters: Record<number, Address> = {
   [baseSepolia.id]: '0xD478003Dd94A76F3dC6D09412f5C60D2e060B49A',
+  [monad.id]: '0xE82e84caa785E7D909d5FE5499405f9cE07e3A93',
 };

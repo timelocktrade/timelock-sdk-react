@@ -113,6 +113,7 @@ export const useMintPerp = (marketAddr: Address | undefined) => {
     });
 
     await sleep(200);
+    void refetchOperators();
     void queryClient.invalidateQueries({queryKey: ['userOptions']});
     void queryClient.invalidateQueries({queryKey: ['userOptions']});
     void queryClient.invalidateQueries({queryKey: ['readContract']});
