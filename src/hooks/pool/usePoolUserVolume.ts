@@ -11,7 +11,7 @@ export const usePoolUserVolume = (
   poolKey: PoolKey | undefined,
   userAddr: Address | undefined,
 ) => {
-  const {uniV4GraphqlClient} = useTimelockConfig();
+  const {univ4GraphqlClient} = useTimelockConfig();
 
   const poolId = useMemo(
     () => (poolKey ? getPoolId(poolKey) : undefined),
@@ -26,7 +26,7 @@ export const usePoolUserVolume = (
       userAddr?.toLowerCase() || '--',
     ],
     queryFn: async () => {
-      const result = await uniV4GraphqlClient!.GetPoolUserVolume({
+      const result = await univ4GraphqlClient!.GetPoolUserVolume({
         poolId: poolId!,
         userAddr: userAddr!,
       });
@@ -39,6 +39,6 @@ export const usePoolUserVolume = (
         swapCount: BigInt(result.PoolUser[0].swapCount),
       };
     },
-    enabled: !!poolId && !!userAddr && !!uniV4GraphqlClient,
+    enabled: !!poolId && !!userAddr && !!univ4GraphqlClient,
   });
 };

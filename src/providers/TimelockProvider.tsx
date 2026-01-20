@@ -1,21 +1,18 @@
 'use client';
 import type {Address} from 'viem';
 import React, {createContext, useContext, useMemo, type ReactNode} from 'react';
-import {GraphQLClient} from 'graphql-request';
-
-import {getSdk as getTimelockGraphqlSdk} from '~/generated/timelock';
-import {getSdk as getUniV4GraphqlSdk} from '~/generated/univ4';
 
 import {type TimelockMarketData} from '~/lib/contracts';
 import {PerpsOperator} from '~/lib/perpsOperator';
+import {getTimelockGraphqlClient, getUniv4GraphqlClient} from '~/graphql';
 
 type TimelockContextValue = {
   marketData: Partial<TimelockMarketData>;
   lensAddr?: Address;
   uniswapMathLensAddr?: Address;
   timelockGraphqlUrl?: string;
-  timelockGraphqlClient?: ReturnType<typeof getTimelockGraphqlSdk>;
-  uniV4GraphqlClient?: ReturnType<typeof getUniV4GraphqlSdk>;
+  timelockGraphqlClient?: ReturnType<typeof getTimelockGraphqlClient>;
+  univ4GraphqlClient?: ReturnType<typeof getUniv4GraphqlClient>;
   perpsOperator?: PerpsOperator;
   perpsOperatorUrl?: string;
 };
@@ -28,53 +25,47 @@ export const TimelockProvider = ({
   children,
   marketData,
   timelockGraphqlUrl,
-  uniV4GraphqlUrl,
+  univ4GraphqlUrl,
   perpsOperatorUrl,
 }: {
   children: ReactNode;
   marketData?: Partial<TimelockMarketData>;
   timelockGraphqlUrl?: string;
-  uniV4GraphqlUrl?: string;
+  univ4GraphqlUrl?: string;
   perpsOperatorUrl?: string;
 }) => {
   const timelockGraphqlClient = useMemo(() => {
-    if (timelockGraphqlUrl) {
-      return getTimelockGraphqlSdk(new GraphQLClient(timelockGraphqlUrl));
-    }
-    return undefined;
+    if (!timelockGraphqlUrl) return;
+    return getTimelockGraphqlClient(timelockGraphqlUrl);
   }, [timelockGraphqlUrl]);
 
-  const uniV4GraphqlClient = useMemo(() => {
-    if (uniV4GraphqlUrl) {
-      return getUniV4GraphqlSdk(new GraphQLClient(uniV4GraphqlUrl));
-    }
-    return undefined;
-  }, [uniV4GraphqlUrl]);
+  const univ4GraphqlClient = useMemo(() => {
+    if (!univ4GraphqlUrl) return;
+    return getUniv4GraphqlClient(univ4GraphqlUrl);
+  }, [univ4GraphqlUrl]);
 
   const perpsOperator = useMemo(() => {
-    if (perpsOperatorUrl) {
-      return new PerpsOperator(perpsOperatorUrl);
-    }
-    return undefined;
+    if (!perpsOperatorUrl) return;
+    return new PerpsOperator(perpsOperatorUrl);
   }, [perpsOperatorUrl]);
 
   const contextValue = useMemo(
     () => ({
       marketData: marketData || {},
       timelockGraphqlUrl,
-      uniV4GraphqlUrl,
+      univ4GraphqlUrl,
       perpsOperator,
-      uniV4GraphqlClient,
+      univ4GraphqlClient,
       timelockGraphqlClient,
       perpsOperatorUrl,
     }),
     [
       marketData,
       timelockGraphqlUrl,
-      uniV4GraphqlUrl,
+      univ4GraphqlUrl,
       perpsOperator,
       timelockGraphqlClient,
-      uniV4GraphqlClient,
+      univ4GraphqlClient,
       perpsOperatorUrl,
     ],
   );
