@@ -34,6 +34,7 @@ const getSavedSignature = (userAddr: Address) => {
     }
     return parsed;
   } catch (error) {
+    console.error(error);
     clearSignature(userAddr);
     throw new Error('Invalid stored signature: ' + raw);
   }

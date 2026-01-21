@@ -1,7 +1,6 @@
 import type {Address} from 'viem';
 import {useMemo} from 'react';
-import {usePoolData, usePoolsData, type PoolInput} from './usePoolData';
-import {useCurrentTicks} from './useCurrentTick';
+import {usePoolData} from './usePoolData';
 
 import {
   type PoolKey,

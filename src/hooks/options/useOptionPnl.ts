@@ -5,7 +5,7 @@ import {
   useReadContract,
   useConnection,
 } from 'wagmi';
-import {encodeAbiParameters, maxUint160} from 'viem';
+import {encodeAbiParameters} from 'viem';
 
 import type {OptionData} from './useUserOptions';
 import {useMarketData} from '~/hooks/market/useMarketData';
