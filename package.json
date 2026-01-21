@@ -1,6 +1,6 @@
 {
   "name": "timelock-sdk",
-  "version": "0.0.253",
+  "version": "0.0.255",
   "author": "",
   "main": "./dist/package.cjs",
   "module": "./dist/package.js",
@@ -11,9 +11,9 @@
     "@graphql-codegen/typescript-operations": "^5.0.7",
     "@types/big.js": "^6.2.2",
     "@types/node": "^25.0.9",
-    "@types/react": "^19.2.8",
+    "@types/react": "^19.2.9",
     "gts": "^7.0.0",
-    "tsdown": "^0.20.0-beta.3",
+    "tsdown": "^0.20.0-beta.4",
     "typescript": "^5.9.3"
   },
   "peerDependencies": {
@@ -22,7 +22,7 @@
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "viem": "^2.44.4",
-    "wagmi": "^3.3.2",
+    "wagmi": "^3.3.4",
     "graphql": "^16.12.0",
     "graphql-request": "^7.4.0",
     "graphql-tag": "^2.12.6"

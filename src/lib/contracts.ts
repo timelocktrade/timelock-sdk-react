@@ -71,8 +71,8 @@ export const timelockLenses: Record<number, Address> = {
   [monad.id]: '0xfd1857a78D13140CB01c78D673070c542B5b7C7C',
 };
 export const timelockFactories: Record<number, Address> = {
-  [baseSepolia.id]: '0x07e4E1829794745b03476CC9401de8dbC862899a',
-  [monad.id]: '0x1B3c134dF94AC0E9981580D58fB7181b5471C3b3',
+  [baseSepolia.id]: '0x07e4E1829794745b03476CC9401de8dbC862899a', // needs redeployment
+  [monad.id]: '0xb3eb2a6443686e2b6a9c35814a8e63bb73c1c727',
 };
 export const stateViews: Record<number, Address> = {
   [baseSepolia.id]: '0x06AF24d39b8cb2100958EAAF279707Bec11160C8',

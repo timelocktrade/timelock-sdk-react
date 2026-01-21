@@ -1,4 +1,4 @@
-import {type Address, decodeEventLog} from 'viem';
+import {type Address, decodeEventLog, zeroAddress} from 'viem';
 import {useChainId, useWriteContract, usePublicClient} from 'wagmi';
 import {useQueryClient} from '@tanstack/react-query';
 import {useMarketState} from '~/hooks/market/useMarketState';
@@ -24,6 +24,108 @@ export const useUpdateMarketPricing = (marketAddr: Address | undefined) => {
 
   const {data: pricingData, error: pricingError} =
     usePricingParams(optionPricing);
+
+  const getOrDeployStaticPricing = async (
+    factoryAddr: Address,
+    params: Required<StaticPricingParams>,
+  ) => {
+    const args = [
+      params.openingRate,
+      params.dailyFundingRate,
+      params.minOpeningAmount,
+      params.minFundingAmount,
+    ] as const;
+
+    const [existingPricing] = await publicClient!.readContract({
+      address: factoryAddr,
+      abi: factoryAbi,
+      functionName: 'getStaticPerpsPricing',
+      args,
+    });
+
+    if (existingPricing !== zeroAddress) {
+      return {pricingAddr: existingPricing};
+    }
+    const hash = await writeContractAsync({
+      address: factoryAddr,
+      abi: factoryAbi,
+      functionName: 'deployStaticPerpsPricing',
+      args,
+    });
+    const receipt = await publicClient!.waitForTransactionReceipt({hash});
+
+    const deployEvent = receipt.logs.find(
+      log => log.address.toLowerCase() === factoryAddr,
+    );
+    if (!deployEvent) {
+      console.error(receipt);
+      throw new Error(`Deploy event not found in tx: ${hash}`);
+    }
+    const decodedEvent = decodeEventLog({
+      abi: factoryAbi,
+      data: deployEvent.data,
+      topics: deployEvent.topics,
+    });
+    if (decodedEvent.eventName !== 'DeployStaticPerpsPricing') {
+      console.error(receipt);
+      throw new Error(
+        `Unexpected event ${decodedEvent.eventName} in tx ${hash}`,
+      );
+    }
+    return {pricingAddr: decodedEvent.args.pricing, deployHash: hash};
+  };
+
+  const getOrDeployOptionPricing = async (
+    factoryAddr: Address,
+    params: Required<OptionPricingParams>,
+  ) => {
+    const args = [
+      params.logicContract,
+      params.iv,
+      params.riskFreeRate,
+      params.minPremiumDailyRate,
+      params.minPremiumAmount,
+    ] as const;
+
+    const [existingPricing] = await publicClient!.readContract({
+      address: factoryAddr,
+      abi: factoryAbi,
+      functionName: 'getOptionPricing',
+      args,
+    });
+
+    if (existingPricing !== zeroAddress) {
+      return {pricingAddr: existingPricing};
+    }
+    const hash = await writeContractAsync({
+      address: factoryAddr,
+      abi: factoryAbi,
+      functionName: 'deployOptionPricing',
+      args,
+    });
+    const receipt = await publicClient!.waitForTransactionReceipt({hash});
+
+    const deployEvent = receipt.logs.find(
+      log => log.address.toLowerCase() === factoryAddr,
+    );
+    if (!deployEvent) {
+      console.error(receipt);
+      throw new Error(`Deploy event not found in tx: ${hash}`);
+    }
+    const decodedEvent = decodeEventLog({
+      abi: factoryAbi,
+      data: deployEvent.data,
+      topics: deployEvent.topics,
+    });
+
+    if (decodedEvent.eventName !== 'DeployOptionPricing') {
+      console.error(receipt);
+      throw new Error(
+        `Unexpected event ${decodedEvent.eventName} in tx ${hash}`,
+      );
+    }
+    return {pricingAddr: decodedEvent.args.pricing, deployHash: hash};
+  };
 
   const updateMarketPricing = async <T extends 'static' | 'bsm'>(
     data: T extends 'static'
@@ -108,62 +210,26 @@ export const useUpdateMarketPricing = (marketAddr: Address | undefined) => {
       }
     }
 
-    const hash =
+    const {pricingAddr, deployHash} =
       data.model === 'static'
-        ? await writeContractAsync({
-            address: factoryAddr,
-            abi: factoryAbi,
-            functionName: 'deployStaticPerpsPricing',
-            args: [
-              data.openingRate!,
-              data.dailyFundingRate!,
-              data.minOpeningAmount!,
-              data.minFundingAmount!,
-            ],
-          })
-        : await writeContractAsync({
-            address: factoryAddr,
-            abi: factoryAbi,
-            functionName: 'deployOptionPricing',
-            args: [
-              data.logicContract!,
-              data.iv!,
-              data.riskFreeRate!,
-              data.minPremiumDailyRate!,
-              data.minPremiumAmount!,
-            ],
-          });
-    const receipt = await publicClient.waitForTransactionReceipt({hash});
+        ? await getOrDeployStaticPricing(
+            factoryAddr,
+            data as Required<StaticPricingParams>,
+          )
+        : await getOrDeployOptionPricing(
+            factoryAddr,
+            data as Required<OptionPricingParams>,
+          );
 
-    const deployEvent = receipt.logs.find(
-      log => log.address.toLowerCase() === factoryAddr,
-    );
-    if (!deployEvent) {
-      throw new Error('DeployFeeStrategy event not found');
-    }
-
-    const decodedEvent = decodeEventLog({
-      abi: factoryAbi,
-      data: deployEvent.data,
-      topics: deployEvent.topics,
-    });
-
-    if (
-      decodedEvent.eventName !== 'DeployStaticPerpsPricing' &&
-      decodedEvent.eventName !== 'DeployOptionPricing'
-    ) {
-      throw new Error('Unexpected event');
-    }
-    const pricingAddr = decodedEvent.args.pricing;
-
-    const hash2 = await writeContractAsync({
+    const updateHash = await writeContractAsync({
       address: marketAddr,
       abi: optionsMarketAbi,
       functionName: 'updateAddresses',
       args: [pricingAddr, feeStrategy, priceFeed],
     });
     void queryClient.invalidateQueries({queryKey: ['readContract']});
-    return {deployHash: hash, updateHash: hash2, newPricingAddr: pricingAddr};
+
+    return {deployHash, updateHash, newPricingAddr: pricingAddr};
   };
 
   return {updateMarketPricing, ...rest};

@@ -3,30 +3,14 @@ export const factoryAbi = [
     type: 'function',
     name: 'deployFeeStrategy',
     inputs: [
-      {
-        name: '_openingFeeRate',
-        type: 'uint32',
-        internalType: 'uint32',
-      },
+      {name: '_openingFeeRate', type: 'uint32', internalType: 'uint32'},
       {name: '_baseFeeRate', type: 'uint32', internalType: 'uint32'},
-      {
-        name: '_minOpeningFee',
-        type: 'uint128',
-        internalType: 'uint128',
-      },
+      {name: '_minOpeningFee', type: 'uint128', internalType: 'uint128'},
       {name: '_minBaseFee', type: 'uint128', internalType: 'uint128'},
-      {
-        name: '_feeRecipient',
-        type: 'address',
-        internalType: 'address',
-      },
+      {name: '_feeRecipient', type: 'address', internalType: 'address'},
     ],
     outputs: [
-      {
-        name: '',
-        type: 'address',
-        internalType: 'contract FeeStrategy',
-      },
+      {name: '', type: 'address', internalType: 'contract FeeStrategy'},
     ],
     stateMutability: 'nonpayable',
   },
@@ -41,23 +25,11 @@ export const factoryAbi = [
       },
       {name: '_iv', type: 'uint32', internalType: 'uint32'},
       {name: '_riskFreeRate', type: 'uint32', internalType: 'uint32'},
-      {
-        name: '_minPremiumDailyRate',
-        type: 'uint32',
-        internalType: 'uint32',
-      },
-      {
-        name: '_minPremiumAmount',
-        type: 'uint256',
-        internalType: 'uint256',
-      },
+      {name: '_minPremiumDailyRate', type: 'uint32', internalType: 'uint32'},
+      {name: '_minPremiumAmount', type: 'uint256', internalType: 'uint256'},
     ],
     outputs: [
-      {
-        name: '',
-        type: 'address',
-        internalType: 'contract OptionPricing',
-      },
+      {name: '', type: 'address', internalType: 'contract OptionPricing'},
     ],
     stateMutability: 'nonpayable',
   },
@@ -66,28 +38,12 @@ export const factoryAbi = [
     name: 'deployStaticPerpsPricing',
     inputs: [
       {name: '_openingRate', type: 'uint32', internalType: 'uint32'},
-      {
-        name: '_dailyFundingRate',
-        type: 'uint32',
-        internalType: 'uint32',
-      },
-      {
-        name: '_minOpeningAmount',
-        type: 'uint128',
-        internalType: 'uint128',
-      },
-      {
-        name: '_minFundingAmount',
-        type: 'uint128',
-        internalType: 'uint128',
-      },
+      {name: '_dailyFundingRate', type: 'uint32', internalType: 'uint32'},
+      {name: '_minOpeningAmount', type: 'uint128', internalType: 'uint128'},
+      {name: '_minFundingAmount', type: 'uint128', internalType: 'uint128'},
     ],
     outputs: [
-      {
-        name: '',
-        type: 'address',
-        internalType: 'contract StaticPerpsPricing',
-      },
+      {name: '', type: 'address', internalType: 'contract StaticPerpsPricing'},
     ],
     stateMutability: 'nonpayable',
   },
@@ -96,11 +52,66 @@ export const factoryAbi = [
     name: 'feeStrategies',
     inputs: [{name: '', type: 'bytes32', internalType: 'bytes32'}],
     outputs: [
+      {name: '', type: 'address', internalType: 'contract FeeStrategy'},
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getFeeStrategy',
+    inputs: [
+      {name: '_openingFeeRate', type: 'uint32', internalType: 'uint32'},
+      {name: '_baseFeeRate', type: 'uint32', internalType: 'uint32'},
+      {name: '_minOpeningFee', type: 'uint128', internalType: 'uint128'},
+      {name: '_minBaseFee', type: 'uint128', internalType: 'uint128'},
+      {name: '_feeRecipient', type: 'address', internalType: 'address'},
+    ],
+    outputs: [
+      {name: 'strategy', type: 'address', internalType: 'contract FeeStrategy'},
+      {name: 'paramsHash', type: 'bytes32', internalType: 'bytes32'},
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getOptionPricing',
+    inputs: [
       {
-        name: '',
+        name: '_logicContract',
         type: 'address',
-        internalType: 'contract FeeStrategy',
+        internalType: 'contract StatelessOptionPricing',
       },
+      {name: '_iv', type: 'uint32', internalType: 'uint32'},
+      {name: '_riskFreeRate', type: 'uint32', internalType: 'uint32'},
+      {name: '_minPremiumDailyRate', type: 'uint32', internalType: 'uint32'},
+      {name: '_minPremiumAmount', type: 'uint256', internalType: 'uint256'},
+    ],
+    outputs: [
+      {
+        name: 'pricing',
+        type: 'address',
+        internalType: 'contract OptionPricing',
+      },
+      {name: 'paramsHash', type: 'bytes32', internalType: 'bytes32'},
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getStaticPerpsPricing',
+    inputs: [
+      {name: '_openingRate', type: 'uint32', internalType: 'uint32'},
+      {name: '_dailyFundingRate', type: 'uint32', internalType: 'uint32'},
+      {name: '_minOpeningAmount', type: 'uint128', internalType: 'uint128'},
+      {name: '_minFundingAmount', type: 'uint128', internalType: 'uint128'},
+    ],
+    outputs: [
+      {
+        name: 'pricing',
+        type: 'address',
+        internalType: 'contract StaticPerpsPricing',
+      },
+      {name: 'paramsHash', type: 'bytes32', internalType: 'bytes32'},
     ],
     stateMutability: 'view',
   },
@@ -109,11 +120,7 @@ export const factoryAbi = [
     name: 'optionPricings',
     inputs: [{name: '', type: 'bytes32', internalType: 'bytes32'}],
     outputs: [
-      {
-        name: '',
-        type: 'address',
-        internalType: 'contract OptionPricing',
-      },
+      {name: '', type: 'address', internalType: 'contract OptionPricing'},
     ],
     stateMutability: 'view',
   },
@@ -122,11 +129,7 @@ export const factoryAbi = [
     name: 'staticPerpsPricings',
     inputs: [{name: '', type: 'bytes32', internalType: 'bytes32'}],
     outputs: [
-      {
-        name: '',
-        type: 'address',
-        internalType: 'contract StaticPerpsPricing',
-      },
+      {name: '', type: 'address', internalType: 'contract StaticPerpsPricing'},
     ],
     stateMutability: 'view',
   },
@@ -189,12 +192,7 @@ export const factoryAbi = [
         indexed: false,
         internalType: 'contract StatelessOptionPricing',
       },
-      {
-        name: 'iv',
-        type: 'uint32',
-        indexed: false,
-        internalType: 'uint32',
-      },
+      {name: 'iv', type: 'uint32', indexed: false, internalType: 'uint32'},
       {
         name: 'riskFreeRate',
         type: 'uint32',
