@@ -14,7 +14,8 @@ type TimelockContextValue = {
   timelockGraphqlClient?: ReturnType<typeof getTimelockGraphqlClient>;
   univ4GraphqlClient?: ReturnType<typeof getUniv4GraphqlClient>;
   perpsOperator?: PerpsOperator;
-  perpsOperatorUrl?: string;
+  perpsOperatorReadUrl?: string;
+  perpsOperatorWriteUrl?: string;
 };
 
 const TimelockContext = createContext<TimelockContextValue | undefined>(

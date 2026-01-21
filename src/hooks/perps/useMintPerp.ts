@@ -20,7 +20,7 @@ export const useMintPerp = (marketAddr: Address | undefined) => {
 
   const {
     operator,
-    address: operatorAddr,
+    addresses: operatorAddresses,
     signMessage: {mutateAsync: signMessage},
   } = usePerpsOperator();
 
@@ -34,6 +34,53 @@ export const useMintPerp = (marketAddr: Address | undefined) => {
   const {refetch: refetchOperators} = useUserOperators(address, marketAddr);
   const {refetch: refetchCurrentTick} = useCurrentTick(poolManager, poolKey);
 
+  const updateOperatorPermsIfNeeded = async (
+    requiredSpendingApproval: bigint,
+  ) => {
+    if (!operatorAddresses) return;
+
+    const {data: operators = []} = await refetchOperators();
+
+    const operatorsToUpdate: Address[] = [];
+    const permsToUpdate: {
+      canExtend: boolean;
+      canExercise: boolean;
+      canTransfer: boolean;
+      canMint: boolean;
+      spendingApproval: bigint;
+    }[] = [];
+
+    for (const operatorAddr of operatorAddresses) {
+      const userPerms = operators.find(
+        o => o.operatorAddr.toLowerCase() === operatorAddr.toLowerCase(),
+      );
+      const hasEnoughPerms =
+        userPerms &&
+        userPerms.canMint &&
+        userPerms.canExtend &&
+        userPerms.canExercise &&
+        userPerms.spendingApproval > requiredSpendingApproval;
+
+      if (!hasEnoughPerms) {
+        operatorsToUpdate.push(operatorAddr);
+
+        permsToUpdate.push({
+          canMint: true,
+          canExtend: true,
+          canExercise: true,
+          canTransfer: userPerms?.canTransfer ?? false,
+          spendingApproval: maxUint256,
+        });
+      }
+    }
+    if (operatorsToUpdate.length > 0) {
+      await setOperatorPerms({
+        operators: operatorsToUpdate,
+        perms: permsToUpdate,
+      });
+    }
+  };
+
   const mintPerp = async (data: {
     optionType: 'CALL' | 'PUT';
     amount: bigint;
@@ -46,7 +93,7 @@ export const useMintPerp = (marketAddr: Address | undefined) => {
     if (!marketAddr) throw new Error('Market address not found');
     if (!tickSpacing) throw new Error('Pool data not found');
 
-    if (!operator || !operatorAddr) {
+    if (!operator || !operatorAddresses) {
       throw new Error('Operator address not found');
     }
     if (optionAssetIsToken0 === undefined || !payoutAsset) {
@@ -61,13 +108,6 @@ export const useMintPerp = (marketAddr: Address | undefined) => {
     if (currentTick === undefined) {
       throw new Error('Could not fetch current tick');
     }
-    const {data: operators = []} = await refetchOperators();
-
-    const userPerms = operatorAddr
-      ? operators.find(
-          o => o.operatorAddr.toLowerCase() === operatorAddr.toLowerCase(),
-        )
-      : undefined;
 
     const validStrikeTick = getNearestValidStrikeTick(
       optionType,
@@ -85,23 +125,7 @@ export const useMintPerp = (marketAddr: Address | undefined) => {
     ]);
     const maxPremium = ((premium + protocolFee) * 11n) / 10n;
 
-    const hasEnoughPerms =
-      userPerms &&
-      userPerms.canMint &&
-      userPerms.canExtend &&
-      userPerms.canExercise &&
-      userPerms.spendingApproval > maxPremium;
-
-    if (!hasEnoughPerms) {
-      await setOperatorPerms({
-        operator: operatorAddr,
-        canMint: true,
-        canExtend: true,
-        canExercise: true,
-        canTransfer: userPerms?.canTransfer || false,
-        spendingApproval: maxUint256,
-      });
-    }
+    await updateOperatorPermsIfNeeded(maxPremium);
     await askForApproval(payoutAsset, marketAddr, maxPremium);
 
     await operator.mintPerp({

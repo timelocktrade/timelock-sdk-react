@@ -13,36 +13,28 @@ export const useSetOperatorPerms = (marketAddr: Address | undefined) => {
   const {mutateAsync: writeContractAsync} = useWriteContract();
 
   const setOperatorPerms = async ({
-    operator,
-    canExtend,
-    canExercise,
-    canTransfer,
-    canMint,
-    spendingApproval,
+    operators,
+    perms,
   }: {
-    operator: Address;
-    canExtend: boolean;
-    canExercise: boolean;
-    canTransfer: boolean;
-    canMint: boolean;
-    spendingApproval: bigint;
+    operators: Address[];
+    perms: {
+      canExtend: boolean;
+      canExercise: boolean;
+      canTransfer: boolean;
+      canMint: boolean;
+      spendingApproval: bigint;
+    }[];
   }) => {
     if (!client || !address) throw new Error('Wallet not connected');
     if (!marketAddr) throw new Error('Market address not available');
-
-    const perms = {
-      canExtend,
-      canExercise,
-      canTransfer,
-      canMint,
-      spendingApproval,
-    };
+    if (operators.length !== perms.length)
+      throw new Error('Operators and perms arrays must have the same length');
 
     const hash = await writeContractAsync({
       address: marketAddr,
       abi: optionsMarketAbi,
       functionName: 'setOperatorsPerms',
-      args: [[operator], [perms]],
+      args: [operators, perms],
     });
     await waitForTransactionReceipt(client, {hash});
 

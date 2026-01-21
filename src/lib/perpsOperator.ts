@@ -15,15 +15,17 @@ export type ExercisePerpBody = {
 };
 
 export class PerpsOperator {
-  #baseUrl: string;
+  #readUrl: string;
+  #writeUrl: string;
   auth?: {message: string; signature: Hex};
 
-  constructor(baseUrl: string) {
-    this.#baseUrl = baseUrl;
+  constructor(readUrl: string, writeUrl: string) {
+    this.#readUrl = readUrl;
+    this.#writeUrl = writeUrl;
   }
 
-  #request = async <T>(path: string, body?: unknown) => {
-    const url = new URL(path, this.#baseUrl);
+  #request = async <T>(baseUrl: string, path: string, body?: unknown) => {
+    const url = new URL(path, baseUrl);
     const res = await fetch(url, {
       method: body ? 'POST' : 'GET',
       headers: {
@@ -43,35 +45,28 @@ export class PerpsOperator {
       const error = JSON.parse(resText) as {error: string};
       throw new Error(`${res.status} ${res.statusText}: ${error.error}`);
     } catch (error) {
+      console.error(error);
       throw new Error(`${res.status} ${res.statusText}: ${resText}`);
     }
   };
 
-  getOperatorAddr = async (): Promise<Address> => {
-    const {address} = await this.#request<{address: Address}>(
-      'api/operator/address',
+  #readRequest = async <T>(path: string, body?: unknown) => {
+    try {
+      return await this.#request<T>(this.#readUrl, path, body);
+    } catch {
+      return await this.#request<T>(this.#writeUrl, path, body);
+    }
+  };
+
+  #writeRequest = async <T>(path: string, body?: unknown) => {
+    return this.#request<T>(this.#writeUrl, path, body);
+  };
+
+  getOperatorAddresses = async (): Promise<Address[]> => {
+    const {addresses} = await this.#readRequest<{addresses: Address[]}>(
+      'api/operator/addresses',
     );
-    return address;
-  };
-
-  genAuthMessage = async (userAddr: Address): Promise<string> => {
-    const {message} = await this.#request<{message: string}>('api/auth/gen', {
-      userAddr,
-    });
-    return message;
-  };
-
-  validateAuthMessage = async (message: string, signature: Hex) => {
-    const {address, createdAt, validUntil} = await this.#request<{
-      address: Address;
-      createdAt: number;
-      validUntil: number;
-    }>('api/auth/validate', {message, signature});
-    return {address, createdAt, validUntil};
-  };
-
-  setAuth = (message: string, signature: Hex) => {
-    this.auth = {message, signature};
+    return addresses;
   };
 
   getUserPerps = async (
@@ -90,7 +85,7 @@ export class PerpsOperator {
 
     const url = `api/positions/${userAddr}?${params.toString()}`;
 
-    const data = await this.#request<
+    const data = await this.#readRequest<
       {
         id: string;
         ownerAddr: Address;
@@ -105,13 +100,36 @@ export class PerpsOperator {
     return data.map(p => ({...p, optionId: BigInt(p.optionId)}));
   };
 
+  genAuthMessage = async (userAddr: Address): Promise<string> => {
+    const {message} = await this.#writeRequest<{message: string}>(
+      'api/auth/gen',
+      {
+        userAddr,
+      },
+    );
+    return message;
+  };
+
+  validateAuthMessage = async (message: string, signature: Hex) => {
+    const {address, createdAt, validUntil} = await this.#writeRequest<{
+      address: Address;
+      createdAt: number;
+      validUntil: number;
+    }>('api/auth/validate', {message, signature});
+    return {address, createdAt, validUntil};
+  };
+
+  setAuth = (message: string, signature: Hex) => {
+    this.auth = {message, signature};
+  };
+
   mintPerp = async (body: MintPerpBody) => {
     if (!this.auth) {
       throw new Error(
         'Authentication required. Call setAuth() with authMessage and signature before exercising perps.',
       );
     }
-    const {txHash, optionId} = await this.#request<{
+    const {txHash, optionId} = await this.#writeRequest<{
       txHash: Hex;
       optionId: string;
     }>('api/positions/mint', {
@@ -128,7 +146,7 @@ export class PerpsOperator {
         'Authentication required. Call setAuth() with authMessage and signature before exercising perps.',
       );
     }
-    const {txHash, optionId} = await this.#request<{
+    const {txHash, optionId} = await this.#writeRequest<{
       txHash: Hex;
       optionId: string;
     }>('api/positions/exercise', {

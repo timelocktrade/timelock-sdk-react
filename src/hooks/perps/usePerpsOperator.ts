@@ -56,9 +56,9 @@ export const usePerpsOperator = () => {
   const {perpsOperatorUrl, perpsOperator: operator} = useTimelockConfig();
   const {mutateAsync: signMessageAsync} = useSignMessage();
 
-  const {data: address} = useQuery({
-    queryKey: ['perpsOperatorAddr', perpsOperatorUrl || '--'],
-    queryFn: () => operator?.getOperatorAddr(),
+  const {data: addresses} = useQuery({
+    queryKey: ['perpsOperatorAddresses', perpsOperatorUrl || '--'],
+    queryFn: () => operator?.getOperatorAddresses(),
     staleTime: 10000,
     refetchInterval: 10000,
     enabled: !!operator,
@@ -107,5 +107,5 @@ export const usePerpsOperator = () => {
     },
   });
 
-  return {operator, address, signMessage};
+  return {operator, addresses, signMessage};
 };
