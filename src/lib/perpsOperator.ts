@@ -6,12 +6,18 @@ export type MintPerpBody = {
   amount: bigint;
   duration: number;
   strikeTick: number;
+  maxPremium: bigint;
+  maxSteps: number;
 };
 
 export type ExercisePerpBody = {
   marketAddr: Address;
   optionId: bigint;
   liquidities: bigint[];
+  minPayout: bigint;
+  minSqrtPrice: bigint;
+  maxSqrtPrice: bigint;
+  deadline: number;
 };
 
 export class PerpsOperator {
@@ -135,6 +141,7 @@ export class PerpsOperator {
     }>('api/positions/mint', {
       ...body,
       amount: body.amount.toString(),
+      maxPremium: body.maxPremium.toString(),
       auth: this.auth,
     });
     return {txHash, optionId: BigInt(optionId)};
@@ -153,6 +160,10 @@ export class PerpsOperator {
       ...body,
       optionId: body.optionId.toString(),
       liquidities: body.liquidities.map(l => l.toString()),
+      minSqrtPrice: body.minSqrtPrice.toString(),
+      maxSqrtPrice: body.maxSqrtPrice.toString(),
+      minPayout: body.minPayout.toString(),
+      deadline: body.deadline,
       auth: this.auth,
     });
     return {txHash, optionId: BigInt(optionId)};

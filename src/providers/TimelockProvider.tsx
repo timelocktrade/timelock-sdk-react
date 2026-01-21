@@ -27,13 +27,15 @@ export const TimelockProvider = ({
   marketData,
   timelockGraphqlUrl,
   univ4GraphqlUrl,
-  perpsOperatorUrl,
+  perpsOperatorReadUrl,
+  perpsOperatorWriteUrl,
 }: {
   children: ReactNode;
   marketData?: Partial<TimelockMarketData>;
   timelockGraphqlUrl?: string;
   univ4GraphqlUrl?: string;
-  perpsOperatorUrl?: string;
+  perpsOperatorReadUrl?: string;
+  perpsOperatorWriteUrl?: string;
 }) => {
   const timelockGraphqlClient = useMemo(() => {
     if (!timelockGraphqlUrl) return;
@@ -46,9 +48,9 @@ export const TimelockProvider = ({
   }, [univ4GraphqlUrl]);
 
   const perpsOperator = useMemo(() => {
-    if (!perpsOperatorUrl) return;
-    return new PerpsOperator(perpsOperatorUrl);
-  }, [perpsOperatorUrl]);
+    if (!perpsOperatorReadUrl || !perpsOperatorWriteUrl) return;
+    return new PerpsOperator(perpsOperatorReadUrl, perpsOperatorWriteUrl);
+  }, [perpsOperatorReadUrl, perpsOperatorWriteUrl]);
 
   const contextValue = useMemo(
     () => ({
@@ -58,7 +60,8 @@ export const TimelockProvider = ({
       perpsOperator,
       univ4GraphqlClient,
       timelockGraphqlClient,
-      perpsOperatorUrl,
+      perpsOperatorReadUrl,
+      perpsOperatorWriteUrl,
     }),
     [
       marketData,
@@ -67,7 +70,8 @@ export const TimelockProvider = ({
       perpsOperator,
       timelockGraphqlClient,
       univ4GraphqlClient,
-      perpsOperatorUrl,
+      perpsOperatorReadUrl,
+      perpsOperatorWriteUrl,
     ],
   );
 

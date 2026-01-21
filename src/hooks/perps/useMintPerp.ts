@@ -9,7 +9,6 @@ import {useSetOperatorPerms} from '~/hooks/operators/useSetOperatorPerms';
 import {useMarketData} from '~/hooks/market/useMarketData';
 import {usePoolData} from '~/hooks/pool/usePoolData';
 import {useCurrentTick} from '~/hooks/pool/useCurrentTick';
-import {getTimelockMarket} from '~/lib/contracts';
 import {getNearestValidStrikeTick} from '~/lib/liquidityUtils';
 import {sleep} from '~/lib/utils';
 
@@ -41,8 +40,8 @@ export const useMintPerp = (marketAddr: Address | undefined) => {
 
     const {data: operators = []} = await refetchOperators();
 
-    const operatorsToUpdate: Address[] = [];
     const permsToUpdate: {
+      operator: Address;
       canExtend: boolean;
       canExercise: boolean;
       canTransfer: boolean;
@@ -62,9 +61,8 @@ export const useMintPerp = (marketAddr: Address | undefined) => {
         userPerms.spendingApproval > requiredSpendingApproval;
 
       if (!hasEnoughPerms) {
-        operatorsToUpdate.push(operatorAddr);
-
         permsToUpdate.push({
+          operator: operatorAddr,
           canMint: true,
           canExtend: true,
           canExercise: true,
@@ -73,11 +71,8 @@ export const useMintPerp = (marketAddr: Address | undefined) => {
         });
       }
     }
-    if (operatorsToUpdate.length > 0) {
-      await setOperatorPerms({
-        operators: operatorsToUpdate,
-        perms: permsToUpdate,
-      });
+    if (permsToUpdate.length > 0) {
+      await setOperatorPerms(permsToUpdate);
     }
   };
 
@@ -85,9 +80,12 @@ export const useMintPerp = (marketAddr: Address | undefined) => {
     optionType: 'CALL' | 'PUT';
     amount: bigint;
     duration: number;
+    maxPremium: bigint;
+    maxSteps: number;
     strikeTick?: number;
   }) => {
-    const {optionType, amount, duration, strikeTick} = data;
+    const {optionType, amount, duration, strikeTick, maxPremium, maxSteps} =
+      data;
 
     if (!client || !address) throw new Error('Wallet not connected');
     if (!marketAddr) throw new Error('Market address not found');
@@ -100,8 +98,6 @@ export const useMintPerp = (marketAddr: Address | undefined) => {
       throw new Error('Market data not found');
     }
     if (!operator.auth) await signMessage();
-
-    const market = getTimelockMarket(marketAddr, client);
 
     const {data: {currentTick} = {}} = await refetchCurrentTick();
 
@@ -116,15 +112,6 @@ export const useMintPerp = (marketAddr: Address | undefined) => {
       currentTick,
       strikeTick,
     );
-    const [premium, protocolFee] = await market.read.getMintFees([
-      optionType === 'CALL' ? 0 : 1,
-      amount,
-      validStrikeTick,
-      duration,
-      '0x',
-    ]);
-    const maxPremium = ((premium + protocolFee) * 11n) / 10n;
-
     await updateOperatorPermsIfNeeded(maxPremium);
     await askForApproval(payoutAsset, marketAddr, maxPremium);
 
@@ -134,6 +121,8 @@ export const useMintPerp = (marketAddr: Address | undefined) => {
       optionType: optionType,
       duration: duration,
       strikeTick: validStrikeTick,
+      maxPremium: maxPremium,
+      maxSteps: maxSteps,
     });
 
     await sleep(200);

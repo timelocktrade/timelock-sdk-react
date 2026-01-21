@@ -1,6 +1,6 @@
 {
   "name": "timelock-sdk",
-  "version": "0.0.255",
+  "version": "0.0.261",
   "author": "",
   "main": "./dist/package.cjs",
   "module": "./dist/package.js",

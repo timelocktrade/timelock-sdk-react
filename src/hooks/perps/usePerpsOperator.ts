@@ -53,11 +53,11 @@ const clearSignature = (userAddr: Address) => {
 
 export const usePerpsOperator = () => {
   const {address: userAddr} = useConnection();
-  const {perpsOperatorUrl, perpsOperator: operator} = useTimelockConfig();
+  const {perpsOperator: operator} = useTimelockConfig();
   const {mutateAsync: signMessageAsync} = useSignMessage();
 
   const {data: addresses} = useQuery({
-    queryKey: ['perpsOperatorAddresses', perpsOperatorUrl || '--'],
+    queryKey: ['perpsOperatorAddresses', operator || '--'],
     queryFn: () => operator?.getOperatorAddresses(),
     staleTime: 10000,
     refetchInterval: 10000,
