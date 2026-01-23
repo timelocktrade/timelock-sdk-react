@@ -44,14 +44,15 @@ const calculateDisplayPnl = (
   return wrapAmount(pnl, payoutAssetDecimals);
 };
 
-const swapperData = encodeAbiParameters(
-  [{type: 'uint160'}, {type: 'uint160'}, {type: 'uint256'}],
-  [
-    MIN_SQRT_RATIO + 1n,
-    MAX_SQRT_RATIO - 1n,
-    BigInt(Math.floor(Date.now() / 1000) + 60 * 10),
-  ],
-);
+const getSwapperData = () =>
+  encodeAbiParameters(
+    [{type: 'uint160'}, {type: 'uint160'}, {type: 'uint256'}],
+    [
+      MIN_SQRT_RATIO + 1n,
+      MAX_SQRT_RATIO - 1n,
+      BigInt(Math.floor(Date.now() / 1000) + 60 * 10),
+    ],
+  );
 
 export const useOptionPnl = (option?: OptionData) => {
   const chainId = useChainId();
@@ -90,7 +91,13 @@ export const useOptionPnl = (option?: OptionData) => {
     address: timelockLens?.address,
     abi: lensAbi,
     functionName: 'getRefTick',
-    args: vault && option?.startTick ? [vault, option.startTick] : undefined,
+    args:
+      vault && option?.startTick !== undefined
+        ? [vault, option.startTick]
+        : undefined,
+    query: {
+      enabled: !!vault && option?.startTick !== undefined,
+    },
   });
 
   const swapper = swappers[chainId];
@@ -102,23 +109,18 @@ export const useOptionPnl = (option?: OptionData) => {
     functionName: 'exerciseOption',
     account,
     args:
-      option && refTick
+      option && refTick !== undefined
         ? [
             option.optionId,
             option.liquiditiesCurrent,
             0n,
             swapper,
-            swapperData,
+            getSwapperData(),
             refTick,
           ]
         : undefined,
     query: {
-      enabled:
-        !!option &&
-        !!swapperData &&
-        !!swapper &&
-        refTick !== undefined &&
-        !!account,
+      enabled: !!option && !!swapper && refTick !== undefined && !!account,
       staleTime: 10_000, // Cache for 10s to avoid excessive calls
       select: data => {
         if (!payoutAssetDecimals) return undefined;
