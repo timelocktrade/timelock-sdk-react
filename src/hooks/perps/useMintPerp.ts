@@ -1,4 +1,4 @@
-import {maxUint256, type Address} from 'viem';
+import type {Address} from 'viem';
 import {useConnection, useClient} from 'wagmi';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 
@@ -19,7 +19,7 @@ export const useMintPerp = (marketAddr: Address | undefined) => {
 
   const {
     operator,
-    addresses: operatorAddresses,
+    address: operatorAddr,
     signMessage: {mutateAsync: signMessage},
   } = usePerpsOperator();
 
@@ -33,47 +33,34 @@ export const useMintPerp = (marketAddr: Address | undefined) => {
   const {refetch: refetchOperators} = useUserOperators(address, marketAddr);
   const {refetch: refetchCurrentTick} = useCurrentTick(poolManager, poolKey);
 
-  const updateOperatorPermsIfNeeded = async (
-    requiredSpendingApproval: bigint,
-  ) => {
-    if (!operatorAddresses) return;
-
+  const updateOperatorPermsIfNeeded = async (requiredApproval: bigint) => {
+    if (!operatorAddr) {
+      throw new Error('Operator address not found');
+    }
     const {data: operators = []} = await refetchOperators();
 
-    const permsToUpdate: {
-      operator: Address;
-      canExtend: boolean;
-      canExercise: boolean;
-      canTransfer: boolean;
-      canMint: boolean;
-      spendingApproval: bigint;
-    }[] = [];
+    const userPerms = operators.find(
+      op => op.operatorAddr.toLowerCase() === operatorAddr.toLowerCase(),
+    );
+    const hasEnoughPerms =
+      userPerms &&
+      userPerms.canMint &&
+      userPerms.canExtend &&
+      userPerms.canExercise &&
+      userPerms.spendingApproval > requiredApproval;
 
-    for (const operatorAddr of operatorAddresses) {
-      const userPerms = operators.find(
-        o => o.operatorAddr.toLowerCase() === operatorAddr.toLowerCase(),
-      );
-      const hasEnoughPerms =
-        userPerms &&
-        userPerms.canMint &&
-        userPerms.canExtend &&
-        userPerms.canExercise &&
-        userPerms.spendingApproval > requiredSpendingApproval;
+    if (hasEnoughPerms) return;
 
-      if (!hasEnoughPerms) {
-        permsToUpdate.push({
-          operator: operatorAddr,
-          canMint: true,
-          canExtend: true,
-          canExercise: true,
-          canTransfer: userPerms?.canTransfer ?? false,
-          spendingApproval: maxUint256,
-        });
-      }
-    }
-    if (permsToUpdate.length > 0) {
-      await setOperatorPerms(permsToUpdate);
-    }
+    await setOperatorPerms([
+      {
+        operator: operatorAddr,
+        canMint: true,
+        canExtend: true,
+        canExercise: true,
+        canTransfer: userPerms?.canTransfer ?? false,
+        spendingApproval: requiredApproval,
+      },
+    ]);
   };
 
   const mintPerp = async (data: {
@@ -91,7 +78,7 @@ export const useMintPerp = (marketAddr: Address | undefined) => {
     if (!marketAddr) throw new Error('Market address not found');
     if (!tickSpacing) throw new Error('Pool data not found');
 
-    if (!operator || !operatorAddresses) {
+    if (!operator) {
       throw new Error('Operator address not found');
     }
     if (optionAssetIsToken0 === undefined || !payoutAsset) {

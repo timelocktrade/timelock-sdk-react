@@ -15,8 +15,8 @@ export type ExercisePerpBody = {
   optionId: bigint;
   liquidities: bigint[];
   minPayout: bigint;
-  minSqrtPrice: bigint;
-  maxSqrtPrice: bigint;
+  minSqrtPriceX96: bigint;
+  maxSqrtPriceX96: bigint;
   deadline: number;
 };
 
@@ -68,11 +68,11 @@ export class PerpsOperator {
     return this.#request<T>(this.#writeUrl, path, body);
   };
 
-  getOperatorAddresses = async (): Promise<Address[]> => {
-    const {addresses} = await this.#readRequest<{addresses: Address[]}>(
-      'api/operator/addresses',
+  getOperatorAddress = async () => {
+    const {address} = await this.#readRequest<{address: Address}>(
+      'api/operator/address',
     );
-    return addresses;
+    return address;
   };
 
   getUserPerps = async (
@@ -109,20 +109,18 @@ export class PerpsOperator {
   genAuthMessage = async (userAddr: Address): Promise<string> => {
     const {message} = await this.#writeRequest<{message: string}>(
       'api/auth/gen',
-      {
-        userAddr,
-      },
+      {userAddr},
     );
     return message;
   };
 
   validateAuthMessage = async (message: string, signature: Hex) => {
-    const {address, createdAt, validUntil} = await this.#writeRequest<{
-      address: Address;
+    const {userAddr, createdAt, validUntil} = await this.#writeRequest<{
+      userAddr: Address;
       createdAt: number;
       validUntil: number;
     }>('api/auth/validate', {message, signature});
-    return {address, createdAt, validUntil};
+    return {userAddr, createdAt, validUntil};
   };
 
   setAuth = (message: string, signature: Hex) => {
@@ -160,8 +158,8 @@ export class PerpsOperator {
       ...body,
       optionId: body.optionId.toString(),
       liquidities: body.liquidities.map(l => l.toString()),
-      minSqrtPrice: body.minSqrtPrice.toString(),
-      maxSqrtPrice: body.maxSqrtPrice.toString(),
+      minSqrtPriceX96: body.minSqrtPriceX96.toString(),
+      maxSqrtPriceX96: body.maxSqrtPriceX96.toString(),
       minPayout: body.minPayout.toString(),
       deadline: body.deadline,
       auth: this.auth,

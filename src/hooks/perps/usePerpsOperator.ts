@@ -56,11 +56,9 @@ export const usePerpsOperator = () => {
   const {perpsOperator: operator} = useTimelockConfig();
   const {mutateAsync: signMessageAsync} = useSignMessage();
 
-  const {data: addresses} = useQuery({
-    queryKey: ['perpsOperatorAddresses', operator || '--'],
-    queryFn: () => operator?.getOperatorAddresses(),
-    staleTime: 10000,
-    refetchInterval: 10000,
+  const {data: address} = useQuery({
+    queryKey: ['perpsOperatorAddress', operator || '--'],
+    queryFn: () => operator?.getOperatorAddress(),
     enabled: !!operator,
   });
 
@@ -68,14 +66,14 @@ export const usePerpsOperator = () => {
     if (!operator || !userAddr) return;
 
     try {
-      const {address, validUntil} = await operator.validateAuthMessage(
+      const {userAddr: addr, validUntil} = await operator.validateAuthMessage(
         message,
         signature,
       );
       if (validUntil < Date.now()) {
         throw new Error('Signature expired');
       }
-      if (address.toLowerCase() !== userAddr.toLowerCase()) {
+      if (addr.toLowerCase() !== userAddr.toLowerCase()) {
         throw new Error('Valid signature but different user address');
       }
       operator.setAuth(message, signature);
@@ -107,5 +105,5 @@ export const usePerpsOperator = () => {
     },
   });
 
-  return {operator, addresses, signMessage};
+  return {operator, address, signMessage};
 };
